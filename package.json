@@ -1,19 +1,26 @@
 {
-  "name": "featbit-node-server-sdk",
+  "name": "@featbit/node-server-sdk",
   "version": "0.0.1",
   "description": "https://github.com/featbit/featbit-node-server-sdk",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "files":[
-    "dist/"
+  "main": "./dist/cjs/src/index.js",
+  "module": "./dist/esm/src/index.js",
+  "files": [
+    "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "build": "rimraf dist && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prepublishOnly": "npm run build"
   },
+  "keywords": [
+    "featbit",
+    "node",
+    "server sdk"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.10.1",
+    "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   }
 }
