@@ -6,8 +6,7 @@ import { format } from "util";
 import SafeLogger from "./logging/SafeLogger";
 import NodePlatform from "./platform/NodePlatform";
 import { Emits } from "./utils/Emits";
-
-class ClientEmitter extends EventEmitter {}
+import { ClientEmitter } from "./utils/ClientEmitter";
 
 /**
  * @ignore
@@ -17,7 +16,7 @@ class FeatBitClientNode extends FeatBitClient {
 
   constructor(options: IOptions) {
     const fallbackLogger = new BasicLogger({
-      level: 'info',
+      level: 'debug',
       // eslint-disable-next-line no-console
       destination: console.error,
       formatter: format,

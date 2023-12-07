@@ -60,7 +60,6 @@ export const defaultValues: ValidatedOptions = {
     streamUri: '',
     eventsUri: '',
     stream: true,
-    streamInitialReconnectDelay: 1,
     sendEvents: true,
     timeout: 5,
     capacity: 10000,
@@ -162,8 +161,6 @@ export default class Configuration {
 
     public readonly stream: boolean;
 
-    public readonly streamInitialReconnectDelay: number;
-
     public readonly featureStoreFactory: (clientContext: IClientContext) => IFeatureStore;
 
     public readonly updateProcessorFactory?: (
@@ -202,7 +199,6 @@ export default class Configuration {
 
         this.offline = validatedOptions.offline;
         this.stream = validatedOptions.stream;
-        this.streamInitialReconnectDelay = validatedOptions.streamInitialReconnectDelay;
 
         if (TypeValidators.Function.is(validatedOptions.updateProcessor)) {
             // @ts-ignore

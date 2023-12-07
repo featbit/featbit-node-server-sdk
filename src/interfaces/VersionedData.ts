@@ -12,6 +12,11 @@ export interface IVersionedData {
   key: string;
 
   /**
+   * A version number that FeatBit will increment each time this item is changed.
+   */
+  version: number;
+
+  /**
    * True if this is a deleted item placeholder (tombstone).
    */
   deleted?: boolean;

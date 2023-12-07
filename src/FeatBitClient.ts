@@ -94,10 +94,8 @@ export class FeatBitClient implements IFeatBitClient {
         ? new StreamingProcessor(
           this.config.sdkKey,
           clientContext,
-          '/all',
-          listeners,
-          (e) => this.dataSourceErrorHandler(e),
-          this.config.streamInitialReconnectDelay,
+          this.featureStore,
+          listeners
         )
         : new PollingProcessor(
           config,

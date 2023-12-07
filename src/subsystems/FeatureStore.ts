@@ -5,7 +5,7 @@ import { IDataKind } from "../interfaces/DataKind";
  */
 export interface IFeatureStoreItem {
     deleted?: boolean;
-    //version: number;
+    version: number;
     // The actual data associated with the item.
     [attribute: string]: any;
 }
@@ -158,4 +158,10 @@ export interface IFeatureStore {
      * Get a description of the store.
      */
     getDescription?(): string;
+
+
+    /**
+     * The latest version of the feature flags and segments.
+     */
+    version: number;
 }

@@ -9,7 +9,6 @@ export interface ValidatedOptions {
     streamUri: string;
     eventsUri: string;
     stream: boolean;
-    streamInitialReconnectDelay: number;
     sendEvents: boolean;
     timeout: number;
     capacity: number;

@@ -7,7 +7,7 @@ import {
     deserializePatch,
     IPatchData,
     deserializeDelete,
-    IDeleteData
+    IDeleteData, FlagsAndSegments
 } from "../store/serialization";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import { EventName, ProcessStreamResponse } from "../platform/IEventSource";
@@ -18,13 +18,13 @@ export const createPutListener = (
     onPutCompleteHandler: VoidFunction = () => {},
 ) => ({
     deserializeData: deserializeAll,
-    processJson: async ({ data: { flags, segments } }: IAllData) => {
+    processJson: async ({ flags, segments }: FlagsAndSegments) => {
         const initData = {
             [VersionedDataKinds.Features.namespace]: flags,
             [VersionedDataKinds.Segments.namespace]: segments,
         };
 
-        logger?.debug('Initializing all data');
+        logger?.debug('Initializing all data', initData);
         dataSourceUpdates.init(initData, onPutCompleteHandler);
     },
 });
@@ -52,7 +52,7 @@ export const createDeleteListener = (
     onDeleteCompleteHandler: VoidFunction = () => {},
 ) => ({
     deserializeData: deserializeDelete,
-    processJson: async ({ kind, path }: IDeleteData) => {
+    processJson: async ({ kind, path, version }: IDeleteData) => {
         if (kind) {
             const key = VersionedDataKinds.getKeyFromPath(kind, path);
             if (key) {
@@ -61,6 +61,7 @@ export const createDeleteListener = (
                     kind,
                     {
                         key,
+                        version,
                         deleted: true,
                     },
                     onDeleteCompleteHandler,

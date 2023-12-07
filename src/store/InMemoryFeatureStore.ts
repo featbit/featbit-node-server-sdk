@@ -5,8 +5,11 @@ import {
     IFeatureStoreItem,
     IFeatureStoreKindData, IKeyedFeatureStoreItem
 } from "../subsystems/FeatureStore";
+import VersionedDataKinds from "./VersionedDataKinds";
 
 export default class InMemoryFeatureStore implements IFeatureStore {
+    version: number = 0;
+
     private allData: IFeatureStoreDataStorage = {};
 
     private initCalled = false;
@@ -24,6 +27,10 @@ export default class InMemoryFeatureStore implements IFeatureStore {
             }
         } else {
             items[key] = item;
+        }
+
+        if (item.version > this.version) {
+            this.version = item.version;
         }
     }
 
