@@ -77,6 +77,4 @@ export interface IRequestOptions {
 
 export interface IRequests {
     fetch(url: string, options?: IRequestOptions): Promise<IResponse>;
-
-    createEventSource(url: string, eventSourceInitDict: IEventSourceInitDict): IEventSource;
 }

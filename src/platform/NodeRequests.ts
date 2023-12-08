@@ -5,32 +5,13 @@ import * as http from "http";
 import { IResponse, IRequests, IRequestOptions } from "./IRequests";
 import NodeResponse from "./NodeResponse";
 
-function createAgent(
-  isSecure: boolean
-): https.Agent | http.Agent | undefined {
-  const options: https.AgentOptions & { [index: string]: any } = {
-    abc: "abc"
-  };
-
-  // Node does not take kindly to undefined keys.
-  Object.keys(options).forEach((key) => {
-    if (options[key] === undefined) {
-      delete options[key];
-    }
-  });
-
-  return new (isSecure ? https : http).Agent(options);
-}
-
 export default class NodeRequests implements IRequests {
-  private agent: https.Agent | http.Agent | undefined;
 
-  constructor(logger?: ILogger) {
+  constructor() {
   }
 
   fetch(url: string, options: IRequestOptions = {}): Promise<IResponse> {
     const isSecure = url.startsWith('https://');
-    const agent = createAgent(isSecure);
     const impl = isSecure ? https : http;
 
     return new Promise((resolve, reject) => {
@@ -39,8 +20,7 @@ export default class NodeRequests implements IRequests {
         {
           timeout: options.timeout,
           headers: options.headers,
-          method: options.method,
-          agent: this.agent,
+          method: options.method
         },
         (res) => resolve(new NodeResponse(res)),
       );
@@ -55,12 +35,5 @@ export default class NodeRequests implements IRequests {
 
       req.end();
     });
-  }
-
-  createEventSource(
-    url: string,
-    eventSourceInitDict: IEventSourceInitDict,
-  ): IEventSource {
-    return {} as IEventSource;
   }
 }

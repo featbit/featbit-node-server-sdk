@@ -4,7 +4,7 @@ import { ILogger } from "../logging/Logger";
 import Configuration from "../Configuration";
 import DataSourceUpdates from "../data_sources/DataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
-import { PollingErrorHandler } from "./types";
+import { PollingErrorHandler, StreamResponseEventType } from "./types";
 import Requestor from "./Requestor";
 import { httpErrorMessage } from "../utils/http";
 import VersionedDataKinds from "../store/VersionedDataKinds";
@@ -45,7 +45,7 @@ export default class PollingProcessor implements IStreamProcessor {
     this.logger?.debug('Polling FeatBit for feature flag updates');
     this.requestor.requestAllData((err, body) => {
       const elapsed = Date.now() - startTime;
-      const sleepFor = Math.max(this.pollInterval * 1000 - elapsed, 0);
+      const sleepFor = Math.max(this.pollInterval - elapsed, 0);
 
       this.logger?.debug('Elapsed: %d ms, sleeping for %d ms', elapsed, sleepFor);
       if (err) {
@@ -60,16 +60,15 @@ export default class PollingProcessor implements IStreamProcessor {
         }
         this.logger?.warn(httpErrorMessage(err, 'polling request', 'will retry'));
       } else if (body) {
-        const parsed = deserializePoll(body);
-        if (!parsed) {
-          // We could not parse this JSON. Report the problem and fallthrough to
-          // start another poll.
-          reportJsonError(body);
-        } else {
+        const message = JSON.parse(body);
+        if (message.messageType === 'data-sync') {
           const initData = {
-            [VersionedDataKinds.Features.namespace]: parsed.flags,
-            [VersionedDataKinds.Segments.namespace]: parsed.segments,
+            [VersionedDataKinds.Features.namespace]: message.data.featureFlags,
+            [VersionedDataKinds.Segments.namespace]: message.data.segments,
           };
+
+          this.logger?.debug("init store with data:", initData);
+
           this.featureStore.init(initData, () => {
             this.initSuccessHandler();
             // Triggering the next poll after the init has completed.
@@ -77,10 +76,11 @@ export default class PollingProcessor implements IStreamProcessor {
               this.poll();
             }, sleepFor);
           });
-          // The poll will be triggered by  the feature store initialization
-          // completing.
-          return;
         }
+
+        // The poll will be triggered by  the feature store initialization
+        // completing.
+        return;
       }
 
       // Falling through, there was some type of error and we need to trigger
