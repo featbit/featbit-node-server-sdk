@@ -5,14 +5,32 @@ import * as http from "http";
 import { IResponse, IRequests, IRequestOptions } from "./IRequests";
 import NodeResponse from "./NodeResponse";
 
+function createAgent(
+  isSecure: boolean
+): https.Agent | http.Agent | undefined {
+  const options: https.AgentOptions & { [index: string]: any } = {
+    abc: "abc"
+  };
+
+  // Node does not take kindly to undefined keys.
+  Object.keys(options).forEach((key) => {
+    if (options[key] === undefined) {
+      delete options[key];
+    }
+  });
+
+  return new (isSecure ? https : http).Agent(options);
+}
+
 export default class NodeRequests implements IRequests {
   private agent: https.Agent | http.Agent | undefined;
 
-  constructor() {
+  constructor(logger?: ILogger) {
   }
 
   fetch(url: string, options: IRequestOptions = {}): Promise<IResponse> {
     const isSecure = url.startsWith('https://');
+    const agent = createAgent(isSecure);
     const impl = isSecure ? https : http;
 
     return new Promise((resolve, reject) => {

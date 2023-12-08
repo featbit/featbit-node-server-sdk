@@ -25,7 +25,7 @@ const validations: Record<string, TypeValidator> = {
     baseUri: TypeValidators.String,
     streamUri: TypeValidators.String,
     eventsUri: TypeValidators.String,
-    timeout: TypeValidators.Number,
+    webSocketHandshakeTimeout: TypeValidators.Number,
     capacity: TypeValidators.Number,
     logger: TypeValidators.Object,
     featureStore: TypeValidators.ObjectOrFactory,
@@ -57,11 +57,9 @@ const validations: Record<string, TypeValidator> = {
 export const defaultValues: ValidatedOptions = {
     sdkKey: '',
     baseUri: '',
-    streamUri: '',
-    eventsUri: '',
     stream: true,
     sendEvents: true,
-    timeout: 5,
+    webSocketHandshakeTimeout: undefined,
     capacity: 10000,
     flushInterval: 5,
     pollInterval: 30,
@@ -116,29 +114,11 @@ function validateTypesAndNames(options: IOptions): {
 }
 
 function validateEndpoints(options: IOptions, validatedOptions: ValidatedOptions) {
-    const { baseUri, streamUri, eventsUri } = options;
-    const streamingEndpointSpecified = streamUri !== undefined && streamUri !== null;
-    const pollingEndpointSpecified = baseUri !== undefined && baseUri !== null;
-    const eventEndpointSpecified = eventsUri !== undefined && eventsUri !== null;
+    const { baseUri } = options;
+    const baseUriSpecified = baseUri !== undefined && baseUri !== null;
 
-    if (
-        streamingEndpointSpecified === pollingEndpointSpecified &&
-        streamingEndpointSpecified === eventEndpointSpecified
-    ) {
-        // Either everything is default, or everything is set.
-        return;
-    }
-
-    if (!streamingEndpointSpecified && validatedOptions.stream) {
-        validatedOptions.logger?.warn(OptionMessages.partialEndpoint('streamUri'));
-    }
-
-    if (!pollingEndpointSpecified) {
+    if (!baseUriSpecified && !validatedOptions.offline) {
         validatedOptions.logger?.warn(OptionMessages.partialEndpoint('baseUri'));
-    }
-
-    if (!eventEndpointSpecified && validatedOptions.sendEvents) {
-        validatedOptions.logger?.warn(OptionMessages.partialEndpoint('eventsUri'));
     }
 }
 
@@ -149,7 +129,7 @@ export default class Configuration {
 
     public readonly eventsCapacity: number;
 
-    public readonly timeout: number;
+    public readonly webSocketHandshakeTimeout?: number;
 
     public readonly logger?: ILogger;
 
@@ -185,14 +165,12 @@ export default class Configuration {
         validateEndpoints(options, validatedOptions);
 
         this.serviceEndpoints = new ServiceEndpoints(
-            validatedOptions.streamUri,
-            validatedOptions.baseUri,
-            validatedOptions.eventsUri
+          validatedOptions.baseUri
         );
 
         this.sdkKey = validatedOptions.sdkKey;
         this.eventsCapacity = validatedOptions.capacity;
-        this.timeout = validatedOptions.timeout;
+        this.webSocketHandshakeTimeout = validatedOptions.webSocketHandshakeTimeout;
 
         this.flushInterval = validatedOptions.flushInterval;
         this.pollInterval = validatedOptions.pollInterval;

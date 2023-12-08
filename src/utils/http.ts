@@ -1,8 +1,29 @@
+import { IInfo } from "../platform/Info";
 
 export type Headers = {
     authorization?: string;
     'user-agent': string;
 };
+
+export function defaultHeaders(
+  sdkKey: string,
+  info: IInfo,
+  includeAuthorizationHeader: boolean = true,
+): Headers {
+    const { userAgentBase, version} = info.sdkData();
+
+    const headers: Headers = {
+        'user-agent': `${userAgentBase ?? 'NodeJSClient'}/${version}`,
+    };
+
+    // edge sdks sets this to false because they use the clientSideID
+    // and they don't need the authorization header
+    if (includeAuthorizationHeader) {
+        headers.authorization = sdkKey;
+    }
+
+    return headers;
+}
 
 export function httpErrorMessage(
     err: {

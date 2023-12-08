@@ -15,20 +15,21 @@ class NodeWebSocket implements IWebSocket {
   private retryCounter = 0;
 
   constructor(
-    private streamingUri: string,
     private sdkKey: string,
+    private streamingUri: string,
     private logger: ILogger,
-    private getTimestamp: () => number) {
+    private getTimestamp: () => number,
+    private handshakeTimeout? : number) {
     this.emitter = new ClientEmitter();
   }
 
   connect() {
     let that = this;
     const startTime = Date.now();
-
     const url = this.streamingUri.replace(/^http/, 'ws') + `?type=server&token=${generateConnectionToken(this.sdkKey)}`;
     this.ws = new WebSocket(url, {
-      perMessageDeflate: false
+      perMessageDeflate: false,
+      handshakeTimeout: that.handshakeTimeout
     });
 
     // Connection opened

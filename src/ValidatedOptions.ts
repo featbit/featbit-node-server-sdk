@@ -6,11 +6,9 @@ import { IStreamProcessor } from "./streaming/StreamProcessor";
 export interface ValidatedOptions {
     sdkKey: string;
     baseUri: string;
-    streamUri: string;
-    eventsUri: string;
     stream: boolean;
     sendEvents: boolean;
-    timeout: number;
+    webSocketHandshakeTimeout?: number;
     capacity: number;
     flushInterval: number;
     pollInterval: number;

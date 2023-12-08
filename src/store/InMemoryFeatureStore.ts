@@ -61,6 +61,16 @@ export default class InMemoryFeatureStore implements IFeatureStore {
     init(allData: IFeatureStoreDataStorage, callback: () => void): void {
         this.initCalled = true;
         this.allData = allData as IFeatureStoreDataStorage;
+
+        this.version = 0;
+        Object.keys(allData).map(namespace => {
+            Object.entries(allData[namespace]).forEach(([_, item]) => {
+                if (item.version > this.version) {
+                    this.version = item.version;
+                }
+            })
+        });
+
         callback?.();
     }
 

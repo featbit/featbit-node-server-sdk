@@ -20,6 +20,8 @@ const reportJsonError = (
     errorHandler?.(new StreamingError('Malformed JSON data in event stream'));
 };
 
+const getTimestampFromDateTimeString = (dateTime: string): number => new Date(dateTime).getTime();
+
 class StreamingProcessor implements IStreamProcessor {
     private socket?: IWebSocketWithEvents;
     private readonly streamUri: string;
@@ -32,7 +34,8 @@ class StreamingProcessor implements IStreamProcessor {
         sdkKey: string,
         clientContext: ClientContext,
         private readonly store: IFeatureStore,
-        private readonly listeners: Map<EventName, ProcessStreamResponse>
+        private readonly listeners: Map<EventName, ProcessStreamResponse>,
+        webSocketHandshakeTimeout?: number
     ) {
         const { basicConfiguration, platform } = clientContext;
         const { logger } = basicConfiguration;
@@ -42,10 +45,11 @@ class StreamingProcessor implements IStreamProcessor {
         this.requests = requests;
         this.streamUri = basicConfiguration.serviceEndpoints.streaming;
         this.socket = new NodeWebSocket(
-          this.streamUri,
           sdkKey,
+          this.streamUri,
           this.logger!,
-          () => store.version);
+          () => store.version,
+          webSocketHandshakeTimeout);
 
         this.listeners.forEach(({ deserializeData, processJson }, eventName) => {
             this.socket?.addListener(eventName, (event) => {
@@ -54,7 +58,11 @@ class StreamingProcessor implements IStreamProcessor {
                 if (event?.data) {
                     this.logger?.debug(event.data);
                     const { featureFlags, segments } = event.data;
-                    processJson({ flags: featureFlags, segments });
+
+                    processJson({
+                        flags: featureFlags.map((f:any) => ({...f, version: getTimestampFromDateTimeString(f.updatedAt)})),
+                        segments: segments.map((s:any) => ({...s, version: getTimestampFromDateTimeString(s.updatedAt)}))
+                    });
                 }
             });
         })

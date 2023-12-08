@@ -95,7 +95,8 @@ export class FeatBitClient implements IFeatBitClient {
           this.config.sdkKey,
           clientContext,
           this.featureStore,
-          listeners
+          listeners,
+          this.config.webSocketHandshakeTimeout
         )
         : new PollingProcessor(
           config,

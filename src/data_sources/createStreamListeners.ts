@@ -11,6 +11,7 @@ import {
 } from "../store/serialization";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import { EventName, ProcessStreamResponse } from "../platform/IEventSource";
+import { IFeatureStoreDataStorage } from "../subsystems/FeatureStore";
 
 export const createPutListener = (
     dataSourceUpdates: IDataSourceUpdates,
@@ -19,7 +20,7 @@ export const createPutListener = (
 ) => ({
     deserializeData: deserializeAll,
     processJson: async ({ flags, segments }: FlagsAndSegments) => {
-        const initData = {
+        const initData: IFeatureStoreDataStorage = {
             [VersionedDataKinds.Features.namespace]: flags,
             [VersionedDataKinds.Segments.namespace]: segments,
         };

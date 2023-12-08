@@ -3,11 +3,14 @@ import Configuration from "../Configuration";
 import { IInfo } from "../platform/Info";
 import { IRequestOptions, IRequests, IResponse } from "../platform/IRequests";
 import { StreamingError } from "../errors";
+import { defaultHeaders } from "../utils/http";
 
 /**
  * @internal
  */
 export default class Requestor implements IRequestor {
+  private readonly headers: Record<string, string>;
+
   private readonly uri: string;
 
   private readonly eTagCache: Record<
@@ -24,7 +27,8 @@ export default class Requestor implements IRequestor {
     info: IInfo,
     private readonly requests: IRequests,
   ) {
-    this.uri = `${config.serviceEndpoints.polling}/sdk/latest-all`;
+    this.headers = defaultHeaders(sdkKey, info);
+    this.uri = `${config.serviceEndpoints.polling}/server/latest-all`;
   }
 
   /**
@@ -63,7 +67,8 @@ export default class Requestor implements IRequestor {
 
   async requestAllData(cb: (err: any, body: any) => void) {
     const options: IRequestOptions = {
-      method: 'GET'
+      method: 'GET',
+      headers: this.headers,
     };
     try {
       const { res, body } = await this.requestWithETagCache(this.uri, options);

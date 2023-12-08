@@ -12,12 +12,12 @@ export default class ServiceEndpoints {
     public readonly events: string;
 
     public constructor(
-        streaming: string,
-        polling: string,
-        events: string
+        baseUri: string
     ) {
-        this.streaming = canonicalizeUri(streaming);
-        this.polling = canonicalizeUri(polling);
-        this.events = canonicalizeUri(events);
+        const canonicalizedUri = canonicalizeUri(baseUri);
+
+        this.streaming = `${canonicalizedUri}/streaming`;
+        this.polling = `${canonicalizedUri}/api/public/sdk/server/latest-all`;
+        this.events = `${canonicalizedUri}/xxx`;
     }
 }
