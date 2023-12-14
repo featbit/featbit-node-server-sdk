@@ -138,7 +138,8 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
             });
         };
         if (checkForChanges) {
-            this.featureStore.get(kind, key, doUpsert);
+            const item = this.featureStore.get(kind, key);
+            doUpsert(item);
         } else {
             doUpsert();
         }

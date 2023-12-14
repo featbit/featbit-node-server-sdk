@@ -30,3 +30,7 @@ export function generateConnectionToken(text: string): string {
 }
 
 /********************** encode text end *****************************/
+
+export function getTimestampFromDateTimeString(dateTime: string): number {
+  return new Date(dateTime).getTime();
+}

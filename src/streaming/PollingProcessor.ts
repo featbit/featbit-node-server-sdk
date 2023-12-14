@@ -9,6 +9,7 @@ import Requestor from "./Requestor";
 import { httpErrorMessage } from "../utils/http";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import { deserializePoll } from "../store/serialization";
+import { getTimestampFromDateTimeString } from "./utils";
 
 export default class PollingProcessor implements IStreamProcessor {
   private stopped = false;
@@ -63,8 +64,14 @@ export default class PollingProcessor implements IStreamProcessor {
         const message = JSON.parse(body);
         if (message.messageType === 'data-sync') {
           const initData = {
-            [VersionedDataKinds.Features.namespace]: message.data.featureFlags,
-            [VersionedDataKinds.Segments.namespace]: message.data.segments,
+            [VersionedDataKinds.Features.namespace]: message.data.featureFlags.reduce((acc: any, cur: any) => {
+              acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
+              return acc;
+            }, {}),
+            [VersionedDataKinds.Segments.namespace]: message.data.segments.reduce((acc: any, cur: any) => {
+              acc[cur.id] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
+              return acc;
+            }, {}),
           };
 
           this.logger?.debug("init store with data:", initData);

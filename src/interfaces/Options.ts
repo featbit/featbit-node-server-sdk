@@ -1,5 +1,5 @@
 import { ICache } from "./Cache";
-import { IContext } from "./Context";
+import { IUser } from "./User";
 import { ILogger } from "../logging/Logger";
 
 export interface IOptions {
@@ -12,7 +12,7 @@ export interface IOptions {
 
     cache?: ICache;
 
-    context?: IContext;
+    context?: IUser;
 
     /**
      * Whether streaming mode should be used to receive flag updates.

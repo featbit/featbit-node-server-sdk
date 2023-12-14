@@ -1,9 +1,7 @@
-import { ContextKind } from "../constants";
 import { IContextProperty } from "./ContextProperty";
 
-export interface IContext {
-    kind: ContextKind;
+export interface IUser {
     name: string;
-    key: string;
+    keyId: string;
     customizedProperties: IContextProperty[];
 }

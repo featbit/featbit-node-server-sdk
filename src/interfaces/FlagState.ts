@@ -1,5 +1,5 @@
 import { FlagValue } from "../data/FlagValue";
-import { EvaluationReason } from "./EvaluationReason";
+import { EvaluationReason } from "../evaluation/EvaluationReason";
 import { IFlagSet } from "./FlagSet";
 
 export interface IFlagsState {

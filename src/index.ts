@@ -1,6 +1,6 @@
-import { FeatBitClient } from "./FeatBitClient";
 import { IOptions } from "./interfaces/Options";
 import FeatBitClientNode from "./FeatBitClientNode";
+import { IFeatBitClientWithEvents } from "./interfaces/FeatBitClient";
 
 export * from './FeatBitClient'
 
@@ -21,6 +21,6 @@ export * from './FeatBitClient'
  * @return
  *   The new {@link LDClient} instance.
  */
-export function init(options: IOptions = {}): FeatBitClient {
+export function init(options: IOptions = {}): IFeatBitClientWithEvents {
   return new FeatBitClientNode(options);
 }

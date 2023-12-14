@@ -54,16 +54,16 @@ export interface IFeatureStore {
      * @param kind
      *   The type of data to be accessed. The store should not make any assumptions about the format
      *   of the data, but just return a JSON object. The actual type of this parameter is
-     *   {@link interfaces.DataKind}.
+     *   {@link DataKind}.
      *
      * @param key
      *   The unique key of the entity within the specified collection.
      *
      * @param callback
      *   Will be called with the retrieved entity, or null if not found. The actual type of the result
-     *   value is {@link interfaces.VersionedData}.
+     *   value is {@link VersionedData}.
      */
-    get(kind: IDataKind, key: string, callback: (res: IFeatureStoreItem | null) => void): void;
+    get(kind: IDataKind, key: string): IFeatureStoreItem | null
 
     /**
      * Get all entities from a collection.
@@ -147,7 +147,7 @@ export interface IFeatureStore {
      * @param callback
      *   Will be called back with the boolean result.
      */
-    initialized(callback: (isInitialized: boolean) => void): void;
+    initialized(): boolean;
 
     /**
      * Releases any resources being used by the feature store.

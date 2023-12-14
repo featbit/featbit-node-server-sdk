@@ -5,17 +5,25 @@ import Configuration from "./Configuration";
 import { ILogger } from "./logging/Logger";
 import ClientContext from "./options/ClientContext";
 import DataSourceUpdates from "./data_sources/DataSourceUpdates";
-import AsyncStoreFacade from "./store/AsyncStoreFacade";
 import { IFeatureStore } from "./subsystems/FeatureStore";
 import { createStreamListeners } from "./data_sources/createStreamListeners";
-import { IContext } from "./interfaces/Context";
-import { EvaluationDetail } from "./interfaces/EvaluationDetail";
+import { IUser } from "./interfaces/User";
+import { EvalDetail } from "./evaluation/EvalDetail";
 import { IFlagsStateOptions } from "./interfaces/FlagsStateOptions";
 import { IFlagsState } from "./interfaces/FlagState";
 import StreamingProcessor from "./streaming/StreamingProcessor";
 import PollingProcessor from "./streaming/PollingProcessor";
 import Requestor from "./streaming/Requestor";
 import { IStreamProcessor } from "./streaming/StreamProcessor";
+import { IFlag } from "./evaluation/data/Flag";
+import VersionedDataKinds from "./store/VersionedDataKinds";
+import Evaluator from "./evaluation/Evaluator";
+import { ISegment } from "./evaluation/data/Segment";
+import { Queries } from "./evaluation/Queries";
+import ReasonKinds from "./evaluation/ReasonKinds";
+import { ClientError } from "./errors";
+import Context from "./Context";
+import { IConvertResult, ValueConverters } from "./ValueConverters";
 
 enum ClientState {
   Initializing,
@@ -39,15 +47,17 @@ export class FeatBitClient implements IFeatBitClient {
 
   private featureStore: IFeatureStore;
 
-  private asyncFeatureStore: AsyncStoreFacade;
-
   private updateProcessor?: IStreamProcessor;
+
+  private evaluator: Evaluator;
 
   private initResolve?: (value: IFeatBitClient | PromiseLike<IFeatBitClient>) => void;
 
   private initReject?: (err: Error) => void;
 
   private rejectionReason: Error | undefined;
+
+  private initializedPromise?: Promise<IFeatBitClient>;
 
   private logger?: ILogger;
 
@@ -80,10 +90,20 @@ export class FeatBitClient implements IFeatBitClient {
 
     const clientContext = new ClientContext(config.sdkKey, config, platform);
     const featureStore = config.featureStoreFactory(clientContext);
-    this.asyncFeatureStore = new AsyncStoreFacade(featureStore);
     const dataSourceUpdates = new DataSourceUpdates(featureStore, hasEventListeners, onUpdate);
 
     this.featureStore = featureStore;
+
+    const queries: Queries = {
+      getFlag(key: string): IFlag | null {
+        return featureStore.get(VersionedDataKinds.Features, key) as IFlag;
+      },
+      getSegment(key: string): ISegment | null {
+        return featureStore.get(VersionedDataKinds.Segments, key) as ISegment;
+      }
+    };
+
+    this.evaluator = new Evaluator(this.platform, queries);
 
     const listeners = createStreamListeners(dataSourceUpdates, this.logger, {
       put: () => this.initSuccess(),
@@ -125,35 +145,83 @@ export class FeatBitClient implements IFeatBitClient {
       }
   }
 
+  initialized(): boolean {
+    return this.state === ClientState.Initialized;
+  }
+
   waitForInitialization(): Promise<IFeatBitClient> {
-    throw new Error("Method not implemented.");
+    // An initialization promise is only created if someone is going to use that promise.
+    // If we always created an initialization promise, and there was no call waitForInitialization
+    // by the time the promise was rejected, then that would result in an unhandled promise
+    // rejection.
+
+    // Initialization promise was created by a previous call to waitForInitialization.
+    if (this.initializedPromise) {
+      return this.initializedPromise;
+    }
+
+    // Initialization completed before waitForInitialization was called, so we have completed
+    // and there was no promise. So we make a resolved promise and return it.
+    if (this.state === ClientState.Initialized) {
+      this.initializedPromise = Promise.resolve(this);
+      return this.initializedPromise;
+    }
+
+    // Initialization failed before waitForInitialization was called, so we have completed
+    // and there was no promise. So we make a rejected promise and return it.
+    if (this.state === ClientState.Failed) {
+      this.initializedPromise = Promise.reject(this.rejectionReason);
+      return this.initializedPromise;
+    }
+
+    if (!this.initializedPromise) {
+      this.initializedPromise = new Promise((resolve, reject) => {
+        this.initResolve = resolve;
+        this.initReject = reject;
+      });
+    }
+    return this.initializedPromise;
   }
 
-  variation(key: string, context: IContext, defaultValue: any, callback?: ((err: any, res: any) => void) | undefined): Promise<any> {
-    throw new Error("Method not implemented.");
+  boolVariation(
+    key: string,
+    user: IUser,
+    defaultValue: boolean
+  ): boolean {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.bool).value;
   }
 
-  variationDetail(key: string, context: IContext, defaultValue: any, callback?: ((err: any, res: EvaluationDetail) => void) | undefined): Promise<EvaluationDetail> {
-    throw new Error("Method not implemented.");
+  boolVariationDetail(
+    key: string,
+    user: IUser,
+    defaultValue: any
+  ): EvalDetail {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.bool);
   }
 
-  allFlagsState(context: IContext, options?: IFlagsStateOptions | undefined, callback?: ((err: Error | null, res: IFlagsState | null) => void) | undefined): Promise<IFlagsState> {
+  allFlagsState(
+    user: IUser,
+    options?: IFlagsStateOptions | undefined,
+    callback?: ((err: Error | null, res: IFlagsState | null) => void) | undefined
+  ): Promise<IFlagsState> {
     throw new Error("Method not implemented.");
   }
 
   close(): void {
-    throw new Error("Method not implemented.");
+    //this.eventProcessor.close();
+    this.updateProcessor?.close();
+    this.featureStore.close();
   }
 
   isOffline(): boolean {
+    return this.config.offline;
+  }
+
+  track(key: string, context: IUser, data?: any, metricValue?: number | undefined): void {
     throw new Error("Method not implemented.");
   }
 
-  track(key: string, context: IContext, data?: any, metricValue?: number | undefined): void {
-    throw new Error("Method not implemented.");
-  }
-
-  identify(context: IContext): void {
+  identify(context: IUser): void {
     throw new Error("Method not implemented.");
   }
 
@@ -161,8 +229,47 @@ export class FeatBitClient implements IFeatBitClient {
     throw new Error("Method not implemented.");
   }
 
-  initialized(): boolean {
-    return this.state === ClientState.Initialized;
+  private evaluateCore<TValue>(
+    flagKey: string,
+    user: IUser,
+    defaultValue: TValue,
+    typeConverter: (value: string) => IConvertResult<TValue>
+  ): EvalDetail {
+    if (!this.initialized()) {
+      this.logger?.warn(
+        'Variation called before FeatBit client initialization completed (did you wait for the' +
+        "'ready' event?) - using default value",
+      );
+
+      return { kind: ReasonKinds.ClientNotReady, reason: 'client not ready', value: defaultValue };
+    }
+
+    const context = Context.fromUser(user);
+    if (!context.valid) {
+      const error = new ClientError(
+        `${context.message ?? 'User not valid;'} returning default value.`,
+      );
+      this.onError(error);
+
+      return { kind: ReasonKinds.ClientNotReady, reason: error.message, value: defaultValue };
+    }
+
+    const evalResult = this.evaluator.evaluate(flagKey, context);
+
+    if (evalResult.kind === ReasonKinds.Error) {
+      // error happened when evaluate flag, return default value
+      const error = new ClientError(evalResult.reason!);
+      this.onError(error);
+
+      return { kind: evalResult.kind, reason: evalResult.reason, value: defaultValue };
+    }
+
+    // send event
+
+    const { isSucceeded, value } = typeConverter(evalResult.value!);
+    return isSucceeded
+      ? { kind: evalResult.kind, reason: evalResult.reason, value }
+      : { kind: ReasonKinds.WrongType, reason: 'type mismatch', value: defaultValue };
   }
 
   private dataSourceErrorHandler(e: any) {

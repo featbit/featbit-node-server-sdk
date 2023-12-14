@@ -8,6 +8,8 @@ import { IWebSocketWithEvents } from "../platform/IWebSocket";
 import { EventName, ProcessStreamResponse } from "../platform/IEventSource";
 import NodeWebSocket from "../platform/NodeWebSocket";
 import { IFeatureStore } from "../subsystems/FeatureStore";
+import { IFlag } from "../evaluation/data/Flag";
+import { getTimestampFromDateTimeString } from "./utils";
 
 const reportJsonError = (
     type: string,
@@ -19,8 +21,6 @@ const reportJsonError = (
     logger?.debug(`Invalid JSON follows: ${data}`);
     errorHandler?.(new StreamingError('Malformed JSON data in event stream'));
 };
-
-const getTimestampFromDateTimeString = (dateTime: string): number => new Date(dateTime).getTime();
 
 class StreamingProcessor implements IStreamProcessor {
     private socket?: IWebSocketWithEvents;
@@ -60,8 +60,14 @@ class StreamingProcessor implements IStreamProcessor {
                     const { featureFlags, segments } = event.data;
 
                     processJson({
-                        flags: featureFlags.map((f:any) => ({...f, version: getTimestampFromDateTimeString(f.updatedAt)})),
-                        segments: segments.map((s:any) => ({...s, version: getTimestampFromDateTimeString(s.updatedAt)}))
+                        flags: featureFlags.reduce((acc: any, cur: any) => {
+                            acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
+                            return acc;
+                        }, {}),
+                        segments: segments.reduce((acc: any, cur: any) => {
+                            acc[cur.id] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
+                            return acc;
+                        }, {})
                     });
                 }
             });

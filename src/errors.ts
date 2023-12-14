@@ -18,6 +18,13 @@ export class StreamingError extends Error {
     }
 }
 
+export class ClientError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'FeatBitClientError';
+    }
+}
+
 export function isHttpRecoverable(status: number) {
     if (status >= 400 && status < 500) {
         return status === 400 || status === 408 || status === 429;

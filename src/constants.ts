@@ -1,3 +1,1 @@
-export enum ContextKind {
-    User = "user",
-}
+export const EmptyString = '';

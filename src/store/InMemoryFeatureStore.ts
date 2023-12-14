@@ -34,17 +34,17 @@ export default class InMemoryFeatureStore implements IFeatureStore {
         }
     }
 
-    get(kind: IDataKind, key: string, callback: (res: IFeatureStoreItem | null) => void): void {
+    get(kind: IDataKind, key: string): IFeatureStoreItem | null {
         const items = this.allData[kind.namespace];
         if (items) {
             if (Object.prototype.hasOwnProperty.call(items, key)) {
                 const item = items[key];
                 if (item && !item.deleted) {
-                    return callback?.(item);
+                    return item;
                 }
             }
         }
-        return callback?.(null);
+        return null;
     }
 
     all(kind: IDataKind, callback: (res: IFeatureStoreKindData) => void): void {
@@ -59,7 +59,6 @@ export default class InMemoryFeatureStore implements IFeatureStore {
     }
 
     init(allData: IFeatureStoreDataStorage, callback: () => void): void {
-        this.initCalled = true;
         this.allData = allData as IFeatureStoreDataStorage;
 
         this.version = 0;
@@ -71,6 +70,7 @@ export default class InMemoryFeatureStore implements IFeatureStore {
             })
         });
 
+        this.initCalled = true;
         callback?.();
     }
 
@@ -85,8 +85,8 @@ export default class InMemoryFeatureStore implements IFeatureStore {
         callback?.();
     }
 
-    initialized(callback: (isInitialized: boolean) => void): void {
-        return callback?.(this.initCalled);
+    initialized(): boolean {
+        return this.initCalled;
     }
 
     /* eslint-disable class-methods-use-this */
