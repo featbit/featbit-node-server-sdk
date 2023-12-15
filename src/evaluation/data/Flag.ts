@@ -11,4 +11,5 @@ export interface IFlag {
     variations: IVariation[];
     disabledVariationId: string;
     rules: ITargetRule[];
+    updatedAt: string;
 }

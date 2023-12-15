@@ -8,7 +8,7 @@ export interface IVersionedDataKind extends IDataKind {
 
 export default class VersionedDataKinds {
     static readonly Features: IVersionedDataKind = {
-        namespace: 'features',
+        namespace: 'flags',
         streamApiPath: '/flags/',
     };
 

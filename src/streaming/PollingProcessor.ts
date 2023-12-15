@@ -74,8 +74,6 @@ export default class PollingProcessor implements IStreamProcessor {
             }, {}),
           };
 
-          this.logger?.debug("init store with data:", initData);
-
           this.featureStore.init(initData, () => {
             this.initSuccessHandler();
             // Triggering the next poll after the init has completed.

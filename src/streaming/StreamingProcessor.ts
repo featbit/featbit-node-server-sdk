@@ -58,17 +58,8 @@ class StreamingProcessor implements IStreamProcessor {
                 if (event?.data) {
                     this.logger?.debug(event.data);
                     const { featureFlags, segments } = event.data;
-
-                    processJson({
-                        flags: featureFlags.reduce((acc: any, cur: any) => {
-                            acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
-                            return acc;
-                        }, {}),
-                        segments: segments.reduce((acc: any, cur: any) => {
-                            acc[cur.id] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
-                            return acc;
-                        }, {})
-                    });
+                    const data = deserializeData(featureFlags, segments);
+                    processJson(data);
                 }
             });
         })

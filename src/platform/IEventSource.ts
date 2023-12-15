@@ -1,7 +1,10 @@
+import { IFlag } from "../evaluation/data/Flag";
+import { ISegment } from "../evaluation/data/Segment";
+
 export type EventName = 'delete' | 'patch' | 'ping' | 'put';
 export type EventListener = (event?: { data?: any }) => void;
 export type ProcessStreamResponse = {
-    deserializeData: (data: string) => any;
+    deserializeData: (flags: IFlag[], segments: ISegment[]) => any;
     processJson: (json: any) => void;
 };
 

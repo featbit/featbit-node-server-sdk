@@ -9,9 +9,12 @@ import {
     deserializeDelete,
     IDeleteData, FlagsAndSegments
 } from "../store/serialization";
-import VersionedDataKinds from "../store/VersionedDataKinds";
+import VersionedDataKinds, { IVersionedDataKind } from "../store/VersionedDataKinds";
 import { EventName, ProcessStreamResponse } from "../platform/IEventSource";
 import { IFeatureStoreDataStorage } from "../subsystems/FeatureStore";
+import { IFlag } from "../evaluation/data/Flag";
+import { ISegment } from "../evaluation/data/Segment";
+import { getTimestampFromDateTimeString } from "../streaming/utils";
 
 export const createPutListener = (
     dataSourceUpdates: IDataSourceUpdates,
@@ -36,41 +39,14 @@ export const createPatchListener = (
     onPatchCompleteHandler: VoidFunction = () => {},
 ) => ({
     deserializeData: deserializePatch,
-    processJson: async ({ data, kind, path }: IPatchData) => {
-        if (kind) {
-            const key = VersionedDataKinds.getKeyFromPath(kind, path);
-            if (key) {
-                logger?.debug(`Updating ${key} in ${kind.namespace}`);
-                dataSourceUpdates.upsert(kind, data, onPatchCompleteHandler);
-            }
-        }
+    processJson: async (data: IPatchData[]) => {
+        data?.forEach(item => {
+            logger?.debug(`Updating ${item.data.key} in ${VersionedDataKinds.Features.namespace}`);
+            dataSourceUpdates.upsert(item.kind, item.data, onPatchCompleteHandler);
+        })
     },
 });
 
-export const createDeleteListener = (
-    dataSourceUpdates: IDataSourceUpdates,
-    logger?: ILogger,
-    onDeleteCompleteHandler: VoidFunction = () => {},
-) => ({
-    deserializeData: deserializeDelete,
-    processJson: async ({ kind, path, version }: IDeleteData) => {
-        if (kind) {
-            const key = VersionedDataKinds.getKeyFromPath(kind, path);
-            if (key) {
-                logger?.debug(`Deleting ${key} in ${kind.namespace}`);
-                dataSourceUpdates.upsert(
-                    kind,
-                    {
-                        key,
-                        version,
-                        deleted: true,
-                    },
-                    onDeleteCompleteHandler,
-                );
-            }
-        }
-    },
-});
 
 export const createStreamListeners = (
     dataSourceUpdates: IDataSourceUpdates,
@@ -84,9 +60,5 @@ export const createStreamListeners = (
     const listeners = new Map<EventName, ProcessStreamResponse>();
     listeners.set('put', createPutListener(dataSourceUpdates, logger, onCompleteHandlers?.put));
     listeners.set('patch', createPatchListener(dataSourceUpdates, logger, onCompleteHandlers?.patch));
-    listeners.set(
-        'delete',
-        createDeleteListener(dataSourceUpdates, logger, onCompleteHandlers?.delete),
-    );
     return listeners;
 };

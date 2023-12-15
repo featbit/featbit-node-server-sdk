@@ -3,6 +3,7 @@ import { ISegment } from "../evaluation/data/Segment";
 import { IRollout } from "../evaluation/data/Rollout";
 import VersionedDataKinds, { IVersionedDataKind } from "./VersionedDataKinds";
 import { IVersionedData } from "../interfaces/VersionedData";
+import { getTimestampFromDateTimeString } from "../streaming/utils";
 
 /**
  * @internal
@@ -31,93 +32,12 @@ export interface IDeleteData extends Omit<IVersionedData, 'key'> {
     kind?: IVersionedDataKind;
 }
 
+type VersionedFlag = IVersionedData & IFlag;
+type VersionedSegment = IVersionedData & ISegment;
+
 export interface IPatchData {
-    path: string;
-    data: IFlag | ISegment;
-    kind?: IVersionedDataKind;
-}
-
-function processRollout(rollout?: IRollout) {
-    // TODO
-}
-
-/**
- * @internal
- */
-export function processFlag(flag: IFlag) {
-    // TODO
-    // if (flag.fallthrough && flag.fallthrough.rollout) {
-    //     const rollout = flag.fallthrough.rollout!;
-    //     processRollout(rollout);
-    // }
-    // flag?.rules?.forEach((rule) => {
-    //     processRollout(rule.rollout);
-    //
-    //     rule?.clauses?.forEach((clause) => {
-    //         if (clause && clause.attribute) {
-    //             // Clauses before U2C would have had literals for attributes.
-    //             // So use the contextKind to indicate if this is new or old data.
-    //             clause.attributeReference = new AttributeReference(clause.attribute, !clause.contextKind);
-    //         } else if (clause) {
-    //             clause.attributeReference = AttributeReference.invalidReference;
-    //         }
-    //     });
-    // });
-}
-
-/**
- * @internal
- */
-export function processSegment(segment: ISegment) {
-    // TODO
-    // if (segment?.included?.length && segment.included.length > TARGET_LIST_ARRAY_CUTOFF) {
-    //     segment.generated_includedSet = new Set(segment.included);
-    //     delete segment.included;
-    // }
-    // if (segment?.excluded?.length && segment.excluded.length > TARGET_LIST_ARRAY_CUTOFF) {
-    //     segment.generated_excludedSet = new Set(segment.excluded);
-    //     delete segment.excluded;
-    // }
-    //
-    // if (segment?.includedContexts?.length) {
-    //     segment.includedContexts.forEach((target) => {
-    //         if (target?.values?.length && target.values.length > TARGET_LIST_ARRAY_CUTOFF) {
-    //             target.generated_valuesSet = new Set(target.values);
-    //             // Currently typing is non-optional, so we don't delete it.
-    //             target.values = [];
-    //         }
-    //     });
-    // }
-    //
-    // if (segment?.excludedContexts?.length) {
-    //     segment.excludedContexts.forEach((target) => {
-    //         if (target?.values?.length && target.values.length > TARGET_LIST_ARRAY_CUTOFF) {
-    //             target.generated_valuesSet = new Set(target.values);
-    //             // Currently typing is non-optional, so we don't delete it.
-    //             target.values = [];
-    //         }
-    //     });
-    // }
-    //
-    // segment?.rules?.forEach((rule) => {
-    //     if (rule.bucketBy) {
-    //         // Rules before U2C would have had literals for attributes.
-    //         // So use the rolloutContextKind to indicate if this is new or old data.
-    //         rule.bucketByAttributeReference = new AttributeReference(
-    //             rule.bucketBy,
-    //             !rule.rolloutContextKind,
-    //         );
-    //     }
-    //     rule?.clauses?.forEach((clause) => {
-    //         if (clause && clause.attribute) {
-    //             // Clauses before U2C would have had literals for attributes.
-    //             // So use the contextKind to indicate if this is new or old data.
-    //             clause.attributeReference = new AttributeReference(clause.attribute, !clause.contextKind);
-    //         } else if (clause) {
-    //             clause.attributeReference = AttributeReference.invalidReference;
-    //         }
-    //     });
-    // });
+    data: VersionedFlag | VersionedSegment;
+    kind: IVersionedDataKind;
 }
 
 function tryParse(data: string): any {
@@ -131,27 +51,27 @@ function tryParse(data: string): any {
 /**
  * @internal
  */
-export function deserializeAll(data: string): IAllData | undefined {
-    // The reviver lacks the context of where a different key exists, being as it
-    // starts at the deepest level and works outward. As a result attributes are
-    // translated into references after the initial parsing. That way we can be sure
-    // they are the correct ones. For instance if we added 'attribute' as a new field to
-    // the schema for something that was NOT an attribute reference, then we wouldn't
-    // want to construct an attribute reference out of it.
-    const parsed = tryParse(data) as IAllData;
+export function deserializeAll(flags: IFlag[], segments: ISegment[]): FlagsAndSegments {
+    const result = {
+        [VersionedDataKinds.Features.namespace]: {},
+        [VersionedDataKinds.Segments.namespace]: {}
+    };
 
-    if (!parsed) {
-        return undefined;
+    if(flags?.length) {
+        result[VersionedDataKinds.Features.namespace] = flags.reduce((acc: any, cur: any) => {
+            acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
+            return acc;
+        }, {});
     }
 
-    Object.values(parsed?.data?.flags || []).forEach((flag) => {
-        processFlag(flag);
-    });
+    if(segments?.length) {
+        result[VersionedDataKinds.Segments.namespace] = segments.reduce((acc: any, cur: any) => {
+            acc[cur.id] = {...cur, key: cur.id, version: getTimestampFromDateTimeString(cur.updatedAt)};
+            return acc;
+        }, {});
+    }
 
-    Object.values(parsed?.data?.segments || []).forEach((segment) => {
-        processSegment(segment);
-    });
-    return parsed;
+    return result as any as FlagsAndSegments;
 }
 
 
@@ -170,35 +90,32 @@ export function deserializePoll(data: string): FlagsAndSegments | undefined {
         return undefined;
     }
 
-    Object.values(parsed?.flags || []).forEach((flag) => {
-        processFlag(flag);
-    });
-
-    Object.values(parsed?.segments || []).forEach((segment) => {
-        processSegment(segment);
-    });
     return parsed;
 }
 
 /**
  * @internal
  */
-export function deserializePatch(data: string): IPatchData | undefined {
-    const parsed = tryParse(data) as IPatchData;
+export function deserializePatch(flags: IFlag[], segments: ISegment[]): IPatchData[] {
+    const result = [
+      ...flags?.map(item => ({
+          data: {
+              ...item,
+              version: getTimestampFromDateTimeString(item.updatedAt),
+          },
+          kind: VersionedDataKinds.Features
+      })) || [],
+      ...segments?.map(item => ({
+          data: {
+              ...item,
+              version: getTimestampFromDateTimeString(item.updatedAt),
+              key: item.id
+          },
+          kind: VersionedDataKinds.Segments
+      })) || []
+    ];
 
-    if (!parsed) {
-        return undefined;
-    }
-
-    if (parsed.path.startsWith(VersionedDataKinds.Features.streamApiPath)) {
-        processFlag(parsed.data as IFlag);
-        parsed.kind = VersionedDataKinds.Features;
-    } else if (parsed.path.startsWith(VersionedDataKinds.Segments.streamApiPath)) {
-        processSegment(parsed.data as ISegment);
-        parsed.kind = VersionedDataKinds.Segments;
-    }
-
-    return parsed;
+    return result as any as IPatchData[];
 }
 
 /**
