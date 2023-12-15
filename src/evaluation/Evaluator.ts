@@ -1,18 +1,19 @@
 import Context from "../Context";
 import { IFlag } from "./data/Flag";
 import EvalResult from "./EvalResult";
-import { Queries } from "./Queries";
 import { IPlatform } from "../platform/Platform";
 import { isMatchRule } from "./evalRules";
 import { Regex } from "../utils/Regex";
 import { DispatchAlgorithm } from "./DispatchAlgorithm";
 import { IVariation } from "./data/Variation";
+import { IStore } from "../subsystems/Store";
+import VersionedDataKinds from "../store/VersionedDataKinds";
 
 /**
  * @internal
  */
 export default class Evaluator {
-  constructor(private platform: IPlatform, private queries: Queries) {
+  constructor(private platform: IPlatform, private store: IStore) {
   }
 
   /**
@@ -25,7 +26,7 @@ export default class Evaluator {
     context: Context,
     //eventFactory?: EventFactory,
   ): EvalResult {
-    const flag = this.queries.getFlag(flagKey);
+    const flag = this.store.get(VersionedDataKinds.Features, flagKey) as IFlag;
     if (!flag) {
       return EvalResult.flagNotFound(flagKey);
     }
@@ -114,7 +115,7 @@ export default class Evaluator {
     let dispatchKey: string;
 
     for(const rule of flag.rules) {
-      const match = isMatchRule(this.queries, rule, context);
+      const match = isMatchRule(this.store, rule, context);
       if(match) {
         const ruleDispatchKey = rule.dispatchKey;
         dispatchKey = Regex.isNullOrWhiteSpace(ruleDispatchKey)

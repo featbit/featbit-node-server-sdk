@@ -6,7 +6,7 @@ import OptionMessages from "./options/OptionMessages";
 import ServiceEndpoints from "./options/ServiceEndpoints";
 import { IStore } from "./subsystems/Store";
 import { IClientContext } from "./interfaces/ClientContext";
-import { IStreamProcessor } from "./streaming/StreamProcessor";
+import { IDataSynchronizer } from "./streaming/DataSynchronizer";
 import { IDataSourceUpdates } from "./subsystems/DataSourceUpdates";
 import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
@@ -71,7 +71,7 @@ export const defaultValues: ValidatedOptions = {
     contextKeysFlushInterval: 300,
     diagnosticOptOut: false,
     diagnosticRecordingInterval: 900,
-    featureStore: () => new InMemoryStore(),
+    store: () => new InMemoryStore(),
 };
 
 function validateTypesAndNames(options: IOptions): {
@@ -141,14 +141,14 @@ export default class Configuration {
 
     public readonly stream: boolean;
 
-    public readonly featureStoreFactory: (clientContext: IClientContext) => IStore;
+    public readonly storeFactory: (clientContext: IClientContext) => IStore;
 
-    public readonly updateProcessorFactory?: (
+    public readonly dataSynchronizerFactory?: (
         clientContext: IClientContext,
         dataSourceUpdates: IDataSourceUpdates,
         initSuccessHandler: VoidFunction,
         errorHandler?: (e: Error) => void,
-    ) => IStreamProcessor;
+    ) => IDataSynchronizer;
 
     constructor(options: IOptions = {}) {
         // The default will handle undefined, but not null.
@@ -178,22 +178,22 @@ export default class Configuration {
         this.offline = validatedOptions.offline;
         this.stream = validatedOptions.stream;
 
-        if (TypeValidators.Function.is(validatedOptions.updateProcessor)) {
+        if (TypeValidators.Function.is(validatedOptions.dataSynchronizer)) {
             // @ts-ignore
-            this.updateProcessorFactory = validatedOptions.updateProcessor;
+            this.dataSynchronizerFactory = validatedOptions.dataSynchronizer;
         } else {
             // The processor is already created, just have the method return it.
             // @ts-ignore
-            this.updateProcessorFactory = () => validatedOptions.updateProcessor;
+            this.dataSynchronizerFactory = () => validatedOptions.dataSynchronizer;
         }
 
-        if (TypeValidators.Function.is(validatedOptions.featureStore)) {
+        if (TypeValidators.Function.is(validatedOptions.store)) {
             // @ts-ignore
-            this.featureStoreFactory = validatedOptions.featureStore;
+            this.storeFactory = validatedOptions.store;
         } else {
             // The store is already created, just have the method return it.
             // @ts-ignore
-            this.featureStoreFactory = () => validatedOptions.featureStore;
+            this.storeFactory = () => validatedOptions.store;
         }
     }
 }

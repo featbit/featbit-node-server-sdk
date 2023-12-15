@@ -1,4 +1,4 @@
-import { IStreamProcessor } from "./StreamProcessor";
+import { IDataSynchronizer } from "./DataSynchronizer";
 import ClientContext from "../options/ClientContext";
 import { EventName, ProcessStreamResponse, StreamingErrorHandler } from "./types";
 import { ILogger } from "../logging/Logger";
@@ -19,7 +19,7 @@ const reportJsonError = (
     errorHandler?.(new StreamingError('Malformed JSON data in event stream'));
 };
 
-class StreamingProcessor implements IStreamProcessor {
+class WebSocketDataSynchronizer implements IDataSynchronizer {
     private socket?: IWebSocketWithEvents;
     private readonly streamUri: string;
     private readonly logger?: ILogger;
@@ -83,4 +83,4 @@ class StreamingProcessor implements IStreamProcessor {
     }
 }
 
-export default StreamingProcessor;
+export default WebSocketDataSynchronizer;

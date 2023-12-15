@@ -1,7 +1,7 @@
 import { ILogger } from "./logging/Logger";
 import { IStore } from "./subsystems/Store";
 import { IOptions } from "./interfaces/Options";
-import { IStreamProcessor } from "./streaming/StreamProcessor";
+import { IDataSynchronizer } from "./streaming/DataSynchronizer";
 
 export interface ValidatedOptions {
     sdkKey: string;
@@ -20,8 +20,8 @@ export interface ValidatedOptions {
     contextKeysFlushInterval: number;
     diagnosticOptOut: boolean;
     diagnosticRecordingInterval: number;
-    featureStore: IStore | ((options: IOptions) => IStore);
-    updateProcessor?: IStreamProcessor;
+    store: IStore | ((options: IOptions) => IStore);
+    dataSynchronizer?: IDataSynchronizer;
     wrapperName?: string;
     wrapperVersion?: string;
     application?: { id?: string; version?: string };

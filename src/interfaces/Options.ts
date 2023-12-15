@@ -1,6 +1,10 @@
 import { ICache } from "./Cache";
 import { IUser } from "./User";
 import { ILogger } from "../logging/Logger";
+import { IDataSynchronizer } from "../streaming/DataSynchronizer";
+import { IClientContext } from "./ClientContext";
+import { IDataSourceUpdates } from "../subsystems/DataSourceUpdates";
+import { VoidFunction } from "../utils/VoidFunction";
 
 export interface IOptions {
     sdkKey?: string;
@@ -44,4 +48,18 @@ export interface IOptions {
      *  Timeout in milliseconds for the WebSocket handshake request. This is reset after every redirection.
      */
     webSocketHandshakeTimeout?: number;
+
+    /**
+     * A component that obtains feature flag and segment data and puts it in the store.
+     *
+     * By default, this is the client's default streaming or polling component.
+     */
+    dataSynchronizer?:
+      | object
+      | ((
+      clientContext: IClientContext,
+      dataSourceUpdates: IDataSourceUpdates,
+      initSuccessHandler: VoidFunction,
+      errorHandler?: (e: Error) => void,
+    ) => IDataSynchronizer);
 }

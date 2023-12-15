@@ -9,21 +9,20 @@ import { IStore } from "./subsystems/Store";
 import { createStreamListeners } from "./data_sources/createStreamListeners";
 import { IUser } from "./interfaces/User";
 import { EvalDetail } from "./evaluation/EvalDetail";
-import { IFlagsStateOptions } from "./interfaces/FlagsStateOptions";
-import { IFlagsState } from "./interfaces/FlagState";
-import StreamingProcessor from "./streaming/StreamingProcessor";
-import PollingProcessor from "./streaming/PollingProcessor";
+import WebSocketDataSynchronizer from "./streaming/WebSocketDataSynchronizer";
+import PollingDataSynchronizer from "./streaming/PollingDataSynchronizer";
 import Requestor from "./streaming/Requestor";
-import { IStreamProcessor } from "./streaming/StreamProcessor";
-import { IFlag } from "./evaluation/data/Flag";
+import { IDataSynchronizer } from "./streaming/DataSynchronizer";
 import VersionedDataKinds from "./store/VersionedDataKinds";
 import Evaluator from "./evaluation/Evaluator";
-import { ISegment } from "./evaluation/data/Segment";
-import { Queries } from "./evaluation/Queries";
 import ReasonKinds from "./evaluation/ReasonKinds";
 import { ClientError } from "./errors";
 import Context from "./Context";
 import { IConvertResult, ValueConverters } from "./ValueConverters";
+import { NullDataSynchronizer } from "./streaming/NullDataSynchronizer";
+import { IEventProcessor } from "./events/EventProcessor";
+import { NullEventProcessor } from "./events/NullEventProcessor";
+import { DefaultEventProcessor } from "./events/DefaultEventProcessor";
 
 enum ClientState {
   Initializing,
@@ -47,7 +46,9 @@ export class FeatBitClient implements IFeatBitClient {
 
   private store: IStore;
 
-  private updateProcessor?: IStreamProcessor;
+  private dataSynchronizer: IDataSynchronizer;
+
+  private eventProcessor: IEventProcessor;
 
   private evaluator: Evaluator;
 
@@ -78,7 +79,7 @@ export class FeatBitClient implements IFeatBitClient {
     this.onFailed = callbacks.onFailed;
     this.onReady = callbacks.onReady;
 
-    const {onUpdate, hasEventListeners} = callbacks;
+    const { onUpdate, hasEventListeners } = callbacks;
     const config = new Configuration(options);
 
     if (!config.sdkKey && !config.offline) {
@@ -89,60 +90,45 @@ export class FeatBitClient implements IFeatBitClient {
     this.logger = config.logger;
 
     const clientContext = new ClientContext(config.sdkKey, config, platform);
-    const featureStore = config.featureStoreFactory(clientContext);
-    const dataSourceUpdates = new DataSourceUpdates(featureStore, hasEventListeners, onUpdate);
+    this.store = config.storeFactory(clientContext);
+    const dataSourceUpdates = new DataSourceUpdates(this.store, hasEventListeners, onUpdate);
+    this.evaluator = new Evaluator(this.platform, this.store);
 
-    this.store = featureStore;
+    if (config.offline) {
+      this.eventProcessor = new NullEventProcessor();
+      this.dataSynchronizer = new NullDataSynchronizer();
+    } else {
+      this.eventProcessor = new DefaultEventProcessor();
 
-    const queries: Queries = {
-      getFlag(key: string): IFlag | null {
-        return featureStore.get(VersionedDataKinds.Features, key) as IFlag;
-      },
-      getSegment(key: string): ISegment | null {
-        return featureStore.get(VersionedDataKinds.Segments, key) as ISegment;
-      }
-    };
+      const listeners = createStreamListeners(dataSourceUpdates, this.logger, {
+        put: () => this.initSuccess(),
+      });
 
-    this.evaluator = new Evaluator(this.platform, queries);
+      const dataSynchronizer = config.stream
+          ? new WebSocketDataSynchronizer(
+            this.config.sdkKey,
+            clientContext,
+            this.store,
+            listeners,
+            this.config.webSocketHandshakeTimeout
+          )
+          : new PollingDataSynchronizer(
+            config,
+            new Requestor(this.config.sdkKey, config, this.platform.info, this.platform.requests),
+            dataSourceUpdates,
+            () => this.initSuccess(),
+            (e) => this.dataSourceErrorHandler(e),
+          );
 
-    const listeners = createStreamListeners(dataSourceUpdates, this.logger, {
-      put: () => this.initSuccess(),
-    });
-
-    const makeDefaultProcessor = () =>
-      config.stream
-        ? new StreamingProcessor(
-          this.config.sdkKey,
+      this.dataSynchronizer = config.dataSynchronizerFactory?.(
           clientContext,
-          this.store,
-          listeners,
-          this.config.webSocketHandshakeTimeout
-        )
-        : new PollingProcessor(
-          config,
-          new Requestor(this.config.sdkKey, config, this.platform.info, this.platform.requests),
           dataSourceUpdates,
           () => this.initSuccess(),
           (e) => this.dataSourceErrorHandler(e),
-        );
+        ) ?? dataSynchronizer;
+    }
 
-      if (!config.offline) {
-          this.updateProcessor =
-            config.updateProcessorFactory?.(
-              clientContext,
-              dataSourceUpdates,
-              () => this.initSuccess(),
-              (e) => this.dataSourceErrorHandler(e),
-            ) ?? makeDefaultProcessor();
-      }
-
-      if (this.updateProcessor) {
-          this.updateProcessor.start();
-      } else {
-          // Deferring the start callback should allow client construction to complete before we start
-          // emitting events. Allowing the client an opportunity to register events.
-          setTimeout(() => this.initSuccess(), 0);
-      }
+    this.dataSynchronizer.start();
   }
 
   initialized(): boolean {
@@ -199,7 +185,7 @@ export class FeatBitClient implements IFeatBitClient {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.bool);
   }
 
-  GetAllVariations(
+  getAllVariations(
     user: IUser,
   ): EvalDetail<string>[] {
     const context = Context.fromUser(user);
@@ -220,8 +206,8 @@ export class FeatBitClient implements IFeatBitClient {
   }
 
   close(): void {
-    //this.eventProcessor.close();
-    this.updateProcessor?.close();
+    this.eventProcessor.close();
+    this.dataSynchronizer?.close();
     this.store.close();
   }
 

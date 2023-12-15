@@ -1,17 +1,16 @@
 import { isHttpRecoverable, PollingError } from "../errors";
-import { IStreamProcessor } from "./StreamProcessor";
+import { IDataSynchronizer } from "./DataSynchronizer";
 import { ILogger } from "../logging/Logger";
 import Configuration from "../Configuration";
 import DataSourceUpdates from "../data_sources/DataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
-import { PollingErrorHandler, StreamResponseEventType } from "./types";
+import { PollingErrorHandler } from "./types";
 import Requestor from "./Requestor";
 import { httpErrorMessage } from "../utils/http";
 import VersionedDataKinds from "../store/VersionedDataKinds";
-import { deserializePoll } from "../store/serialization";
 import { getTimestampFromDateTimeString } from "./utils";
 
-export default class PollingProcessor implements IStreamProcessor {
+export default class PollingDataSynchronizer implements IDataSynchronizer {
   private stopped = false;
 
   private logger?: ILogger;

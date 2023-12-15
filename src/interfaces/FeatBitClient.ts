@@ -23,7 +23,7 @@ export interface IFeatBitClient {
       defaultValue: any
     ): EvalDetail<boolean>;
 
-    GetAllVariations(
+    getAllVariations(
       user: IUser,
     ): EvalDetail<string>[];
 
