@@ -21,13 +21,11 @@ export interface IFeatBitClient {
       key: string,
       user: IUser,
       defaultValue: any
-    ): EvalDetail;
+    ): EvalDetail<boolean>;
 
-    allFlagsState(
-        context: IUser,
-        options?: IFlagsStateOptions,
-        callback?: (err: Error | null, res: IFlagsState | null) => void,
-    ): Promise<IFlagsState>;
+    GetAllVariations(
+      user: IUser,
+    ): EvalDetail<string>[];
 
     close(): void;
 

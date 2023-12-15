@@ -8,7 +8,7 @@ import {
     FlagsAndSegments
 } from "../store/serialization";
 import VersionedDataKinds from "../store/VersionedDataKinds";
-import { IFeatureStoreDataStorage } from "../subsystems/FeatureStore";
+import { IFeatureStoreDataStorage } from "../subsystems/Store";
 import { EventName, ProcessStreamResponse } from "../streaming/types";
 
 export const createPutListener = (

@@ -6,7 +6,7 @@ import { IRequests } from "../platform/IRequests";
 import { StreamingError } from "../errors";
 import { IWebSocketWithEvents } from "../platform/IWebSocket";
 import NodeWebSocket from "../platform/NodeWebSocket";
-import { IFeatureStore } from "../subsystems/FeatureStore";
+import { IStore } from "../subsystems/Store";
 
 const reportJsonError = (
     type: string,
@@ -30,7 +30,7 @@ class StreamingProcessor implements IStreamProcessor {
     constructor(
         sdkKey: string,
         clientContext: ClientContext,
-        private readonly store: IFeatureStore,
+        private readonly store: IStore,
         private readonly listeners: Map<EventName, ProcessStreamResponse>,
         webSocketHandshakeTimeout?: number
     ) {

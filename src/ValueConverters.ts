@@ -18,14 +18,14 @@ export class ValueConverters {
     return ValueConverters.error<boolean>();
   }
 
-  private static success<TValue>(value: TValue) {
+  private static success<TValue>(value: TValue): IConvertResult<TValue> {
     return {
       isSucceeded: true,
       value: value
     }
   }
 
-  private static error<TValue>() {
+  private static error<TValue>(): IConvertResult<TValue> {
     return {
       isSucceeded: false
     }

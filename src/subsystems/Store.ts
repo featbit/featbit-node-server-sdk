@@ -45,7 +45,7 @@ export interface IFeatureStoreDataStorage {
  * is not part of normal use of the SDK) you should be aware that the callback may be executed
  * immediately.
  */
-export interface IFeatureStore {
+export interface IStore {
     /**
      * Get an entity from the store.
      *
@@ -75,12 +75,8 @@ export interface IFeatureStore {
      *   of the data, but just return an object in which each key is the `key` property of an entity
      *   and the value is the entity. The actual type of this parameter is
      *   {@link interfaces.DataKind}.
-     *
-     * @param callback
-     *   Will be called with the resulting map. The actual type of the result value is
-     *   `interfaces.KeyedItems<VersionedData>`.
      */
-    all(kind: IDataKind, callback: (res: IFeatureStoreKindData) => void): void;
+    all(kind: IDataKind): IFeatureStoreKindData;
 
     /**
      * Initialize the store, overwriting any existing data.

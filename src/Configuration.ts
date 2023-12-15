@@ -4,11 +4,11 @@ import { ValidatedOptions } from "./ValidatedOptions";
 import { NumberWithMinimum, TypeValidator, TypeValidators } from "./Validators";
 import OptionMessages from "./options/OptionMessages";
 import ServiceEndpoints from "./options/ServiceEndpoints";
-import { IFeatureStore } from "./subsystems/FeatureStore";
+import { IStore } from "./subsystems/Store";
 import { IClientContext } from "./interfaces/ClientContext";
 import { IStreamProcessor } from "./streaming/StreamProcessor";
 import { IDataSourceUpdates } from "./subsystems/DataSourceUpdates";
-import InMemoryFeatureStore from "./store/InMemoryFeatureStore";
+import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
 
 // Once things are internal to the implementation of the SDK we can depend on
@@ -71,7 +71,7 @@ export const defaultValues: ValidatedOptions = {
     contextKeysFlushInterval: 300,
     diagnosticOptOut: false,
     diagnosticRecordingInterval: 900,
-    featureStore: () => new InMemoryFeatureStore(),
+    featureStore: () => new InMemoryStore(),
 };
 
 function validateTypesAndNames(options: IOptions): {
@@ -141,7 +141,7 @@ export default class Configuration {
 
     public readonly stream: boolean;
 
-    public readonly featureStoreFactory: (clientContext: IClientContext) => IFeatureStore;
+    public readonly featureStoreFactory: (clientContext: IClientContext) => IStore;
 
     public readonly updateProcessorFactory?: (
         clientContext: IClientContext,

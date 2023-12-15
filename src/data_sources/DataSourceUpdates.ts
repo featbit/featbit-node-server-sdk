@@ -1,10 +1,10 @@
 import { IDataSourceUpdates } from "../subsystems/DataSourceUpdates";
 import {
-    IFeatureStore,
+    IStore,
     IFeatureStoreDataStorage,
     IFeatureStoreItem,
     IKeyedFeatureStoreItem
-} from "../subsystems/FeatureStore";
+} from "../subsystems/Store";
 import { IDataKind } from "../interfaces/DataKind";
 import NamespacedDataSet from "./NamespacedDataSet";
 import { IClause } from "../evaluation/data/Clause";
@@ -53,7 +53,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
     private readonly dependencyTracker = new DependencyTracker();
 
     constructor(
-        private readonly featureStore: IFeatureStore,
+        private readonly featureStore: IStore,
         private readonly hasEventListeners: () => boolean,
         private readonly onChange: (key: string) => void,
     ) {}
@@ -101,15 +101,13 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
         };
 
         if (checkForChanges) {
-            this.featureStore.all(VersionedDataKinds.Features, (oldFlags) => {
-                this.featureStore.all(VersionedDataKinds.Segments, (oldSegments) => {
-                    const oldData = {
-                        [VersionedDataKinds.Features.namespace]: oldFlags,
-                        [VersionedDataKinds.Segments.namespace]: oldSegments,
-                    };
-                    doInit(oldData);
-                });
-            });
+            const oldFlags = this.featureStore.all(VersionedDataKinds.Features);
+            const oldSegments = this.featureStore.all(VersionedDataKinds.Segments);
+            const oldData = {
+                [VersionedDataKinds.Features.namespace]: oldFlags,
+                [VersionedDataKinds.Segments.namespace]: oldSegments,
+            };
+            doInit(oldData);
         } else {
             doInit();
         }

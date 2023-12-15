@@ -1,5 +1,5 @@
 import { ILogger } from "./logging/Logger";
-import { IFeatureStore } from "./subsystems/FeatureStore";
+import { IStore } from "./subsystems/Store";
 import { IOptions } from "./interfaces/Options";
 import { IStreamProcessor } from "./streaming/StreamProcessor";
 
@@ -20,7 +20,7 @@ export interface ValidatedOptions {
     contextKeysFlushInterval: number;
     diagnosticOptOut: boolean;
     diagnosticRecordingInterval: number;
-    featureStore: IFeatureStore | ((options: IOptions) => IFeatureStore);
+    featureStore: IStore | ((options: IOptions) => IStore);
     updateProcessor?: IStreamProcessor;
     wrapperName?: string;
     wrapperVersion?: string;

@@ -1,13 +1,13 @@
 import { IDataKind } from "../interfaces/DataKind";
 import {
-    IFeatureStore,
+    IStore,
     IFeatureStoreDataStorage,
     IFeatureStoreItem,
     IFeatureStoreKindData, IKeyedFeatureStoreItem
-} from "../subsystems/FeatureStore";
+} from "../subsystems/Store";
 import VersionedDataKinds from "./VersionedDataKinds";
 
-export default class InMemoryFeatureStore implements IFeatureStore {
+export default class InMemoryStore implements IStore {
     version: number = 0;
 
     private allData: IFeatureStoreDataStorage = {};
@@ -47,7 +47,7 @@ export default class InMemoryFeatureStore implements IFeatureStore {
         return null;
     }
 
-    all(kind: IDataKind, callback: (res: IFeatureStoreKindData) => void): void {
+    all(kind: IDataKind): IFeatureStoreKindData {
         const result: IFeatureStoreKindData = {};
         const items = this.allData[kind.namespace] ?? {};
         Object.entries(items).forEach(([key, item]) => {
@@ -55,7 +55,8 @@ export default class InMemoryFeatureStore implements IFeatureStore {
                 result[key] = item;
             }
         });
-        callback?.(result);
+
+        return result;
     }
 
     init(allData: IFeatureStoreDataStorage, callback: () => void): void {

@@ -5,7 +5,7 @@ import Configuration from "./Configuration";
 import { ILogger } from "./logging/Logger";
 import ClientContext from "./options/ClientContext";
 import DataSourceUpdates from "./data_sources/DataSourceUpdates";
-import { IFeatureStore } from "./subsystems/FeatureStore";
+import { IStore } from "./subsystems/Store";
 import { createStreamListeners } from "./data_sources/createStreamListeners";
 import { IUser } from "./interfaces/User";
 import { EvalDetail } from "./evaluation/EvalDetail";
@@ -45,7 +45,7 @@ export interface IClientCallbacks {
 export class FeatBitClient implements IFeatBitClient {
   private state: ClientState = ClientState.Initializing;
 
-  private featureStore: IFeatureStore;
+  private store: IStore;
 
   private updateProcessor?: IStreamProcessor;
 
@@ -92,7 +92,7 @@ export class FeatBitClient implements IFeatBitClient {
     const featureStore = config.featureStoreFactory(clientContext);
     const dataSourceUpdates = new DataSourceUpdates(featureStore, hasEventListeners, onUpdate);
 
-    this.featureStore = featureStore;
+    this.store = featureStore;
 
     const queries: Queries = {
       getFlag(key: string): IFlag | null {
@@ -114,7 +114,7 @@ export class FeatBitClient implements IFeatBitClient {
         ? new StreamingProcessor(
           this.config.sdkKey,
           clientContext,
-          this.featureStore,
+          this.store,
           listeners,
           this.config.webSocketHandshakeTimeout
         )
@@ -188,29 +188,41 @@ export class FeatBitClient implements IFeatBitClient {
     user: IUser,
     defaultValue: boolean
   ): boolean {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.bool).value;
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.bool).value!;
   }
 
   boolVariationDetail(
     key: string,
     user: IUser,
     defaultValue: any
-  ): EvalDetail {
+  ): EvalDetail<boolean> {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.bool);
   }
 
-  allFlagsState(
+  GetAllVariations(
     user: IUser,
-    options?: IFlagsStateOptions | undefined,
-    callback?: ((err: Error | null, res: IFlagsState | null) => void) | undefined
-  ): Promise<IFlagsState> {
-    throw new Error("Method not implemented.");
+  ): EvalDetail<string>[] {
+    const context = Context.fromUser(user);
+    if (!context.valid) {
+      const error = new ClientError(
+        `${context.message ?? 'User not valid;'} returning default value.`,
+      );
+      this.onError(error);
+
+      return [];
+    }
+
+    const flags = this.store.all(VersionedDataKinds.Features);
+    return Object.keys(flags).map(flagKey => {
+      const evalResult = this.evaluator.evaluate(flagKey, context);
+      return { kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value };
+    });
   }
 
   close(): void {
     //this.eventProcessor.close();
     this.updateProcessor?.close();
-    this.featureStore.close();
+    this.store.close();
   }
 
   isOffline(): boolean {
@@ -234,7 +246,7 @@ export class FeatBitClient implements IFeatBitClient {
     user: IUser,
     defaultValue: TValue,
     typeConverter: (value: string) => IConvertResult<TValue>
-  ): EvalDetail {
+  ): EvalDetail<TValue> {
     if (!this.initialized()) {
       this.logger?.warn(
         'Variation called before FeatBit client initialization completed (did you wait for the' +
