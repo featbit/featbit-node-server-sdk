@@ -1,15 +1,12 @@
 import { IStreamProcessor } from "./StreamProcessor";
 import ClientContext from "../options/ClientContext";
-import { StreamingErrorHandler } from "./types";
+import { EventName, ProcessStreamResponse, StreamingErrorHandler } from "./types";
 import { ILogger } from "../logging/Logger";
 import { IRequests } from "../platform/IRequests";
 import { StreamingError } from "../errors";
 import { IWebSocketWithEvents } from "../platform/IWebSocket";
-import { EventName, ProcessStreamResponse } from "../platform/IEventSource";
 import NodeWebSocket from "../platform/NodeWebSocket";
 import { IFeatureStore } from "../subsystems/FeatureStore";
-import { IFlag } from "../evaluation/data/Flag";
-import { getTimestampFromDateTimeString } from "./utils";
 
 const reportJsonError = (
     type: string,

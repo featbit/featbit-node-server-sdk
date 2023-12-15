@@ -1,5 +1,3 @@
-import { IEventSource, IEventSourceInitDict } from './IEventSource';
-
 // These are not full specifications of the interface, but instead subsets
 // based on the functionality needed by the SDK. Exposure of the full standard
 // would require much more per platform implementation for platforms that do not

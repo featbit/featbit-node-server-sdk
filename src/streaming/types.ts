@@ -16,3 +16,9 @@ export interface IStreamResponse {
   featureFlags: IFlag[]
   segments: ISegment[]
 }
+
+export type EventName = 'delete' | 'patch' | 'ping' | 'put';
+export type ProcessStreamResponse = {
+  deserializeData: (flags: IFlag[], segments: ISegment[]) => any;
+  processJson: (json: any) => void;
+};

@@ -1,5 +1,3 @@
-import { IEventSource, IEventSourceInitDict } from "./IEventSource";
-import { ILogger } from "../logging/Logger";
 import * as https from "https";
 import * as http from "http";
 import { IResponse, IRequests, IRequestOptions } from "./IRequests";

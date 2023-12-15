@@ -2,19 +2,14 @@ import { IDataSourceUpdates } from "../subsystems/DataSourceUpdates";
 import { ILogger } from "../logging/Logger";
 import { VoidFunction } from "../utils/VoidFunction";
 import {
-    IAllData,
     deserializeAll,
     deserializePatch,
     IPatchData,
-    deserializeDelete,
-    IDeleteData, FlagsAndSegments
+    FlagsAndSegments
 } from "../store/serialization";
-import VersionedDataKinds, { IVersionedDataKind } from "../store/VersionedDataKinds";
-import { EventName, ProcessStreamResponse } from "../platform/IEventSource";
+import VersionedDataKinds from "../store/VersionedDataKinds";
 import { IFeatureStoreDataStorage } from "../subsystems/FeatureStore";
-import { IFlag } from "../evaluation/data/Flag";
-import { ISegment } from "../evaluation/data/Segment";
-import { getTimestampFromDateTimeString } from "../streaming/utils";
+import { EventName, ProcessStreamResponse } from "../streaming/types";
 
 export const createPutListener = (
     dataSourceUpdates: IDataSourceUpdates,
