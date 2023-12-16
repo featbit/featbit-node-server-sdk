@@ -1,21 +1,17 @@
-import {IFeatBitClient} from "../interfaces/FeatBitClient";
-
 export interface IEvent {}
 
 export class AsyncEvent implements IEvent {
     private isCompletedPromise?: Promise<AsyncEvent>;
-    private resolveFn: (value: AsyncEvent) => void;
-    private rejectFn?: () => void;
+    private resolveFn?: (value: AsyncEvent) => void;
 
     constructor() {
-        this.isCompletedPromise = new Promise<AsyncEvent>((resolve, reject) => {
+        this.isCompletedPromise = new Promise<AsyncEvent>((resolve) => {
             this.resolveFn = resolve;
-            this.rejectFn = reject;
         });
     }
 
-    async waitForCompletion() {
-        return this.isCompletedPromise;
+    waitForCompletion(): Promise<AsyncEvent> {
+        return this.isCompletedPromise!;
     }
 
     complete() {
@@ -25,7 +21,7 @@ export class AsyncEvent implements IEvent {
 
 export class FlushEvent extends AsyncEvent {}
 
-export class ShutdownEvent implements IEvent {}
+export class ShutdownEvent extends AsyncEvent {}
 
 export class PayloadEvent implements IEvent {}
 

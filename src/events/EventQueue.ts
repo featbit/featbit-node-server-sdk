@@ -1,9 +1,13 @@
 import { IEvent } from "./event";
 
-export interface IEventBuffer {
+export interface IEventQueue {
   addEvent(event: IEvent): boolean;
 
   clear(): void;
+
+  pop(): IEvent | undefined;
+
+  close(): void;
 
   get eventsSnapshot(): IEvent[];
 

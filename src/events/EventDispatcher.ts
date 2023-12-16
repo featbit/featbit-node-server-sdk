@@ -1,55 +1,59 @@
 import { ILogger } from "../logging/Logger";
 import ClientContext from "../options/ClientContext";
 import {DeliveryStatus, IEventSender} from "./EventSender";
-import { IEventBuffer } from "./EventBuffer";
-import { DefaultEventBuffer } from "./DefaultEventBuffer";
+import { IEventQueue } from "./EventQueue";
+import { DefaultEventQueue } from "./DefaultEventQueue";
 import { DefaultEventSender } from "./DefaultEventSender";
-import { FlushEvent, IEvent, PayloadEvent, ShutdownEvent } from "./event";
+import { AsyncEvent, FlushEvent, IEvent, PayloadEvent, ShutdownEvent } from "./event";
 import {IEventSerializer} from "./EventSerializer";
 import {DefaultEventSerializer} from "./DefaultEventSerializer";
+import sleep from "../utils/sleep";
 
 export class EventDispatcher {
   private logger: ILogger;
   private sender: IEventSender;
-  private buffer: IEventBuffer;
+  private buffer: IEventQueue;
   private serializer: IEventSerializer;
-  private flushInterval: number;
 
   private maxEventPerRequest = 50;
   private stopped: boolean = false;
 
-  constructor(clientContext: ClientContext, queue: IEvent[]) {
+  constructor(clientContext: ClientContext, queue: IEventQueue) {
     const { basicConfiguration } = clientContext;
-    const { logger, maxEventsInQueue, flushInterval} = basicConfiguration;
+    const { logger, maxEventsInQueue} = basicConfiguration;
     this.logger = logger!;
-    this.flushInterval = flushInterval;
 
-    this.buffer = new DefaultEventBuffer(maxEventsInQueue);
+    this.buffer = new DefaultEventQueue(maxEventsInQueue);
     this.sender = new DefaultEventSender(clientContext);
     this.serializer = new DefaultEventSerializer();
 
     this.dispatchLoop(queue);
   }
 
-  private dispatchLoop(queue: IEvent[]) {
+  private async dispatchLoop(queue: IEventQueue) {
     this.logger.debug('Start dispatch loop.');
 
-    try {
-      const event = queue.pop();
+    let running = true;
+    while(running) {
+      try {
+        const event = queue.pop();
 
-      if (event instanceof PayloadEvent) {
-        this.addEventToBuffer(event);
+        if (event === undefined) {
+          await sleep(1000);
+          continue;
+        }
 
-        setTimeout(() => this.dispatchLoop(queue), this.flushInterval);
-      } else if (event instanceof FlushEvent) {
-        this.triggerFlush(event);
-
-        setTimeout(() => this.dispatchLoop(queue), this.flushInterval);
-      } else if (event instanceof ShutdownEvent) {
-        this.waitForFlush(event);
+        if (event instanceof PayloadEvent) {
+          this.addEventToBuffer(event);
+        } else if (event instanceof FlushEvent) {
+          await this.triggerFlush(event);
+        } else if (event instanceof ShutdownEvent) {
+          this.stopped = true;
+          await this.triggerFlush(event);
+        }
+      } catch (err) {
+        this.logger.error('Unexpected error in event dispatcher.', err);
       }
-    } catch (err) {
-      this.logger.error('Unexpected error in event dispatcher.', err);
     }
 
     this.logger.debug('Finish dispatch loop.');
@@ -67,8 +71,17 @@ export class EventDispatcher {
     }
   }
 
-  private async triggerFlush(event: IEvent) {
+  private async triggerFlush(event: AsyncEvent) {
+    if (this.stopped) {
+      event.complete();
+      return;
+    }
+
     if (this.buffer.isEmpty) {
+      this.logger.debug('Flush empty buffer.');
+      // There are no events to flush. If we don't complete the message, then the async task may never
+      // complete (if it had a non-zero positive timeout, then it would complete after the timeout).
+      event.complete();
       return;
     }
 
@@ -95,9 +108,5 @@ export class EventDispatcher {
         this.stopped = true;
       }
     }
-  }
-
-  private waitForFlush(event: IEvent) {
-
   }
 }
