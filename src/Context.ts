@@ -1,7 +1,7 @@
 import { IUser } from "./interfaces/User";
 
 export default class Context {
-  private user?: IUser;
+  private _user?: IUser;
   /**
    * Is this a valid context. If a valid context cannot be created, then this flag will be true.
    * The validity of a context should be tested before it is used.
@@ -38,18 +38,22 @@ export default class Context {
     }
 
     const context = new Context(true);
-    context.user = user;
+    context._user = user;
 
     return context;
   }
 
-  public key(): string {
-    return this.user!.keyId;
+  get user(): IUser {
+    return this.user;
   }
 
-  public value(property: string): any {
+  get key(): string {
+    return this._user!.keyId;
+  }
+
+  value(property: string): any {
     const propertyName = property as keyof IUser;
-    return this.user?.[propertyName];
+    return this._user?.[propertyName];
   }
 
   private static contextForError(message: string) {

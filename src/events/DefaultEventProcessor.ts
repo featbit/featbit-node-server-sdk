@@ -61,12 +61,12 @@ export class DefaultEventProcessor implements IEventProcessor {
     this.closed = true;
   }
 
-  record(event: IEvent): boolean {
+  record(event: IEvent | null): boolean {
     if (isNullOrUndefined(event)) {
       return false;
     }
 
-    if (!this.eventQueue.addEvent(event)) {
+    if (!this.eventQueue.addEvent(event!)) {
       this.capacityExceeded = true;
       this.logger.warn("Events are being produced faster than they can be processed. We shouldn't see this.");
 

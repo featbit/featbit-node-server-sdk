@@ -1,3 +1,6 @@
+import {IUser} from "../interfaces/User";
+import {IVariation} from "../evaluation/data/Variation";
+
 export interface IEvent {}
 
 export class AsyncEvent implements IEvent {
@@ -26,5 +29,15 @@ export class ShutdownEvent extends AsyncEvent {}
 export class PayloadEvent implements IEvent {}
 
 export class EvalEvent extends PayloadEvent {
+    timestamp: number;
 
+    constructor(
+        user: IUser,
+        flagKey: string,
+        variation: IVariation,
+        sendToExperiment: boolean
+    ) {
+        super();
+        this.timestamp = new Date().getTime();
+    }
 }

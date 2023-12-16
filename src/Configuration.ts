@@ -137,6 +137,8 @@ export default class Configuration {
 
     public readonly flushInterval: number;
 
+    public readonly maxEventsInQueue: number;
+
     public readonly pollInterval: number;
 
     public readonly offline: boolean;
@@ -175,6 +177,7 @@ export default class Configuration {
         this.webSocketHandshakeTimeout = validatedOptions.webSocketHandshakeTimeout;
 
         this.flushInterval = validatedOptions.flushInterval;
+        this.maxEventsInQueue = validatedOptions.maxEventsInQueue;
         this.pollInterval = validatedOptions.pollInterval;
 
         this.offline = validatedOptions.offline;

@@ -17,11 +17,11 @@ function isMatchCondition(condition: ICondition, context: Context) {
 }
 
 function isMatchSegment(segment: ISegment, context: Context) {
-  if(segment.excluded.includes(context.key())) {
+  if(segment.excluded.includes(context.key)) {
     return false;
   }
 
-  if(segment.included.includes(context.key())) {
+  if(segment.included.includes(context.key)) {
     return true;
   }
 

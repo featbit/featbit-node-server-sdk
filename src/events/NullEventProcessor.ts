@@ -1,4 +1,5 @@
 import { IEventProcessor } from "./EventProcessor";
+import {IEvent} from "./event";
 
 export class NullEventProcessor implements IEventProcessor {
   flush(): Promise<void> {
@@ -8,6 +9,7 @@ export class NullEventProcessor implements IEventProcessor {
   close(): void {
   }
 
-  record(): void {
+  record(event: IEvent | null): boolean {
+    return false;
   }
 }

@@ -98,7 +98,7 @@ export class FeatBitClient implements IFeatBitClient {
       this.eventProcessor = new NullEventProcessor();
       this.dataSynchronizer = new NullDataSynchronizer();
     } else {
-      this.eventProcessor = new DefaultEventProcessor();
+      this.eventProcessor = new DefaultEventProcessor(clientContext);
 
       const listeners = createStreamListeners(dataSourceUpdates, this.logger, {
         put: () => this.initSuccess(),
@@ -200,7 +200,7 @@ export class FeatBitClient implements IFeatBitClient {
 
     const flags = this.store.all(VersionedDataKinds.Features);
     return Object.keys(flags).map(flagKey => {
-      const evalResult = this.evaluator.evaluate(flagKey, context);
+      const [evalResult, _] = this.evaluator.evaluate(flagKey, context);
       return { kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value };
     });
   }
@@ -252,7 +252,7 @@ export class FeatBitClient implements IFeatBitClient {
       return { kind: ReasonKinds.ClientNotReady, reason: error.message, value: defaultValue };
     }
 
-    const evalResult = this.evaluator.evaluate(flagKey, context);
+    const [evalResult, evalEvent] = this.evaluator.evaluate(flagKey, context);
 
     if (evalResult.kind === ReasonKinds.Error) {
       // error happened when evaluate flag, return default value
@@ -263,6 +263,7 @@ export class FeatBitClient implements IFeatBitClient {
     }
 
     // send event
+    this.eventProcessor.record(evalEvent);
 
     const { isSucceeded, value } = typeConverter(evalResult.value!);
     return isSucceeded

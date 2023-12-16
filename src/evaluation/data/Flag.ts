@@ -12,4 +12,5 @@ export interface IFlag {
     disabledVariationId: string;
     rules: ITargetRule[];
     updatedAt: string;
+    exptIncludeAllTargets: boolean;
 }

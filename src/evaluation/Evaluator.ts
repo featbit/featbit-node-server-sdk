@@ -8,6 +8,9 @@ import { DispatchAlgorithm } from "./DispatchAlgorithm";
 import { IVariation } from "./data/Variation";
 import { IStore } from "../subsystems/Store";
 import VersionedDataKinds from "../store/VersionedDataKinds";
+import {EvalEvent} from "../events/event";
+import {ITargetRule} from "./data/Rule";
+import {IRolloutVariation} from "./data/RolloutVariation";
 
 /**
  * @internal
@@ -25,19 +28,19 @@ export default class Evaluator {
     flagKey: string,
     context: Context,
     //eventFactory?: EventFactory,
-  ): EvalResult {
+  ): [EvalResult, EvalEvent | null] {
     const flag = this.store.get(VersionedDataKinds.Features, flagKey) as IFlag;
     if (!flag) {
-      return EvalResult.flagNotFound(flagKey);
+      return [EvalResult.flagNotFound(flagKey), null];
     }
 
     if (!flag.isEnabled) {
-      return this.evalDisabledVariation(flag);
+      return this.evalDisabledVariation(flag, context);
     }
 
-    const targetRes = this.evalTargets(flag, context);
+    const [targetRes, evalEvent] = this.evalTargets(flag, context);
     if (targetRes) {
-      return targetRes;
+      return [targetRes, evalEvent];
     }
 
     return this.evaluateRules(flag, context);
@@ -51,15 +54,15 @@ export default class Evaluator {
    *
    * @internal
    */
-  private evalTargets(flag: IFlag, context: Context): EvalResult | undefined {
-    const target = flag.targetUsers.find(t => t.keyIds.indexOf(context.key()))
+  private evalTargets(flag: IFlag, context: Context): [EvalResult | null, EvalEvent | null] {
+    const target = flag.targetUsers.find(t => t.keyIds.indexOf(context.key))
 
     if (target) {
       const targetedVariation = this.getVariation(flag, target.variationId);
-      EvalResult.targeted(targetedVariation!.value);
+      return [EvalResult.targeted(targetedVariation!.value), new EvalEvent(context.user, flag.key, targetedVariation!, flag.exptIncludeAllTargets)];
     }
 
-    return undefined;
+    return [null, null];
   }
 
   /**
@@ -90,13 +93,13 @@ export default class Evaluator {
    *
    * @internal
    */
-  private evalDisabledVariation(flag: IFlag): EvalResult {
+  private evalDisabledVariation(flag: IFlag, context: Context): [EvalResult, EvalEvent | null] {
     const disabledVariation = this.getVariation(flag, flag.disabledVariationId);
     if (!disabledVariation) {
-      return EvalResult.malformedFlag();
+      return this.malformedFlag();
     }
 
-    return EvalResult.flagOff(disabledVariation.value);
+    return [EvalResult.flagOff(disabledVariation.value), new EvalEvent(context.user, flag.key, disabledVariation, false)];
   }
 
   /**
@@ -111,7 +114,7 @@ export default class Evaluator {
   private evaluateRules(
     flag: IFlag,
     context: Context,
-  ): EvalResult {
+  ): [EvalResult, EvalEvent | null] {
     let dispatchKey: string;
 
     for(const rule of flag.rules) {
@@ -119,33 +122,79 @@ export default class Evaluator {
       if(match) {
         const ruleDispatchKey = rule.dispatchKey;
         dispatchKey = Regex.isNullOrWhiteSpace(ruleDispatchKey)
-          ? `${flag.key}${context.key()}`
+          ? `${flag.key}${context.key}`
           : `${flag.key}${context.value(ruleDispatchKey)}`;
 
         const rolloutVariation = rule.variations.find(v => DispatchAlgorithm.IsInRollout(this.platform.crypto, dispatchKey, v.rollout))
         if (!rolloutVariation) {
-          return EvalResult.malformedFlag();
+          return this.malformedFlag();
         }
 
         const variation = this.getVariation(flag, rolloutVariation.id)!;
 
-        return EvalResult.ruleMatched(variation?.value, rule.name);
+        return this.ruleMatched(context, rule, flag.key, dispatchKey, variation);
       }
     }
 
     // match default rule
     const fallthroughDispatchKey = flag.fallthrough.dispatchKey;
     dispatchKey = Regex.isNullOrWhiteSpace(fallthroughDispatchKey)
-      ? `${flag.key}${context.key()}`
+      ? `${flag.key}${context.key}`
       : `${flag.key}${context.value(fallthroughDispatchKey)}`;
 
     const defaultVariation = flag.fallthrough.variations.find(v => DispatchAlgorithm.IsInRollout(this.platform.crypto, dispatchKey, v.rollout));
     if (!defaultVariation) {
-      return EvalResult.malformedFlag();
+      return this.malformedFlag();
     }
 
     const variation = this.getVariation(flag, defaultVariation.id)!;
 
-    return EvalResult.fallthrough(variation.value);
+    return this.fallthroughMatched(context, flag.key, fallthroughDispatchKey, variation);
+  }
+
+  private ruleMatched(context: Context, rule: ITargetRule, flagKey: string, dispatchKey: string, variation: IVariation): [EvalResult, EvalEvent] {
+    const sendToExperiment = this.shouldSendToExperiment();
+    const evalEvent = new EvalEvent(context.user, flagKey, variation, sendToExperiment);
+
+    return [EvalResult.ruleMatched(variation.value, rule.name), evalEvent];
+  }
+
+  private fallthroughMatched(context: Context, flagKey: string, dispatchKey: string, variation: IVariation): [EvalResult, EvalEvent] {
+    const sendToExperiment = this.shouldSendToExperiment();
+    const evalEvent = new EvalEvent(context.user, flagKey, variation, sendToExperiment);
+
+    return [EvalResult.fallthrough(variation.value), evalEvent];
+  }
+
+  private malformedFlag(): [EvalResult, null] {
+    return [EvalResult.malformedFlag(), null];
+  }
+
+  private shouldSendToExperiment(
+      exptIncludeAllTargets: boolean,
+      thisRuleIncludeInExpt: boolean,
+      dispatchKey: string,
+      rolloutVariation: IRolloutVariation
+  ): boolean {
+    if (exptIncludeAllTargets) {
+      return true;
+    }
+
+    if (!thisRuleIncludeInExpt)
+    {
+      return false;
+    }
+
+    // create a new key to calculate the experiment dispatch percentage
+    const exptDispatchKeyPrefix = "expt";
+    const sendToExptKey = `${exptDispatchKeyPrefix}${dispatchKey}`;
+
+    const exptRollout = rolloutVariation.exptRollout;
+    const dispatchRollout = rolloutVariation.DispatchRollout();
+    if (exptRollout == 0.0 || dispatchRollout == 0.0)
+    {
+      return false;
+    }
+    return true;
   }
 }
