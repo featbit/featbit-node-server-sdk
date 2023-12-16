@@ -1,27 +1,33 @@
 import { ILogger } from "../logging/Logger";
 import ClientContext from "../options/ClientContext";
-import { IEventSender } from "./EventSender";
+import {DeliveryStatus, IEventSender} from "./EventSender";
 import { IEventBuffer } from "./EventBuffer";
 import { DefaultEventBuffer } from "./DefaultEventBuffer";
 import { DefaultEventSender } from "./DefaultEventSender";
 import { FlushEvent, IEvent, PayloadEvent, ShutdownEvent } from "./event";
+import {IEventSerializer} from "./EventSerializer";
+import {DefaultEventSerializer} from "./DefaultEventSerializer";
 
 export class EventDispatcher {
   private logger: ILogger;
   private sender: IEventSender;
   private buffer: IEventBuffer;
-  private stoped: boolean;
+  private serializer: IEventSerializer;
   private flushInterval: number;
+
+  private maxEventPerRequest = 50;
+  private stopped: boolean = false;
 
   constructor(clientContext: ClientContext, queue: IEvent[]) {
     const { basicConfiguration } = clientContext;
-    this.logger = basicConfiguration.logger!;
-    this.flushInterval = basicConfiguration.flushInterval;
+    const { logger, maxEventsInQueue, flushInterval} = basicConfiguration;
+    this.logger = logger!;
+    this.flushInterval = flushInterval;
 
-    this.buffer = new DefaultEventBuffer();
+    this.buffer = new DefaultEventBuffer(maxEventsInQueue);
     this.sender = new DefaultEventSender(clientContext);
+    this.serializer = new DefaultEventSerializer();
 
-    this.stoped = false;
     this.dispatchLoop(queue);
   }
 
@@ -50,7 +56,7 @@ export class EventDispatcher {
   }
 
   private addEventToBuffer(event: IEvent) {
-    if (this.stoped){
+    if (this.stopped){
       return;
     }
 
@@ -61,8 +67,34 @@ export class EventDispatcher {
     }
   }
 
-  private triggerFlush(event: IEvent) {
+  private async triggerFlush(event: IEvent) {
+    if (this.buffer.isEmpty) {
+      return;
+    }
 
+    const snapshot = this.buffer.eventsSnapshot;
+    this.buffer.clear();
+    try {
+      await this.flushEvents(snapshot);
+      this.logger.debug(`${snapshot.length} events has been flushed.`);
+    } catch (err) {
+      this.logger.warn('Exception happened when flushing events', err);
+    }
+  }
+
+  private async flushEvents(events: IEvent[]) {
+    const total = events.length;
+    for(let i=0; i < total; i+= this.maxEventPerRequest) {
+      const length = Math.min(this.maxEventPerRequest, total - i);
+      const slice = events.slice(i,  i + length);
+      const payload = this.serializer.serialize(slice);
+
+      const { status } = await this.sender.send(payload);
+      if (status === DeliveryStatus.FailedAndMustShutDown)
+      {
+        this.stopped = true;
+      }
+    }
   }
 
   private waitForFlush(event: IEvent) {

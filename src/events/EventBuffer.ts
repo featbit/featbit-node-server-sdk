@@ -5,9 +5,9 @@ export interface IEventBuffer {
 
   clear(): void;
 
-  eventsSnapshot(): IEvent[];
+  get eventsSnapshot(): IEvent[];
 
-  length(): number;
+  get length(): number;
 
-  isEmpty(): boolean;
+  get isEmpty(): boolean;
 }

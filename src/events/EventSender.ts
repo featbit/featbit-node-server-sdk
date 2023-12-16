@@ -11,5 +11,5 @@ export interface IEventSenderResult {
 }
 
 export interface IEventSender {
-  send(payload: any): Promise<IEventSenderResult>;
+  send(payload: string): Promise<IEventSenderResult>;
 }

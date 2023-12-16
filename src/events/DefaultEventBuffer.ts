@@ -21,15 +21,15 @@ export class DefaultEventBuffer implements IEventBuffer {
     this.events = [];
   }
 
-  eventsSnapshot(): IEvent[] {
+  get eventsSnapshot(): IEvent[] {
     return [...this.events];
   }
 
-  length(): number {
+  get length(): number {
     return this.events.length;
   }
 
-  isEmpty(): boolean {
-    return this.length() === 0;
+  get isEmpty(): boolean {
+    return this.length === 0;
   }
 }

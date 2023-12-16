@@ -11,6 +11,7 @@ export interface ValidatedOptions {
     webSocketHandshakeTimeout?: number;
     capacity: number;
     flushInterval: number;
+    maxEventsInQueue: number;
     pollInterval: number;
     offline: boolean;
     useLdd: boolean;

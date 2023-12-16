@@ -26,7 +26,7 @@ export class DefaultEventSender implements IEventSender {
     this.requests = requests;
   }
 
-  async send(payload: any): Promise<IEventSenderResult> {
+  async send(payload: string): Promise<IEventSenderResult> {
     const res: IEventSenderResult = {
       status: DeliveryStatus.Succeeded,
     };
@@ -40,7 +40,7 @@ export class DefaultEventSender implements IEventSender {
     try {
       const { status } = await this.requests.fetch(this.eventsUri, {
         headers,
-        body: JSON.stringify(payload),
+        body: payload,
         method: 'POST',
       });
 

@@ -29,6 +29,11 @@ interface BasicConfiguration {
      * The interval in between flushes of events queue, in milliseconds.
      */
     flushInterval: number;
+
+    /**
+     * The max number of events in the events queue.
+     */
+    maxEventsInQueue: number;
 }
 
 /**
@@ -44,6 +49,7 @@ export default class ClientContext implements IClientContext {
             logger?: ILogger;
             offline?: boolean;
             flushInterval: number;
+            maxEventsInQueue: number;
             serviceEndpoints: ServiceEndpoints;
         },
         public readonly platform: IPlatform,
@@ -52,6 +58,7 @@ export default class ClientContext implements IClientContext {
             logger: configuration.logger,
             offline: configuration.offline,
             flushInterval: configuration.flushInterval,
+            maxEventsInQueue: configuration.maxEventsInQueue,
             serviceEndpoints: configuration.serviceEndpoints,
             sdkKey,
         };
