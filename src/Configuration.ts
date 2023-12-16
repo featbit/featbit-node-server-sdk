@@ -61,7 +61,7 @@ export const defaultValues: ValidatedOptions = {
     sendEvents: true,
     webSocketHandshakeTimeout: undefined,
     capacity: 10000,
-    flushInterval: 5,
+    flushInterval: 2000,
     pollInterval: 30000,
     offline: false,
     useLdd: false,

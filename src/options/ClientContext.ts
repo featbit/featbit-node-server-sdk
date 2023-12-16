@@ -26,9 +26,9 @@ interface BasicConfiguration {
     serviceEndpoints: ServiceEndpoints;
 
     /**
-     * Sets the initial reconnect delay for the streaming connection, in seconds.
+     * The interval in between flushes of events queue, in milliseconds.
      */
-    streamInitialReconnectDelay?: number;
+    flushInterval: number;
 }
 
 /**
@@ -43,6 +43,7 @@ export default class ClientContext implements IClientContext {
         configuration: {
             logger?: ILogger;
             offline?: boolean;
+            flushInterval: number;
             serviceEndpoints: ServiceEndpoints;
         },
         public readonly platform: IPlatform,
@@ -50,6 +51,7 @@ export default class ClientContext implements IClientContext {
         this.basicConfiguration = {
             logger: configuration.logger,
             offline: configuration.offline,
+            flushInterval: configuration.flushInterval,
             serviceEndpoints: configuration.serviceEndpoints,
             sdkKey,
         };

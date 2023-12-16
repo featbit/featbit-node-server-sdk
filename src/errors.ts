@@ -18,6 +18,14 @@ export class StreamingError extends Error {
     }
 }
 
+export class UnexpectedResponseError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'FeatBitUnexpectedResponseError';
+    }
+}
+
+
 export class ClientError extends Error {
     constructor(message: string) {
         super(message);
