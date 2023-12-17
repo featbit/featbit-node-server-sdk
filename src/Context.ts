@@ -44,7 +44,7 @@ export default class Context {
   }
 
   get user(): IUser {
-    return this.user;
+    return this._user!;
   }
 
   get key(): string {

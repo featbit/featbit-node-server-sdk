@@ -18,6 +18,6 @@ export default class ServiceEndpoints {
 
         this.streaming = `${canonicalizedUri}/streaming`;
         this.polling = `${canonicalizedUri}/api/public/sdk/server/latest-all`;
-        this.events = `${canonicalizedUri}/xxx`;
+        this.events = `${canonicalizedUri}/api/public/insight/track`;
     }
 }

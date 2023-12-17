@@ -125,14 +125,13 @@ export default class Evaluator {
           ? `${flag.key}${context.key}`
           : `${flag.key}${context.value(ruleDispatchKey)}`;
 
-        const rolloutVariation = rule.variations.find(v => DispatchAlgorithm.IsInRollout(this.platform.crypto, dispatchKey, v.rollout))
+        const rolloutVariation = rule.variations.find(v => DispatchAlgorithm.isInRollout(this.platform.crypto, dispatchKey, v.rollout))
         if (!rolloutVariation) {
           return this.malformedFlag();
         }
 
-        const variation = this.getVariation(flag, rolloutVariation.id)!;
-
-        return this.ruleMatched(context, rule, flag.key, dispatchKey, variation);
+        const [evalEvent, variation] = this.getEvalEventAndVariation(context, flag, dispatchKey, rolloutVariation);
+        return [EvalResult.ruleMatched(variation.value, rule.name), evalEvent];
       }
     }
 
@@ -142,27 +141,12 @@ export default class Evaluator {
       ? `${flag.key}${context.key}`
       : `${flag.key}${context.value(fallthroughDispatchKey)}`;
 
-    const defaultVariation = flag.fallthrough.variations.find(v => DispatchAlgorithm.IsInRollout(this.platform.crypto, dispatchKey, v.rollout));
+    const defaultVariation = flag.fallthrough.variations.find(v => DispatchAlgorithm.isInRollout(this.platform.crypto, dispatchKey, v.rollout));
     if (!defaultVariation) {
       return this.malformedFlag();
     }
 
-    const variation = this.getVariation(flag, defaultVariation.id)!;
-
-    return this.fallthroughMatched(context, flag.key, fallthroughDispatchKey, variation);
-  }
-
-  private ruleMatched(context: Context, rule: ITargetRule, flagKey: string, dispatchKey: string, variation: IVariation): [EvalResult, EvalEvent] {
-    const sendToExperiment = this.shouldSendToExperiment();
-    const evalEvent = new EvalEvent(context.user, flagKey, variation, sendToExperiment);
-
-    return [EvalResult.ruleMatched(variation.value, rule.name), evalEvent];
-  }
-
-  private fallthroughMatched(context: Context, flagKey: string, dispatchKey: string, variation: IVariation): [EvalResult, EvalEvent] {
-    const sendToExperiment = this.shouldSendToExperiment();
-    const evalEvent = new EvalEvent(context.user, flagKey, variation, sendToExperiment);
-
+    const [evalEvent, variation] = this.getEvalEventAndVariation(context, flag, dispatchKey, defaultVariation);
     return [EvalResult.fallthrough(variation.value), evalEvent];
   }
 
@@ -190,11 +174,32 @@ export default class Evaluator {
     const sendToExptKey = `${exptDispatchKeyPrefix}${dispatchKey}`;
 
     const exptRollout = rolloutVariation.exptRollout;
-    const dispatchRollout = rolloutVariation.DispatchRollout();
+    const dispatchRollout = DispatchAlgorithm.dispatchRollout(rolloutVariation.rollout);
     if (exptRollout == 0.0 || dispatchRollout == 0.0)
     {
       return false;
     }
-    return true;
+
+    var upperBound = exptRollout / dispatchRollout;
+    if (upperBound > 1.0)
+    {
+      upperBound = 1.0;
+    }
+
+    return DispatchAlgorithm.isInRollout(this.platform.crypto, sendToExptKey, [0.0, upperBound]);
+  }
+
+  private getEvalEventAndVariation(context: Context, flag: IFlag, dispatchKey: string, rolloutVariation: IRolloutVariation): [EvalEvent, IVariation] {
+    const variation = this.getVariation(flag, rolloutVariation.id)!;
+
+    const sendToExperiment = this.shouldSendToExperiment(
+      flag.exptIncludeAllTargets,
+      flag.fallthrough.includedInExpt,
+      dispatchKey,
+      rolloutVariation);
+
+    const evalEvent = new EvalEvent(context.user, flag.key, variation, sendToExperiment);
+
+    return [evalEvent, variation];
   }
 }
