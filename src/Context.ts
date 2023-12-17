@@ -1,4 +1,4 @@
-import { IUser } from "./interfaces/User";
+import { IUser } from "./options/User";
 
 export default class Context {
   private _user?: IUser;

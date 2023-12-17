@@ -1,12 +1,12 @@
 import EventEmitter from "events";
-import { FeatBitClient } from "./FeatBitClient";
-import { IOptions } from "./interfaces/Options";
+import { IOptions } from "./options/Options";
 import BasicLogger from "./logging/BasicLogger";
 import { format } from "util";
 import SafeLogger from "./logging/SafeLogger";
 import NodePlatform from "./platform/NodePlatform";
 import { Emits } from "./utils/Emits";
 import { ClientEmitter } from "./utils/ClientEmitter";
+import { FeatBitClient } from "./FeatBitClient";
 
 /**
  * @ignore

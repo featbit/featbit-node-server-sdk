@@ -1,4 +1,4 @@
-import { IUser } from "../interfaces/User";
+import { IUser } from "../options/User";
 import { IVariation } from "../evaluation/data/Variation";
 
 export interface IEvent {

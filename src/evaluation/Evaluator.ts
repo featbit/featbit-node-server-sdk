@@ -6,7 +6,7 @@ import { isMatchRule } from "./evalRules";
 import { Regex } from "../utils/Regex";
 import { DispatchAlgorithm } from "./DispatchAlgorithm";
 import { IVariation } from "./data/Variation";
-import { IStore } from "../subsystems/Store";
+import { IStore } from "../store/Store";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import {EvalEvent} from "../events/event";
 import {ITargetRule} from "./data/Rule";

@@ -4,7 +4,7 @@ import { IPlatform } from "./Platform";
 import NodeCrypto from "./NodeCrypto";
 import { ICrypto } from "./ICrypto";
 import { IRequests } from "./IRequests";
-import { IOptions } from "../interfaces/Options";
+import { IOptions } from "../options/Options";
 import NodeRequests from "./NodeRequests";
 
 export default class NodePlatform implements IPlatform {

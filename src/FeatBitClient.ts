@@ -1,13 +1,10 @@
 import { IFeatBitClient } from "./interfaces/FeatBitClient";
-import { IOptions } from "./interfaces/Options";
 import { IPlatform } from "./platform/Platform";
 import Configuration from "./Configuration";
 import { ILogger } from "./logging/Logger";
 import ClientContext from "./options/ClientContext";
 import DataSourceUpdates from "./data_sources/DataSourceUpdates";
-import { IStore } from "./subsystems/Store";
 import { createStreamListeners } from "./data_sources/createStreamListeners";
-import { IUser } from "./interfaces/User";
 import { EvalDetail } from "./evaluation/EvalDetail";
 import WebSocketDataSynchronizer from "./streaming/WebSocketDataSynchronizer";
 import PollingDataSynchronizer from "./streaming/PollingDataSynchronizer";
@@ -23,6 +20,9 @@ import { NullDataSynchronizer } from "./streaming/NullDataSynchronizer";
 import { IEventProcessor } from "./events/EventProcessor";
 import { NullEventProcessor } from "./events/NullEventProcessor";
 import { DefaultEventProcessor } from "./events/DefaultEventProcessor";
+import { IStore } from "./store/Store";
+import { IOptions } from "./options/Options";
+import { IUser } from "./options/User";
 
 enum ClientState {
   Initializing,

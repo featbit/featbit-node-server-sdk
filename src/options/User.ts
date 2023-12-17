@@ -1,4 +1,4 @@
-import { IContextProperty } from "./ContextProperty";
+import { IContextProperty } from "../interfaces/ContextProperty";
 
 export interface IUser {
     name: string;

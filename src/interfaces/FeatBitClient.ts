@@ -1,8 +1,5 @@
-import { IUser } from "./User";
-import { FlagValue } from "../data/FlagValue";
+import { IUser } from "../options/User";
 import { EvalDetail } from "../evaluation/EvalDetail";
-import { IFlagsState } from "./FlagState";
-import { IFlagsStateOptions } from "./FlagsStateOptions";
 import EventEmitter from "events";
 
 export interface IFeatBitClient {

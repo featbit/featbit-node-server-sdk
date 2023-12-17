@@ -1,13 +1,13 @@
-import { IOptions } from "./interfaces/Options";
+import { IOptions } from "./options/Options";
 import { ILogger } from "./logging/Logger";
 import { ValidatedOptions } from "./ValidatedOptions";
 import { NumberWithMinimum, TypeValidator, TypeValidators } from "./Validators";
 import OptionMessages from "./options/OptionMessages";
 import ServiceEndpoints from "./options/ServiceEndpoints";
-import { IStore } from "./subsystems/Store";
+import { IStore } from "./store/Store";
 import { IClientContext } from "./interfaces/ClientContext";
 import { IDataSynchronizer } from "./streaming/DataSynchronizer";
-import { IDataSourceUpdates } from "./subsystems/DataSourceUpdates";
+import { IDataSourceUpdates } from "./store/DataSourceUpdates";
 import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
 

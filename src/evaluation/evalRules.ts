@@ -3,7 +3,7 @@ import { ICondition } from "./data/Condition";
 import { ISegment } from "./data/Segment";
 import Context from "../Context";
 import { Operator } from "./operator";
-import { IStore } from "../subsystems/Store";
+import { IStore } from "../store/Store";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 
 const IsInSegmentProperty = "User is in segment";

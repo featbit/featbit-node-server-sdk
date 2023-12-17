@@ -1,8 +1,8 @@
-import { IOptions } from "./interfaces/Options";
+import { IOptions } from "./options/Options";
 import FeatBitClientNode from "./FeatBitClientNode";
 import { IFeatBitClientWithEvents } from "./interfaces/FeatBitClient";
 
-export * from './FeatBitClient'
+export * from './interfaces/FeatBitClient'
 
 /**
  * Creates an instance of the FeatBit client.

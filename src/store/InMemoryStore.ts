@@ -4,7 +4,7 @@ import {
     IStoreDataStorage,
     IStoreItem,
     IStoreKindData, IKeyedStoreItem
-} from "../subsystems/Store";
+} from "./Store";
 import VersionedDataKinds from "./VersionedDataKinds";
 
 export default class InMemoryStore implements IStore {

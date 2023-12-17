@@ -1,10 +1,10 @@
-import { IDataSourceUpdates } from "../subsystems/DataSourceUpdates";
+import { IDataSourceUpdates } from "../store/DataSourceUpdates";
 import {
     IStore,
     IStoreDataStorage,
     IStoreItem,
     IKeyedStoreItem
-} from "../subsystems/Store";
+} from "../store/Store";
 import { IDataKind } from "../interfaces/DataKind";
 import NamespacedDataSet from "./NamespacedDataSet";
 import { IClause } from "../evaluation/data/Clause";

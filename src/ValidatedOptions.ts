@@ -1,6 +1,6 @@
 import { ILogger } from "./logging/Logger";
-import { IStore } from "./subsystems/Store";
-import { IOptions } from "./interfaces/Options";
+import { IStore } from "./store/Store";
+import { IOptions } from "./options/Options";
 import { IDataSynchronizer } from "./streaming/DataSynchronizer";
 
 export interface ValidatedOptions {

@@ -1,9 +1,8 @@
-import { ICache } from "./Cache";
 import { IUser } from "./User";
 import { ILogger } from "../logging/Logger";
 import { IDataSynchronizer } from "../streaming/DataSynchronizer";
-import { IClientContext } from "./ClientContext";
-import { IDataSourceUpdates } from "../subsystems/DataSourceUpdates";
+import { IClientContext } from "../interfaces/ClientContext";
+import { IDataSourceUpdates } from "../store/DataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
 
 export interface IOptions {
@@ -13,8 +12,6 @@ export interface IOptions {
      * The base URI for the FeatBit Evaluation server.
      */
     baseUri?: string;
-
-    cache?: ICache;
 
     context?: IUser;
 

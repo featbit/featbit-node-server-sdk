@@ -4,7 +4,7 @@ import { EventName, ProcessStreamResponse } from "./types";
 import { ILogger } from "../logging/Logger";
 import { IWebSocketWithEvents } from "../platform/IWebSocket";
 import NodeWebSocket from "../platform/NodeWebSocket";
-import { IStore } from "../subsystems/Store";
+import { IStore } from "../store/Store";
 
 class WebSocketDataSynchronizer implements IDataSynchronizer {
     private socket?: IWebSocketWithEvents;
