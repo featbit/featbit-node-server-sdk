@@ -1,5 +1,5 @@
 import { ILogger } from "./Logger";
-import { TypeValidators } from "../Validators";
+import { TypeValidators } from "../options/Validators";
 
 const loggerRequirements = {
   error: TypeValidators.Function,

@@ -1,4 +1,4 @@
-import { Regex } from "./utils/Regex";
+import { Regex } from "./Regex";
 
 export interface IConvertResult<TValue> {
   isSucceeded: boolean,

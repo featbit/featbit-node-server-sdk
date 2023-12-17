@@ -1,7 +1,7 @@
-import { ILogger } from "./logging/Logger";
-import { IStore } from "./store/Store";
-import { IOptions } from "./options/Options";
-import { IDataSynchronizer } from "./streaming/DataSynchronizer";
+import { ILogger } from "../logging/Logger";
+import { IStore } from "../store/Store";
+import { IOptions } from "./Options";
+import { IDataSynchronizer } from "../streaming/DataSynchronizer";
 
 export interface ValidatedOptions {
     sdkKey: string;

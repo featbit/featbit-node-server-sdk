@@ -1,5 +1,5 @@
 import { IOptions } from "./options/Options";
-import FeatBitClientNode from "./FeatBitClientNode";
+import FeatBitClientNode from "./platform/FeatBitClientNode";
 import { IFeatBitClientWithEvents } from "./interfaces/FeatBitClient";
 
 export * from './interfaces/FeatBitClient'

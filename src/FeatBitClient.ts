@@ -15,7 +15,7 @@ import Evaluator from "./evaluation/Evaluator";
 import ReasonKinds from "./evaluation/ReasonKinds";
 import { ClientError } from "./errors";
 import Context from "./Context";
-import { IConvertResult, ValueConverters } from "./ValueConverters";
+import { IConvertResult, ValueConverters } from "./utils/ValueConverters";
 import { NullDataSynchronizer } from "./streaming/NullDataSynchronizer";
 import { IEventProcessor } from "./events/EventProcessor";
 import { NullEventProcessor } from "./events/NullEventProcessor";

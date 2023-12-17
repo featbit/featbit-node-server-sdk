@@ -1,7 +1,7 @@
 import { IOptions } from "./options/Options";
 import { ILogger } from "./logging/Logger";
-import { ValidatedOptions } from "./ValidatedOptions";
-import { NumberWithMinimum, TypeValidator, TypeValidators } from "./Validators";
+import { ValidatedOptions } from "./options/ValidatedOptions";
+import { NumberWithMinimum, TypeValidator, TypeValidators } from "./options/Validators";
 import OptionMessages from "./options/OptionMessages";
 import ServiceEndpoints from "./options/ServiceEndpoints";
 import { IStore } from "./store/Store";
