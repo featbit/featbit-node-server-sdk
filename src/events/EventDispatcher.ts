@@ -23,7 +23,7 @@ export class EventDispatcher {
     const { logger, maxEventsInQueue} = basicConfiguration;
     this.logger = logger!;
 
-    this.buffer = new DefaultEventQueue(maxEventsInQueue);
+    this.buffer = new DefaultEventQueue(maxEventsInQueue, this.logger);
     this.sender = new DefaultEventSender(clientContext);
     this.serializer = new DefaultEventSerializer();
 

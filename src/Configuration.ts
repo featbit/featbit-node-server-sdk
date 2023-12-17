@@ -26,6 +26,7 @@ const validations: Record<string, TypeValidator> = {
     streamUri: TypeValidators.String,
     eventsUri: TypeValidators.String,
     webSocketHandshakeTimeout: TypeValidators.Number,
+    webSocketPingInterval: TypeValidators.Number,
     capacity: TypeValidators.Number,
     logger: TypeValidators.Object,
     featureStore: TypeValidators.ObjectOrFactory,
@@ -61,6 +62,7 @@ export const defaultValues: ValidatedOptions = {
     stream: true,
     sendEvents: true,
     webSocketHandshakeTimeout: undefined,
+    webSocketPingInterval: 18 * 1000,
     capacity: 10000,
     flushInterval: 2000,
     maxEventsInQueue: 10000,
@@ -133,6 +135,8 @@ export default class Configuration {
 
     public readonly webSocketHandshakeTimeout?: number;
 
+    public readonly webSocketPingInterval: number;
+
     public readonly logger?: ILogger;
 
     public readonly flushInterval: number;
@@ -175,6 +179,7 @@ export default class Configuration {
         this.sdkKey = validatedOptions.sdkKey;
         this.eventsCapacity = validatedOptions.capacity;
         this.webSocketHandshakeTimeout = validatedOptions.webSocketHandshakeTimeout;
+        this.webSocketPingInterval = validatedOptions.webSocketPingInterval!;
 
         this.flushInterval = validatedOptions.flushInterval;
         this.maxEventsInQueue = validatedOptions.maxEventsInQueue;

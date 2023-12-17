@@ -1,11 +1,12 @@
 import { IEventQueue } from "./EventQueue";
 import { IEvent } from "./event";
+import { ILogger } from "../logging/Logger";
 
 export class DefaultEventQueue implements IEventQueue {
   private events: IEvent[];
   private closed: boolean = false;
 
-  constructor(private readonly capacity: number) {
+  constructor(private readonly capacity: number, private readonly logger: ILogger) {
     this.events = [];
   }
 
@@ -15,6 +16,7 @@ export class DefaultEventQueue implements IEventQueue {
     }
 
     if (this.events.length >= this.capacity) {
+      this.logger.warn("Events are being produced faster than they can be processed. We shouldn't see this.");
       return false;
     }
 

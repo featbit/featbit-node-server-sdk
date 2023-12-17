@@ -9,6 +9,7 @@ export interface ValidatedOptions {
     stream: boolean;
     sendEvents: boolean;
     webSocketHandshakeTimeout?: number;
+    webSocketPingInterval?: number;
     capacity: number;
     flushInterval: number;
     maxEventsInQueue: number;

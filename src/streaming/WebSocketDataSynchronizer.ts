@@ -1,30 +1,16 @@
 import { IDataSynchronizer } from "./DataSynchronizer";
 import ClientContext from "../options/ClientContext";
-import { EventName, ProcessStreamResponse, StreamingErrorHandler } from "./types";
+import { EventName, ProcessStreamResponse } from "./types";
 import { ILogger } from "../logging/Logger";
-import { IRequests } from "../platform/IRequests";
-import { StreamingError } from "../errors";
 import { IWebSocketWithEvents } from "../platform/IWebSocket";
 import NodeWebSocket from "../platform/NodeWebSocket";
 import { IStore } from "../subsystems/Store";
-
-const reportJsonError = (
-    type: string,
-    data: string,
-    logger?: ILogger,
-    errorHandler?: StreamingErrorHandler,
-) => {
-    logger?.error(`Stream received invalid data in "${type}" message`);
-    logger?.debug(`Invalid JSON follows: ${data}`);
-    errorHandler?.(new StreamingError('Malformed JSON data in event stream'));
-};
 
 class WebSocketDataSynchronizer implements IDataSynchronizer {
     private socket?: IWebSocketWithEvents;
     private readonly streamUri: string;
     private readonly logger?: ILogger;
 
-    private requests: IRequests;
     private connectionAttemptStartTime?: number;
 
     constructor(
@@ -32,20 +18,20 @@ class WebSocketDataSynchronizer implements IDataSynchronizer {
         clientContext: ClientContext,
         private readonly store: IStore,
         private readonly listeners: Map<EventName, ProcessStreamResponse>,
-        webSocketHandshakeTimeout?: number
+        webSocketPingInterval: number,
+        webSocketHandshakeTimeout?: number,
     ) {
         const { basicConfiguration, platform } = clientContext;
-        const { logger } = basicConfiguration;
-        const { requests } = platform;
+        const { logger, serviceEndpoints } = basicConfiguration;
 
         this.logger = logger;
-        this.requests = requests;
-        this.streamUri = basicConfiguration.serviceEndpoints.streaming;
+        this.streamUri = serviceEndpoints.streaming;
         this.socket = new NodeWebSocket(
           sdkKey,
           this.streamUri,
           this.logger!,
           () => store.version,
+          webSocketPingInterval,
           webSocketHandshakeTimeout);
 
         this.listeners.forEach(({ deserializeData, processJson }, eventName) => {

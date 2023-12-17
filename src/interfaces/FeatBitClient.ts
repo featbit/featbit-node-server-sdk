@@ -27,7 +27,7 @@ export interface IFeatBitClient {
       user: IUser,
     ): EvalDetail<string>[];
 
-    close(): void;
+    close(): Promise<void>;
 
     isOffline(): boolean;
 

@@ -63,6 +63,12 @@ export interface IOptions {
     webSocketHandshakeTimeout?: number;
 
     /**
+     * The interval in between sending WebSocket ping messages to evaluation server, in milliseconds.
+     * The default value is 18 * 1000
+     */
+    webSocketPingInterval?: number;
+
+    /**
      * A component that obtains feature flag and segment data and puts it in the store.
      *
      * By default, this is the client's default streaming or polling component.

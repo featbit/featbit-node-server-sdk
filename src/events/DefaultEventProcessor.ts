@@ -12,14 +12,13 @@ export class DefaultEventProcessor implements IEventProcessor {
   private readonly flushInterval: number;
   private readonly eventDispatcher: EventDispatcher;
   private readonly eventQueue: IEventQueue;
-  private capacityExceeded: boolean = false;
   private closed: boolean = false;
 
   constructor(clientContext: ClientContext) {
     const { logger, flushInterval, maxEventsInQueue } = clientContext.basicConfiguration;
     this.logger = logger!;
     this.flushInterval = flushInterval;
-    this.eventQueue = new DefaultEventQueue(maxEventsInQueue);
+    this.eventQueue = new DefaultEventQueue(maxEventsInQueue, this.logger);
     this.eventDispatcher = new EventDispatcher(clientContext, this.eventQueue);
 
     this.start();
@@ -67,9 +66,6 @@ export class DefaultEventProcessor implements IEventProcessor {
     }
 
     if (!this.eventQueue.addEvent(event!)) {
-      this.capacityExceeded = true;
-      this.logger.warn("Events are being produced faster than they can be processed. We shouldn't see this.");
-
       if (event instanceof FlushEvent) {
         event.complete();
       }

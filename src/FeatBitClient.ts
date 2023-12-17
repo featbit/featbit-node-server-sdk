@@ -110,6 +110,7 @@ export class FeatBitClient implements IFeatBitClient {
             clientContext,
             this.store,
             listeners,
+            this.config.webSocketPingInterval,
             this.config.webSocketHandshakeTimeout
           )
           : new PollingDataSynchronizer(
@@ -205,8 +206,8 @@ export class FeatBitClient implements IFeatBitClient {
     });
   }
 
-  close(): void {
-    this.eventProcessor.close();
+  async close(): Promise<void> {
+    await this.eventProcessor.close();
     this.dataSynchronizer?.close();
     this.store.close();
   }

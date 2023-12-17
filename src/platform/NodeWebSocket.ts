@@ -7,18 +7,20 @@ import EventEmitter from "events";
 import { ClientEmitter } from "../utils/ClientEmitter";
 import { Emits } from "../utils/Emits";
 
-const socketConnectionIntervals = [250, 500, 1000, 2000, 4000, 8000];
+const socketConnectionIntervals = [30 * 1000, 60 * 1000, 5 * 60 * 1000, 10 * 60 * 1000, 15 * 60 * 1000];
 
 class NodeWebSocket implements IWebSocket {
   emitter: EventEmitter;
   private ws?: WebSocket;
   private retryCounter = 0;
+  private closed: boolean = false;
 
   constructor(
     private sdkKey: string,
     private streamingUri: string,
     private logger: ILogger,
     private getTimestamp: () => number,
+    private pingInterval: number,
     private handshakeTimeout? : number) {
     this.emitter = new ClientEmitter();
   }
@@ -42,7 +44,7 @@ class NodeWebSocket implements IWebSocket {
 
     // Connection closed
     that.ws?.addEventListener('close', function (event) {
-      that.logger.debug('close');
+      that.logger.debug('WebSocket received close event');
       if (event.code === 4003) { // do not reconnect when 4003
         return;
       }
@@ -73,6 +75,7 @@ class NodeWebSocket implements IWebSocket {
   }
 
   close(): void {
+    this.closed = true;
     this.ws?.close(4003, 'Closed by user');
     this.ws = undefined;
   }
@@ -116,17 +119,19 @@ class NodeWebSocket implements IWebSocket {
       } catch (err) {
         this.logger.debug(err);
       }
-    }, 18000);
+    }, this.pingInterval);
   }
 
   private reconnect() {
-    this.ws = undefined;
-    const waitTime = socketConnectionIntervals[Math.min(this.retryCounter++, socketConnectionIntervals.length - 1)];
-    setTimeout(() => {
-      this.logger.debug('emit reconnect event');
-      this.connect();
-    }, waitTime);
-    this.logger.debug(waitTime);
+    if (!this.closed) {
+      this.ws = undefined;
+      const waitTime = socketConnectionIntervals[Math.min(this.retryCounter++, socketConnectionIntervals.length - 1)];
+      setTimeout(() => {
+        this.logger.debug('emit reconnect event');
+        this.connect();
+      }, waitTime);
+      this.logger.debug(waitTime);
+    }
   }
 }
 
