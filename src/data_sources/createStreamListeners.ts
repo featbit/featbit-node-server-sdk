@@ -19,7 +19,7 @@ export const createPutListener = (
     deserializeData: deserializeAll,
     processJson: async ({ flags, segments }: FlagsAndSegments) => {
         const initData: IStoreDataStorage = {
-            [VersionedDataKinds.Features.namespace]: flags,
+            [VersionedDataKinds.Flags.namespace]: flags,
             [VersionedDataKinds.Segments.namespace]: segments,
         };
 
@@ -36,7 +36,7 @@ export const createPatchListener = (
     deserializeData: deserializePatch,
     processJson: async (data: IPatchData[]) => {
         data?.forEach(item => {
-            logger?.debug(`Updating ${item.data.key} in ${VersionedDataKinds.Features.namespace}`);
+            logger?.debug(`Updating ${item.data.key} in ${VersionedDataKinds.Flags.namespace}`);
             dataSourceUpdates.upsert(item.kind, item.data, onPatchCompleteHandler);
         })
     },

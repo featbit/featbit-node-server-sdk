@@ -63,7 +63,7 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
         const message = JSON.parse(body);
         if (message.messageType === 'data-sync') {
           const initData = {
-            [VersionedDataKinds.Features.namespace]: message.data.featureFlags.reduce((acc: any, cur: any) => {
+            [VersionedDataKinds.Flags.namespace]: message.data.featureFlags.reduce((acc: any, cur: any) => {
               acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
               return acc;
             }, {}),

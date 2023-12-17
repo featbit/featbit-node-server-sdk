@@ -199,7 +199,7 @@ export class FeatBitClient implements IFeatBitClient {
       return [];
     }
 
-    const flags = this.store.all(VersionedDataKinds.Features);
+    const flags = this.store.all(VersionedDataKinds.Flags);
     return Object.keys(flags).map(flagKey => {
       const [evalResult, _] = this.evaluator.evaluate(flagKey, context);
       return { kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value };

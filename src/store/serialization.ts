@@ -53,12 +53,12 @@ function tryParse(data: string): any {
  */
 export function deserializeAll(flags: IFlag[], segments: ISegment[]): FlagsAndSegments {
     const result = {
-        [VersionedDataKinds.Features.namespace]: {},
+        [VersionedDataKinds.Flags.namespace]: {},
         [VersionedDataKinds.Segments.namespace]: {}
     };
 
     if(flags?.length) {
-        result[VersionedDataKinds.Features.namespace] = flags.reduce((acc: any, cur: any) => {
+        result[VersionedDataKinds.Flags.namespace] = flags.reduce((acc: any, cur: any) => {
             acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
             return acc;
         }, {});
@@ -103,7 +103,7 @@ export function deserializePatch(flags: IFlag[], segments: ISegment[]): IPatchDa
               ...item,
               version: getTimestampFromDateTimeString(item.updatedAt),
           },
-          kind: VersionedDataKinds.Features
+          kind: VersionedDataKinds.Flags
       })) || [],
       ...segments?.map(item => ({
           data: {
@@ -116,20 +116,4 @@ export function deserializePatch(flags: IFlag[], segments: ISegment[]): IPatchDa
     ];
 
     return result as any as IPatchData[];
-}
-
-/**
- * @internal
- */
-export function deserializeDelete(data: string): IDeleteData | undefined {
-    const parsed = tryParse(data) as IDeleteData;
-    if (!parsed) {
-        return undefined;
-    }
-    if (parsed.path.startsWith(VersionedDataKinds.Features.streamApiPath)) {
-        parsed.kind = VersionedDataKinds.Features;
-    } else if (parsed.path.startsWith(VersionedDataKinds.Segments.streamApiPath)) {
-        parsed.kind = VersionedDataKinds.Segments;
-    }
-    return parsed;
 }

@@ -27,7 +27,7 @@ interface TypeWithRuleClauses {
 
 function computeDependencies(namespace: string, item: IStoreItem) {
     const ret = new NamespacedDataSet<boolean>();
-    const isFlag = namespace === VersionedDataKinds.Features.namespace;
+    const isFlag = namespace === VersionedDataKinds.Flags.namespace;
     const isSegment = namespace === VersionedDataKinds.Segments.namespace;
 
     if (isFlag || isSegment) {
@@ -101,10 +101,10 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
         };
 
         if (checkForChanges) {
-            const oldFlags = this.store.all(VersionedDataKinds.Features);
+            const oldFlags = this.store.all(VersionedDataKinds.Flags);
             const oldSegments = this.store.all(VersionedDataKinds.Segments);
             const oldData = {
-                [VersionedDataKinds.Features.namespace]: oldFlags,
+                [VersionedDataKinds.Flags.namespace]: oldFlags,
                 [VersionedDataKinds.Segments.namespace]: oldSegments,
             };
             doInit(oldData);
@@ -158,7 +158,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
 
     sendChangeEvents(dataSet: NamespacedDataSet<boolean>) {
         dataSet.enumerate((namespace, key) => {
-            if (namespace === VersionedDataKinds.Features.namespace) {
+            if (namespace === VersionedDataKinds.Flags.namespace) {
                 this.onChange(key);
             }
         });

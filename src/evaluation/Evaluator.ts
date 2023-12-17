@@ -29,7 +29,7 @@ export default class Evaluator {
     context: Context,
     //eventFactory?: EventFactory,
   ): [EvalResult, EvalEvent | null] {
-    const flag = this.store.get(VersionedDataKinds.Features, flagKey) as IFlag;
+    const flag = this.store.get(VersionedDataKinds.Flags, flagKey) as IFlag;
     if (!flag) {
       return [EvalResult.flagNotFound(flagKey), null];
     }

@@ -1,8 +1,4 @@
-import { EvalDetail } from "./EvalDetail";
-import Reasons from "./Reasons";
 import ReasonKinds from "./ReasonKinds";
-import { FlagValue } from "../data/FlagValue";
-import { EvaluationReason } from "./EvaluationReason";
 import { EmptyString } from "../constants";
 
 /**
@@ -12,8 +8,6 @@ import { EmptyString } from "../constants";
  * @internal
  */
 export default class EvalResult {
-  //public events?: internal.InputEvalEvent[];
-
   protected constructor(
     public kind: ReasonKinds,
     public value: string,

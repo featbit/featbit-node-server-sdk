@@ -1,5 +1,3 @@
-import { FlagValue } from "../data/FlagValue";
-import { EvaluationReason } from "./EvaluationReason";
 import ReasonKinds from "./ReasonKinds";
 
 export interface EvalDetail<TValue> {
