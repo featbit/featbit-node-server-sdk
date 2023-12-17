@@ -1,5 +1,5 @@
 import { IDataKind } from "../interfaces/DataKind";
-import { IFeatureStoreDataStorage, IKeyedFeatureStoreItem } from "./Store";
+import { IStoreDataStorage, IKeyedStoreItem } from "./Store";
 
 /**
  * Interface that a data source implementation will use to push data into the SDK.
@@ -20,7 +20,7 @@ export interface IDataSourceUpdates {
      * @param callback
      *   Will be called when the store has been initialized.
      */
-    init(allData: IFeatureStoreDataStorage, callback: () => void): void;
+    init(allData: IStoreDataStorage, callback: () => void): void;
 
     /**
      * Updates or inserts an item in the specified collection. For updates, the object will only be
@@ -39,5 +39,5 @@ export interface IDataSourceUpdates {
      * @param callback
      *   Will be called after the upsert operation is complete.
      */
-    upsert(kind: IDataKind, data: IKeyedFeatureStoreItem, callback: () => void): void;
+    upsert(kind: IDataKind, data: IKeyedStoreItem, callback: () => void): void;
 }

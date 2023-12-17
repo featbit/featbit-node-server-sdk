@@ -1,20 +1,20 @@
 import { IDataKind } from "../interfaces/DataKind";
 import {
     IStore,
-    IFeatureStoreDataStorage,
-    IFeatureStoreItem,
-    IFeatureStoreKindData, IKeyedFeatureStoreItem
+    IStoreDataStorage,
+    IStoreItem,
+    IStoreKindData, IKeyedStoreItem
 } from "../subsystems/Store";
 import VersionedDataKinds from "./VersionedDataKinds";
 
 export default class InMemoryStore implements IStore {
     version: number = 0;
 
-    private allData: IFeatureStoreDataStorage = {};
+    private allData: IStoreDataStorage = {};
 
     private initCalled = false;
 
-    private addItem(kind: IDataKind, key: string, item: IFeatureStoreItem) {
+    private addItem(kind: IDataKind, key: string, item: IStoreItem) {
         let items = this.allData[kind.namespace];
         if (!items) {
             items = {};
@@ -34,7 +34,7 @@ export default class InMemoryStore implements IStore {
         }
     }
 
-    get(kind: IDataKind, key: string): IFeatureStoreItem | null {
+    get(kind: IDataKind, key: string): IStoreItem | null {
         const items = this.allData[kind.namespace];
         if (items) {
             if (Object.prototype.hasOwnProperty.call(items, key)) {
@@ -47,8 +47,8 @@ export default class InMemoryStore implements IStore {
         return null;
     }
 
-    all(kind: IDataKind): IFeatureStoreKindData {
-        const result: IFeatureStoreKindData = {};
+    all(kind: IDataKind): IStoreKindData {
+        const result: IStoreKindData = {};
         const items = this.allData[kind.namespace] ?? {};
         Object.entries(items).forEach(([key, item]) => {
             if (item && !item.deleted) {
@@ -59,8 +59,8 @@ export default class InMemoryStore implements IStore {
         return result;
     }
 
-    init(allData: IFeatureStoreDataStorage, callback: () => void): void {
-        this.allData = allData as IFeatureStoreDataStorage;
+    init(allData: IStoreDataStorage, callback: () => void): void {
+        this.allData = allData as IStoreDataStorage;
 
         this.version = 0;
         Object.keys(allData).map(namespace => {
@@ -81,7 +81,7 @@ export default class InMemoryStore implements IStore {
         callback?.();
     }
 
-    upsert(kind: IDataKind, data: IKeyedFeatureStoreItem, callback: () => void): void {
+    upsert(kind: IDataKind, data: IKeyedStoreItem, callback: () => void): void {
         this.addItem(kind, data.key, data);
         callback?.();
     }

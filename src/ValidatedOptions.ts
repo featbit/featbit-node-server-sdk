@@ -15,17 +15,8 @@ export interface ValidatedOptions {
     maxEventsInQueue: number;
     pollInterval: number;
     offline: boolean;
-    useLdd: boolean;
-    allAttributesPrivate: false;
-    privateAttributes: string[];
-    contextKeysCapacity: number;
-    contextKeysFlushInterval: number;
-    diagnosticOptOut: boolean;
-    diagnosticRecordingInterval: number;
     store: IStore | ((options: IOptions) => IStore);
     dataSynchronizer?: IDataSynchronizer;
-    wrapperName?: string;
-    wrapperVersion?: string;
     application?: { id?: string; version?: string };
     logger?: ILogger;
     // Allow indexing this by a string for the validation step.

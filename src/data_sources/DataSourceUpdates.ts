@@ -1,9 +1,9 @@
 import { IDataSourceUpdates } from "../subsystems/DataSourceUpdates";
 import {
     IStore,
-    IFeatureStoreDataStorage,
-    IFeatureStoreItem,
-    IKeyedFeatureStoreItem
+    IStoreDataStorage,
+    IStoreItem,
+    IKeyedStoreItem
 } from "../subsystems/Store";
 import { IDataKind } from "../interfaces/DataKind";
 import NamespacedDataSet from "./NamespacedDataSet";
@@ -25,7 +25,7 @@ interface TypeWithRuleClauses {
     ];
 }
 
-function computeDependencies(namespace: string, item: IFeatureStoreItem) {
+function computeDependencies(namespace: string, item: IStoreItem) {
     const ret = new NamespacedDataSet<boolean>();
     const isFlag = namespace === VersionedDataKinds.Features.namespace;
     const isSegment = namespace === VersionedDataKinds.Segments.namespace;
@@ -53,15 +53,15 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
     private readonly dependencyTracker = new DependencyTracker();
 
     constructor(
-        private readonly featureStore: IStore,
+        private readonly store: IStore,
         private readonly hasEventListeners: () => boolean,
         private readonly onChange: (key: string) => void,
     ) {}
 
-    init(allData: IFeatureStoreDataStorage, callback: () => void): void {
+    init(allData: IStoreDataStorage, callback: () => void): void {
         const checkForChanges = this.hasEventListeners();
-        const doInit = (oldData?: IFeatureStoreDataStorage) => {
-            this.featureStore.init(allData, () => {
+        const doInit = (oldData?: IStoreDataStorage) => {
+            this.store.init(allData, () => {
                 // Defer change events so they execute after the callback.
                 Promise.resolve().then(() => {
                     this.dependencyTracker.reset();
@@ -101,8 +101,8 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
         };
 
         if (checkForChanges) {
-            const oldFlags = this.featureStore.all(VersionedDataKinds.Features);
-            const oldSegments = this.featureStore.all(VersionedDataKinds.Segments);
+            const oldFlags = this.store.all(VersionedDataKinds.Features);
+            const oldSegments = this.store.all(VersionedDataKinds.Segments);
             const oldData = {
                 [VersionedDataKinds.Features.namespace]: oldFlags,
                 [VersionedDataKinds.Segments.namespace]: oldSegments,
@@ -113,11 +113,11 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
         }
     }
 
-    upsert(kind: IDataKind, data: IKeyedFeatureStoreItem, callback: () => void): void {
+    upsert(kind: IDataKind, data: IKeyedStoreItem, callback: () => void): void {
         const { key } = data;
         const checkForChanges = this.hasEventListeners();
-        const doUpsert = (oldItem?: IFeatureStoreItem | null) => {
-            this.featureStore.upsert(kind, data, () => {
+        const doUpsert = (oldItem?: IStoreItem | null) => {
+            this.store.upsert(kind, data, () => {
                 // Defer change events so they execute after the callback.
                 Promise.resolve().then(() => {
                     this.dependencyTracker.updateDependenciesFrom(
@@ -136,7 +136,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
             });
         };
         if (checkForChanges) {
-            const item = this.featureStore.get(kind, key);
+            const item = this.store.get(kind, key);
             doUpsert(item);
         } else {
             doUpsert();
@@ -146,8 +146,8 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
     addIfModified(
         namespace: string,
         key: string,
-        oldValue: IFeatureStoreItem | null | undefined,
-        newValue: IFeatureStoreItem,
+        oldValue: IStoreItem | null | undefined,
+        newValue: IStoreItem,
         toDataSet: NamespacedDataSet<boolean>,
     ) {
         if (newValue && oldValue && newValue.version <= oldValue.version) {

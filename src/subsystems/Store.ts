@@ -3,7 +3,7 @@ import { IDataKind } from "../interfaces/DataKind";
 /**
  * Represents an item which can be stored in the feature store.
  */
-export interface IFeatureStoreItem {
+export interface IStoreItem {
     deleted?: boolean;
     version: number;
     // The actual data associated with the item.
@@ -13,22 +13,22 @@ export interface IFeatureStoreItem {
 /**
  * When upserting an item it must contain a key.
  */
-export interface IKeyedFeatureStoreItem extends IFeatureStoreItem {
+export interface IKeyedStoreItem extends IStoreItem {
     key: string;
 }
 
 /**
  * Represents the storage for a single kind of data. e.g. 'flag' or 'segment'.
  */
-export interface IFeatureStoreKindData {
-    [key: string]: IFeatureStoreItem;
+export interface IStoreKindData {
+    [key: string]: IStoreItem;
 }
 
 /**
  * Represents the storage for the full data store.
  */
-export interface IFeatureStoreDataStorage {
-    [namespace: string]: IFeatureStoreKindData;
+export interface IStoreDataStorage {
+    [namespace: string]: IStoreKindData;
 }
 
 /**
@@ -63,7 +63,7 @@ export interface IStore {
      *   Will be called with the retrieved entity, or null if not found. The actual type of the result
      *   value is {@link VersionedData}.
      */
-    get(kind: IDataKind, key: string): IFeatureStoreItem | null
+    get(kind: IDataKind, key: string): IStoreItem | null
 
     /**
      * Get all entities from a collection.
@@ -76,7 +76,7 @@ export interface IStore {
      *   and the value is the entity. The actual type of this parameter is
      *   {@link interfaces.DataKind}.
      */
-    all(kind: IDataKind): IFeatureStoreKindData;
+    all(kind: IDataKind): IStoreKindData;
 
     /**
      * Initialize the store, overwriting any existing data.
@@ -89,7 +89,7 @@ export interface IStore {
      * @param callback
      *   Will be called when the store has been initialized.
      */
-    init(allData: IFeatureStoreDataStorage, callback: () => void): void;
+    init(allData: IStoreDataStorage, callback: () => void): void;
 
     /**
      * Delete an entity from the store.
@@ -131,7 +131,7 @@ export interface IStore {
      * @param callback
      *   Will be called after the upsert operation is complete.
      */
-    upsert(kind: IDataKind, data: IKeyedFeatureStoreItem, callback: () => void): void;
+    upsert(kind: IDataKind, data: IKeyedStoreItem, callback: () => void): void;
 
     /**
      * Tests whether the store is initialized.

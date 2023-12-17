@@ -22,7 +22,7 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
   constructor(
     config: Configuration,
     private readonly requestor: Requestor,
-    private readonly featureStore: DataSourceUpdates,
+    private readonly store: DataSourceUpdates,
     private readonly initSuccessHandler: VoidFunction = () => {},
     private readonly errorHandler?: PollingErrorHandler,
   ) {
@@ -73,7 +73,7 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
             }, {}),
           };
 
-          this.featureStore.init(initData, () => {
+          this.store.init(initData, () => {
             this.initSuccessHandler();
             // Triggering the next poll after the init has completed.
             this.timeoutHandle = setTimeout(() => {

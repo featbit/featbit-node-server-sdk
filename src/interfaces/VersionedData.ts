@@ -2,7 +2,7 @@
  * Used internally to describe the basic properties of stored data such as feature flags or user
  * segments.
  *
- * This is the actual type of parameters and return values in `LDFeatureStore` methods that refer
+ * This is the actual type of parameters and return values in `IStore` methods that refer
  * to a flag or segment item. Those methods still use the `object` type for backward compatibility.
  */
 export interface IVersionedData {
