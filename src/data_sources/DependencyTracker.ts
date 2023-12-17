@@ -8,6 +8,10 @@ export default class DependencyTracker {
 
     private readonly dependenciesTo = new NamespacedDataSet<NamespacedDataSet<boolean>>();
 
+    getItemsDependTo(namespace: string, key: string) : NamespacedDataSet<boolean> | undefined {
+        return this.dependenciesTo.get(namespace, key);
+    }
+
     updateDependenciesFrom(
         namespace: string,
         key: string,

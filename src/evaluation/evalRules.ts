@@ -9,6 +9,10 @@ import VersionedDataKinds from "../store/VersionedDataKinds";
 const IsInSegmentProperty = "User is in segment";
 const IsNotInSegmentProperty = "User is not in segment";
 
+export function isSegmentCondition(condition: ICondition) {
+  return IsInSegmentProperty === condition.property || IsNotInSegmentProperty === condition.property;
+}
+
 function isMatchCondition(condition: ICondition, context: Context) {
   const value = context.value(condition.property);
 
