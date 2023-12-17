@@ -108,7 +108,7 @@ export class FeatBitClient implements IFeatBitClient {
           ? new WebSocketDataSynchronizer(
             this.config.sdkKey,
             clientContext,
-            this.store,
+            () => this.store.version,
             listeners,
             this.config.webSocketPingInterval,
             this.config.webSocketHandshakeTimeout
@@ -116,8 +116,8 @@ export class FeatBitClient implements IFeatBitClient {
           : new PollingDataSynchronizer(
             config,
             new Requestor(this.config.sdkKey, config, this.platform.info, this.platform.requests),
-            dataSourceUpdates,
-            () => this.initSuccess(),
+            () => this.store.version,
+            listeners,
             (e) => this.dataSourceErrorHandler(e),
           );
 

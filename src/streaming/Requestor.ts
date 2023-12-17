@@ -65,13 +65,13 @@ export default class Requestor implements IRequestor {
     return { res, body };
   }
 
-  async requestAllData(cb: (err: any, body: any) => void) {
+  async requestData(timestamp: number, cb: (err: any, body: any) => void) {
     const options: IRequestOptions = {
       method: 'GET',
       headers: this.headers,
     };
     try {
-      const { res, body } = await this.requestWithETagCache(this.uri, options);
+      const { res, body } = await this.requestWithETagCache(`${this.uri}?timestamp=${timestamp ?? 0}`, options);
       if (res.status !== 200 && res.status !== 304) {
         const err = new StreamingError(`Unexpected status code: ${res.status}`, res.status);
         return cb(err, undefined);

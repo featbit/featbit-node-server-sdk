@@ -2,13 +2,9 @@ import { isHttpRecoverable, PollingError } from "../errors";
 import { IDataSynchronizer } from "./DataSynchronizer";
 import { ILogger } from "../logging/Logger";
 import Configuration from "../Configuration";
-import DataSourceUpdates from "../data_sources/DataSourceUpdates";
-import { VoidFunction } from "../utils/VoidFunction";
-import { PollingErrorHandler } from "./types";
+import { EventName, PollingErrorHandler, ProcessStreamResponse, StreamResponseEventType } from "./types";
 import Requestor from "./Requestor";
 import { httpErrorMessage } from "../utils/http";
-import VersionedDataKinds from "../store/VersionedDataKinds";
-import { getTimestampFromDateTimeString } from "./utils";
 
 export default class PollingDataSynchronizer implements IDataSynchronizer {
   private stopped = false;
@@ -22,8 +18,8 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
   constructor(
     config: Configuration,
     private readonly requestor: Requestor,
-    private readonly store: DataSourceUpdates,
-    private readonly initSuccessHandler: VoidFunction = () => {},
+    private readonly getStoreTimestamp: () => number,
+    private readonly listeners: Map<EventName, ProcessStreamResponse>,
     private readonly errorHandler?: PollingErrorHandler,
   ) {
     this.logger = config.logger;
@@ -35,15 +31,9 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
       return;
     }
 
-    const reportJsonError = (data: string) => {
-      this.logger?.error('Polling received invalid data');
-      this.logger?.debug(`Invalid JSON follows: ${data}`);
-      this.errorHandler?.(new PollingError('Malformed JSON data in polling response'));
-    };
-
     const startTime = Date.now();
     this.logger?.debug('Polling FeatBit for feature flag updates');
-    this.requestor.requestAllData((err, body) => {
+    this.requestor.requestData(this.getStoreTimestamp(),(err, body) => {
       const elapsed = Date.now() - startTime;
       const sleepFor = Math.max(this.pollInterval - elapsed, 0);
 
@@ -62,28 +52,25 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
       } else if (body) {
         const message = JSON.parse(body);
         if (message.messageType === 'data-sync') {
-          const initData = {
-            [VersionedDataKinds.Flags.namespace]: message.data.featureFlags.reduce((acc: any, cur: any) => {
-              acc[cur.key] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
-              return acc;
-            }, {}),
-            [VersionedDataKinds.Segments.namespace]: message.data.segments.reduce((acc: any, cur: any) => {
-              acc[cur.id] = {...cur, version: getTimestampFromDateTimeString(cur.updatedAt)};
-              return acc;
-            }, {}),
-          };
+          let processStreamResponse: ProcessStreamResponse | undefined;
+          switch (message.data.eventType) {
+            case StreamResponseEventType.patch:
+              processStreamResponse = this.listeners.get('patch');
+              break;
+            case StreamResponseEventType.full:
+              processStreamResponse = this.listeners.get('put');
+              break;
+          }
 
-          this.store.init(initData, () => {
-            this.initSuccessHandler();
-            // Triggering the next poll after the init has completed.
-            this.timeoutHandle = setTimeout(() => {
-              this.poll();
-            }, sleepFor);
-          });
+          const { featureFlags, segments } = message.data;
+          const data = processStreamResponse?.deserializeData?.(featureFlags, segments);
+          processStreamResponse?.processJson?.(data);
+
+          this.timeoutHandle = setTimeout(() => {
+            this.poll();
+          }, sleepFor);
         }
 
-        // The poll will be triggered by  the feature store initialization
-        // completing.
         return;
       }
 

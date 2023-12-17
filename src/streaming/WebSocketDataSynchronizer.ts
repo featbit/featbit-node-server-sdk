@@ -16,7 +16,7 @@ class WebSocketDataSynchronizer implements IDataSynchronizer {
     constructor(
         sdkKey: string,
         clientContext: ClientContext,
-        private readonly store: IStore,
+        private readonly getStoreTimestamp: () => number,
         private readonly listeners: Map<EventName, ProcessStreamResponse>,
         webSocketPingInterval: number,
         webSocketHandshakeTimeout?: number,
@@ -30,7 +30,7 @@ class WebSocketDataSynchronizer implements IDataSynchronizer {
           sdkKey,
           this.streamUri,
           this.logger!,
-          () => store.version,
+          getStoreTimestamp,
           webSocketPingInterval,
           webSocketHandshakeTimeout);
 

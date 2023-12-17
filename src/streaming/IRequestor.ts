@@ -6,5 +6,5 @@
  * @ignore
  */
 export interface IRequestor {
-  requestAllData: (cb: (err: any, body: any) => void) => void;
+  requestData: (timestamp: number, cb: (err: any, body: any) => void) => void;
 }

@@ -19,7 +19,7 @@ class NodeWebSocket implements IWebSocket {
     private sdkKey: string,
     private streamingUri: string,
     private logger: ILogger,
-    private getTimestamp: () => number,
+    private getStoreTimestamp: () => number,
     private pingInterval: number,
     private handshakeTimeout? : number) {
     this.emitter = new ClientEmitter();
@@ -84,7 +84,7 @@ class NodeWebSocket implements IWebSocket {
     const payload = {
       messageType: 'data-sync',
       data: {
-        timestamp: this.getTimestamp()
+        timestamp: this.getStoreTimestamp()
       }
     };
 
@@ -135,5 +135,4 @@ class NodeWebSocket implements IWebSocket {
   }
 }
 
-//export default class extends Emits(NodeWebSocket) {}
 export default Emits(NodeWebSocket);
