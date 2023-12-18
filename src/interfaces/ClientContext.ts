@@ -28,8 +28,6 @@ export interface IBasicConfiguration {
     offline?: boolean;
 
     logger?: ILogger;
-
-    tags?: { value?: string };
 }
 
 /**
