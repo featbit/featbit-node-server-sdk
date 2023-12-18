@@ -1,7 +1,7 @@
 import { DeliveryStatus, IEventSender, IEventSenderResult } from "./EventSender";
 import ClientContext from "../options/ClientContext";
 import { defaultHeaders, httpErrorMessage } from "../utils/http";
-import { IRequests } from "../platform/IRequests";
+import { IRequests } from "../platform/Requests";
 import { isHttpRecoverable, UnexpectedResponseError } from "../errors";
 import sleep from "../utils/sleep";
 

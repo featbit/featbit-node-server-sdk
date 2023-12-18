@@ -2,8 +2,8 @@ import { IDataSynchronizer } from "./DataSynchronizer";
 import ClientContext from "../options/ClientContext";
 import { EventName, ProcessStreamResponse } from "./types";
 import { ILogger } from "../logging/Logger";
-import { IWebSocketWithEvents } from "../platform/IWebSocket";
-import NodeWebSocket from "../platform/NodeWebSocket";
+import { IWebSocketWithEvents } from "../platform/WebSocket";
+import NodeWebSocket from "../platform/node/NodeWebSocket";
 import { IStore } from "../store/Store";
 
 class WebSocketDataSynchronizer implements IDataSynchronizer {

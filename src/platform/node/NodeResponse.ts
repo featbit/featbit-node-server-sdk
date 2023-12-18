@@ -1,6 +1,6 @@
-import { IHeaders, IResponse } from "./IRequests";
+import { IHeaders, IResponse } from "../Requests";
 import * as http from "http";
-import HeaderWrapper from "./HeaderWrapper";
+import HeaderWrapper from "../../streaming/HeaderWrapper";
 
 export default class NodeResponse implements IResponse {
   incomingMessage: http.IncomingMessage;

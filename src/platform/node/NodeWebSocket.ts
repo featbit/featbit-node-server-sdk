@@ -1,11 +1,11 @@
-import { IWebSocket } from "./IWebSocket";
+import { IWebSocket } from "../WebSocket";
 import WebSocket from 'ws';
-import { IStreamResponse, StreamResponseEventType } from "../streaming/types";
-import { generateConnectionToken } from "../streaming/utils";
-import { ILogger } from "../logging/Logger";
+import { IStreamResponse, StreamResponseEventType } from "../../streaming/types";
+import { generateConnectionToken } from "../../streaming/utils";
+import { ILogger } from "../../logging/Logger";
 import EventEmitter from "events";
-import { ClientEmitter } from "../utils/ClientEmitter";
-import { Emits } from "../utils/Emits";
+import { ClientEmitter } from "../../utils/ClientEmitter";
+import { Emits } from "../../utils/Emits";
 
 const socketConnectionIntervals = [30 * 1000, 60 * 1000, 5 * 60 * 1000, 10 * 60 * 1000, 15 * 60 * 1000];
 

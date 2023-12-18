@@ -1,5 +1,5 @@
 import { IOptions } from "./options/Options";
-import FbClientNode from "./platform/FbClientNode";
+import FbClientNode from "./platform/node/FbClientNode";
 import { IFbClientWithEvents } from "./interfaces/FbClient";
 
 export * from './interfaces/FbClient'

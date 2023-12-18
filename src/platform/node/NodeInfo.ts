@@ -1,6 +1,6 @@
-import { IInfo, IPlatformData, ISdkData } from "./Info";
+import { IInfo, IPlatformData, ISdkData } from "../Info";
 import * as os from "os";
-import { version, name } from '../../package.json';
+import { version, name } from '../../../package.json';
 
 function processPlatformName(name: string): string {
   switch (name) {

@@ -1,7 +1,7 @@
 import { IRequestor } from "./IRequestor";
 import Configuration from "../Configuration";
 import { IInfo } from "../platform/Info";
-import { IRequestOptions, IRequests, IResponse } from "../platform/IRequests";
+import { IRequestOptions, IRequests, IResponse } from "../platform/Requests";
 import { StreamingError } from "../errors";
 import { defaultHeaders } from "../utils/http";
 

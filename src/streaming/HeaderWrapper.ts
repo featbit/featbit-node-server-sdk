@@ -1,4 +1,4 @@
-import { IHeaders } from "./IRequests";
+import { IHeaders } from "../platform/Requests";
 import * as http from "http";
 
 /**
