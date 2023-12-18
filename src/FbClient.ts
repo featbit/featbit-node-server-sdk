@@ -131,7 +131,29 @@ export class FbClient implements IFbClient {
         ) ?? dataSynchronizer;
     }
 
+    this.start();
+  }
+
+  private start() {
     this.dataSynchronizer.start();
+    setTimeout(() => {
+      if (!this.initialized()) {
+        const msg = `FbClient failed to start successfully within ${this.config.startWaitTime} milliseconds. ` +
+          'This error usually indicates a connection issue with FeatBit or an invalid sdkKey.' +
+          'Please double-check your sdkKey and streamingUri/pollingUri configuration. ' +
+          'We will continue to initialize the FbClient, it still have a chance to get to work ' +
+          'if it\'s a temporary network issue';
+
+        const error = new Error(msg);
+        this.state = ClientState.Failed;
+        this.rejectionReason = error;
+        this.initReject?.(error);
+
+        return this.logger?.warn(msg);
+      }
+
+      this.logger?.info('FbClient started successfully.');
+    }, this.config.startWaitTime);
   }
 
   initialized(): boolean {

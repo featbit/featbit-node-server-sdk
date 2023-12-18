@@ -9,18 +9,9 @@ export interface IOptions {
     /**
      * How long the client constructor will block awaiting a successful connection to FeatBit, in milliseconds.
      *
-     * This value must greater than {@link connectTimeout}
      * Defaults to 5000 milliseconds.
      */
     startWaitTime?: number;
-
-    /**
-     * The connection timeout. This is the time allowed for the WebSocket client to connect to the server, in milliseconds.
-     *
-     * This value must lower then {@link startWaitTime}
-     * Defaults to 3000 seconds.
-     */
-    connectTimeout?: number;
 
     /**
      * The SDK key for your FeatBit environment.

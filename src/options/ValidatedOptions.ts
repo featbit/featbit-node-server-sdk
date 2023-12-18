@@ -4,6 +4,7 @@ import { IOptions } from "./Options";
 import { IDataSynchronizer } from "../streaming/DataSynchronizer";
 
 export interface ValidatedOptions {
+    startWaitTime: number;
     sdkKey: string;
     pollingUri: string;
     streamingUri: string;

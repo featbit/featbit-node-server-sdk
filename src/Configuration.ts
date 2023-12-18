@@ -22,6 +22,7 @@ import { isNullOrUndefined } from "./utils/isNullOrUndefined";
  * and these should allow for conditional construction.
  */
 const validations: Record<string, TypeValidator> = {
+  startWaitTime: TypeValidators.Number,
   sdkKey: TypeValidators.String,
   pollingUri: TypeValidators.String,
   streamingUri: TypeValidators.String,
@@ -42,6 +43,7 @@ const validations: Record<string, TypeValidator> = {
  * @internal
  */
 export const defaultValues: ValidatedOptions = {
+  startWaitTime: 5000,
   sdkKey: '',
   pollingUri: '',
   streamingUri: '',
@@ -104,20 +106,22 @@ function validateEndpoints(options: IOptions, validatedOptions: ValidatedOptions
 
   if (!validatedOptions.offline && (eventsUriMissing || (streamingUriMissing && pollingUriMissing))) {
     if (eventsUriMissing) {
-      validatedOptions.logger?.warn(OptionMessages.partialEndpoint('eventsUri'));
+      validatedOptions.logger?.error(OptionMessages.partialEndpoint('eventsUri'));
     }
 
     if (options.stream && streamingUriMissing) {
-      validatedOptions.logger?.warn(OptionMessages.partialEndpoint('streamingUri'));
+      validatedOptions.logger?.error(OptionMessages.partialEndpoint('streamingUri'));
     }
 
     if (!options.stream && pollingUriMissing) {
-      validatedOptions.logger?.warn(OptionMessages.partialEndpoint('pollingUri'));
+      validatedOptions.logger?.error(OptionMessages.partialEndpoint('pollingUri'));
     }
   }
 }
 
 export default class Configuration {
+  public readonly startWaitTime: number;
+
   public readonly sdkKey: string;
 
   public readonly serviceEndpoints: ServiceEndpoints;
@@ -166,6 +170,8 @@ export default class Configuration {
       validatedOptions.pollingUri,
       validatedOptions.eventsUri
     );
+
+    this.startWaitTime = validatedOptions.startWaitTime;
 
     this.sdkKey = validatedOptions.sdkKey;
     this.webSocketHandshakeTimeout = validatedOptions.webSocketHandshakeTimeout;
