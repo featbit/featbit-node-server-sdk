@@ -34,14 +34,14 @@ export class PayloadEvent implements IEvent {
     toPayload(): any {};
 }
 
-export class CustomEvent extends PayloadEvent {
+export class MetricEvent extends PayloadEvent {
   timestamp: number;
 
   constructor(
     public user: IUser,
     public eventName: string,
     public appType: string,
-    public metricValue?: number
+    public metricValue: number
   ) {
     super();
     this.timestamp = new Date().getTime();
@@ -51,9 +51,9 @@ export class CustomEvent extends PayloadEvent {
     return {
       user: this.user,
       metrics: [{
-        route: '',
+        route: 'index/metric',
         timestamp: this.timestamp,
-        numericValue: this.metricValue ?? 1,
+        numericValue: this.metricValue,
         appType: this.appType,
         eventName: this.eventName,
         type: 'CustomEvent'

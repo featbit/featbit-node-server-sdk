@@ -2,11 +2,11 @@ import { IUser } from "../options/User";
 import { EvalDetail } from "../evaluation/EvalDetail";
 import EventEmitter from "events";
 
-export interface IFeatBitClient {
+export interface IFbClient {
 
     initialized(): boolean;
 
-    waitForInitialization(): Promise<IFeatBitClient>;
+    waitForInitialization(): Promise<IFbClient>;
 
     boolVariation(
       key: string,
@@ -64,12 +64,12 @@ export interface IFeatBitClient {
 
     isOffline(): boolean;
 
-    sendCustomEvent(user: IUser, eventName: string, metricValue?: number | undefined): void
+    track(user: IUser, eventName: string, metricValue?: number | undefined): void
 
     flush(callback?: (res: boolean) => void): Promise<boolean>;
 }
 
-export interface IFeatBitClientWithEvents extends IFeatBitClient, EventEmitter {
+export interface IFbClientWithEvents extends IFbClient, EventEmitter {
     /**
      *
      * Registers an event listener that will be called when the client triggers some type of event.

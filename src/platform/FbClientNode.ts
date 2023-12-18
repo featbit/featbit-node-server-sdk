@@ -6,12 +6,12 @@ import SafeLogger from "../logging/SafeLogger";
 import NodePlatform from "./NodePlatform";
 import { Emits } from "../utils/Emits";
 import { ClientEmitter } from "../utils/ClientEmitter";
-import { FeatBitClient } from "../FeatBitClient";
+import { FbClient } from "../FbClient";
 
 /**
  * @ignore
  */
-class FeatBitClientNode extends FeatBitClient {
+class FbClientNode extends FbClient {
   emitter: EventEmitter;
 
   constructor(options: IOptions) {
@@ -57,4 +57,4 @@ class FeatBitClientNode extends FeatBitClient {
   }
 }
 
-export default Emits(FeatBitClientNode);
+export default Emits(FbClientNode);

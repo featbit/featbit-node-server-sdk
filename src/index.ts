@@ -1,8 +1,8 @@
 import { IOptions } from "./options/Options";
-import FeatBitClientNode from "./platform/FeatBitClientNode";
-import { IFeatBitClientWithEvents } from "./interfaces/FeatBitClient";
+import FbClientNode from "./platform/FbClientNode";
+import { IFbClientWithEvents } from "./interfaces/FbClient";
 
-export * from './interfaces/FeatBitClient'
+export * from './interfaces/FbClient'
 
 /**
  * Creates an instance of the FeatBit client.
@@ -21,6 +21,6 @@ export * from './interfaces/FeatBitClient'
  * @return
  *   The new {@link LDClient} instance.
  */
-export function init(options: IOptions = {}): IFeatBitClientWithEvents {
-  return new FeatBitClientNode(options);
+export function init(options: IOptions = {}): IFbClientWithEvents {
+  return new FbClientNode(options);
 }

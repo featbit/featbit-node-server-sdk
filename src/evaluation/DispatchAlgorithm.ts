@@ -21,10 +21,9 @@ export class DispatchAlgorithm {
   }
 
   public static rolloutOfKey(crypto: ICrypto, key: string): number {
-    const hasher = crypto.createHash('md5');
-    const hashedKey = hasher.update(key).digest('hex');
-    const magicNumber: number = parseInt(hashedKey.substring(0, 8), 16);
-    const percentage: number = Math.abs(magicNumber / MinInt);
+    const hashedBuffer = crypto.createHash('md5').update(key).digest();
+    const magicNumber = hashedBuffer.readInt32LE(0);
+    const percentage = Math.abs(magicNumber / MinInt);
 
     return percentage;
   }

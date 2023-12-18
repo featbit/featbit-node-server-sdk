@@ -11,7 +11,7 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
 
   private logger?: ILogger;
 
-  private pollInterval: number;
+  private pollingInterval: number;
 
   private timeoutHandle: any;
 
@@ -23,7 +23,7 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
     private readonly errorHandler?: PollingErrorHandler,
   ) {
     this.logger = config.logger;
-    this.pollInterval = config.pollInterval;
+    this.pollingInterval = config.pollingInterval;
   }
 
   private poll() {
@@ -32,10 +32,10 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
     }
 
     const startTime = Date.now();
-    this.logger?.debug('Polling FeatBit for feature flag updates');
+    this.logger?.debug('Polling for feature flag and segments updates');
     this.requestor.requestData(this.getStoreTimestamp(),(err, body) => {
       const elapsed = Date.now() - startTime;
-      const sleepFor = Math.max(this.pollInterval - elapsed, 0);
+      const sleepFor = Math.max(this.pollingInterval - elapsed, 0);
 
       this.logger?.debug('Elapsed: %d ms, sleeping for %d ms', elapsed, sleepFor);
       if (err) {

@@ -6,6 +6,25 @@ import { IDataSourceUpdates } from "../store/DataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
 
 export interface IOptions {
+    /**
+     * How long the client constructor will block awaiting a successful connection to FeatBit, in milliseconds.
+     *
+     * This value must greater than {@link connectTimeout}
+     * Defaults to 5000 milliseconds.
+     */
+    startWaitTime?: number;
+
+    /**
+     * The connection timeout. This is the time allowed for the WebSocket client to connect to the server, in milliseconds.
+     *
+     * This value must lower then {@link startWaitTime}
+     * Defaults to 3000 seconds.
+     */
+    connectTimeout?: number;
+
+    /**
+     * The SDK key for your FeatBit environment.
+     */
     sdkKey?: string;
 
     /**
@@ -36,7 +55,7 @@ export interface IOptions {
     /**
      * The time between polling requests, in milliseconds, if less than 30 000 ms, 30 000 ms would be used. Ignored in streaming mode.
      */
-    pollInterval?: number;
+    pollingInterval?: number;
 
     /**
      * The interval in between flushes of events queue, in milliseconds.

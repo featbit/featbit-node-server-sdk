@@ -1,2 +1,2 @@
 export const EmptyString = '';
-export const MinInt: number = -2147483648;
+export const MinInt: number = 0x80000000;

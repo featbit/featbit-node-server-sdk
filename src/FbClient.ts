@@ -1,4 +1,4 @@
-import { IFeatBitClient } from "./interfaces/FeatBitClient";
+import { IFbClient } from "./interfaces/FbClient";
 import { IPlatform } from "./platform/Platform";
 import Configuration from "./Configuration";
 import { ILogger } from "./logging/Logger";
@@ -23,7 +23,7 @@ import { DefaultEventProcessor } from "./events/DefaultEventProcessor";
 import { IStore } from "./store/Store";
 import { IOptions } from "./options/Options";
 import { IUser } from "./options/User";
-import { CustomEvent, PayloadEvent } from "./events/event";
+import { MetricEvent, PayloadEvent } from "./events/event";
 import { platform } from "os";
 
 enum ClientState {
@@ -43,7 +43,7 @@ export interface IClientCallbacks {
   hasEventListeners: () => boolean;
 }
 
-export class FeatBitClient implements IFeatBitClient {
+export class FbClient implements IFbClient {
   private state: ClientState = ClientState.Initializing;
 
   private store: IStore;
@@ -54,13 +54,13 @@ export class FeatBitClient implements IFeatBitClient {
 
   private evaluator: Evaluator;
 
-  private initResolve?: (value: IFeatBitClient | PromiseLike<IFeatBitClient>) => void;
+  private initResolve?: (value: IFbClient | PromiseLike<IFbClient>) => void;
 
   private initReject?: (err: Error) => void;
 
   private rejectionReason: Error | undefined;
 
-  private initializedPromise?: Promise<IFeatBitClient>;
+  private initializedPromise?: Promise<IFbClient>;
 
   private logger?: ILogger;
 
@@ -138,7 +138,7 @@ export class FeatBitClient implements IFeatBitClient {
     return this.state === ClientState.Initialized;
   }
 
-  waitForInitialization(): Promise<IFeatBitClient> {
+  waitForInitialization(): Promise<IFbClient> {
     // An initialization promise is only created if someone is going to use that promise.
     // If we always created an initialization promise, and there was no call waitForInitialization
     // by the time the promise was rejected, then that would result in an unhandled promise
@@ -242,9 +242,9 @@ export class FeatBitClient implements IFeatBitClient {
     return this.config.offline;
   }
 
-  sendCustomEvent(user: IUser, eventName: string, metricValue?: number | undefined): void {
-    const customEvent = new CustomEvent(user, eventName, this.platform.info.appType, metricValue);
-    this.eventProcessor.record(customEvent);
+  track(user: IUser, eventName: string, metricValue?: number | undefined): void {
+    const metricEvent = new MetricEvent(user, eventName, this.platform.info.appType, metricValue ?? 1);
+    this.eventProcessor.record(metricEvent);
     return;
   }
 

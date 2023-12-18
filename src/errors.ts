@@ -4,7 +4,7 @@ export class PollingError extends Error {
     constructor(message: string, status?: number) {
         super(message);
         this.status = status;
-        this.name = 'FeatBitPollingError';
+        this.name = 'FbPollingError';
     }
 }
 
@@ -14,14 +14,14 @@ export class StreamingError extends Error {
     constructor(message: string, code?: number) {
         super(message);
         this.code = code;
-        this.name = 'FeatBitStreamingError';
+        this.name = 'FbStreamingError';
     }
 }
 
 export class UnexpectedResponseError extends Error {
     constructor(message: string) {
         super(message);
-        this.name = 'FeatBitUnexpectedResponseError';
+        this.name = 'FbUnexpectedResponseError';
     }
 }
 
@@ -29,7 +29,7 @@ export class UnexpectedResponseError extends Error {
 export class ClientError extends Error {
     constructor(message: string) {
         super(message);
-        this.name = 'FeatBitClientError';
+        this.name = 'FbClientError';
     }
 }
 

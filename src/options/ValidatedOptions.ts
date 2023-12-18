@@ -13,7 +13,7 @@ export interface ValidatedOptions {
     webSocketPingInterval?: number;
     flushInterval: number;
     maxEventsInQueue: number;
-    pollInterval: number;
+    pollingInterval: number;
     offline: boolean;
     store: IStore | ((options: IOptions) => IStore);
     dataSynchronizer?: IDataSynchronizer;

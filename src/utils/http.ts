@@ -12,7 +12,7 @@ export function defaultHeaders(
     const { userAgentBase, version} = info.sdkData();
 
     const headers: Headers = {
-        'user-agent': `${userAgentBase ?? 'fb-nodejs-server-sdk'}/${version}`,
+        'user-agent': `${userAgentBase ?? info.appType}/${version}`,
         'authorization': sdkKey
     };
 
