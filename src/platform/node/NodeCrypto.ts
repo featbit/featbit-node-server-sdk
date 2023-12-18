@@ -1,4 +1,4 @@
-import { ICrypto, IHasher } from "../Crypto";
+import { ICrypto, IHasher } from "../ICrypto";
 import { createHash } from 'crypto';
 
 export default class NodeCrypto implements ICrypto {

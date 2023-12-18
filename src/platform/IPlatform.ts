@@ -1,6 +1,6 @@
-import { IRequests } from "./Requests";
-import { IInfo } from "./Info";
-import { ICrypto } from "./Crypto";
+import { IRequests } from "./requests";
+import { IInfo } from "./IInfo";
+import { ICrypto } from "./ICrypto";
 
 export interface IPlatform {
     /**

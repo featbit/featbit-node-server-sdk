@@ -1,16 +1,16 @@
 import Context from "../Context";
-import { IFlag } from "./data/Flag";
+import { IFlag } from "./data/IFlag";
 import EvalResult from "./EvalResult";
-import { IPlatform } from "../platform/Platform";
+import { IPlatform } from "../platform/IPlatform";
 import { isMatchRule } from "./evalRules";
 import { Regex } from "../utils/Regex";
 import { DispatchAlgorithm } from "./DispatchAlgorithm";
-import { IVariation } from "./data/Variation";
-import { IStore } from "../store/Store";
+import { IVariation } from "./data/IVariation";
+import { IStore } from "../store/store";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import {EvalEvent} from "../events/event";
-import {ITargetRule} from "./data/Rule";
-import {IRolloutVariation} from "./data/RolloutVariation";
+import {ITargetRule} from "./data/IRule";
+import {IRolloutVariation} from "./data/IRolloutVariation";
 
 /**
  * @internal

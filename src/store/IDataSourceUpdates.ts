@@ -1,5 +1,5 @@
 import { IDataKind } from "../interfaces/DataKind";
-import { IStoreDataStorage, IKeyedStoreItem } from "./Store";
+import { IStoreDataStorage, IKeyedStoreItem } from "./store";
 
 /**
  * Interface that a data source implementation will use to push data into the SDK.

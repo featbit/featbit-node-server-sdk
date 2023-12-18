@@ -1,4 +1,4 @@
-import { IRolloutVariation } from "./RolloutVariation";
+import { IRolloutVariation } from "./IRolloutVariation";
 
 export interface IFallthrough {
   dispatchKey: string;

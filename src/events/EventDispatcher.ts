@@ -1,7 +1,7 @@
-import { ILogger } from "../logging/Logger";
+import { ILogger } from "../logging/ILogger";
 import ClientContext from "../options/ClientContext";
-import {DeliveryStatus, IEventSender} from "./EventSender";
-import { IEventQueue } from "./EventQueue";
+import {DeliveryStatus, IEventSender} from "./IEventSender";
+import { IEventQueue } from "./IEventQueue";
 import { DefaultEventQueue } from "./DefaultEventQueue";
 import { DefaultEventSender } from "./DefaultEventSender";
 import { AsyncEvent, FlushEvent, IEvent, PayloadEvent, ShutdownEvent } from "./event";

@@ -1,13 +1,13 @@
-import { ILogger } from "../logging/Logger";
-import { IClientContext } from "../interfaces/ClientContext";
-import { IPlatform } from "../platform/Platform";
+import { ILogger } from "../logging/ILogger";
+import { IClientContext } from "../interfaces/IClientContext";
+import { IPlatform } from "../platform/IPlatform";
 import ServiceEndpoints from "./ServiceEndpoints";
 
 /**
  * Basic configuration applicable to many SDK components for both server and
  * client SDKs.
  */
-interface BasicConfiguration {
+interface IBasicConfiguration {
     logger?: ILogger;
 
     /**
@@ -41,7 +41,7 @@ interface BasicConfiguration {
  * when building SDK components.
  */
 export default class ClientContext implements IClientContext {
-    basicConfiguration: BasicConfiguration;
+    basicConfiguration: IBasicConfiguration;
 
     constructor(
         sdkKey: string,

@@ -4,8 +4,7 @@ import {
     IStoreDataStorage,
     IStoreItem,
     IStoreKindData, IKeyedStoreItem
-} from "./Store";
-import VersionedDataKinds from "./VersionedDataKinds";
+} from "./store";
 
 export default class InMemoryStore implements IStore {
     version: number = 0;

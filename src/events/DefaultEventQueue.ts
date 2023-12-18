@@ -1,6 +1,6 @@
-import { IEventQueue } from "./EventQueue";
+import { IEventQueue } from "./IEventQueue";
 import { IEvent } from "./event";
-import { ILogger } from "../logging/Logger";
+import { ILogger } from "../logging/ILogger";
 
 export class DefaultEventQueue implements IEventQueue {
   private events: IEvent[];

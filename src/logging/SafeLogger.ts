@@ -1,4 +1,4 @@
-import { ILogger } from "./Logger";
+import { ILogger } from "./ILogger";
 import { TypeValidators } from "../options/Validators";
 
 const loggerRequirements = {

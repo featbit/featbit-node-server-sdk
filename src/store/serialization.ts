@@ -1,8 +1,7 @@
-import { IFlag } from "../evaluation/data/Flag";
-import { ISegment } from "../evaluation/data/Segment";
-import { IRollout } from "../evaluation/data/Rollout";
+import { IFlag } from "../evaluation/data/IFlag";
+import { ISegment } from "../evaluation/data/ISegment";
 import VersionedDataKinds, { IVersionedDataKind } from "./VersionedDataKinds";
-import { IVersionedData } from "../interfaces/VersionedData";
+import { IVersionedData } from "../interfaces/IVersionedData";
 import { getTimestampFromDateTimeString } from "../streaming/utils";
 
 /**
@@ -40,14 +39,6 @@ export interface IPatchData {
     kind: IVersionedDataKind;
 }
 
-function tryParse(data: string): any {
-    try {
-        return JSON.parse(data, reviver);
-    } catch {
-        return undefined;
-    }
-}
-
 /**
  * @internal
  */
@@ -72,25 +63,6 @@ export function deserializeAll(flags: IFlag[], segments: ISegment[]): FlagsAndSe
     }
 
     return result as any as FlagsAndSegments;
-}
-
-
-/**
- * This function is intended for usage inside FeatBit SDKs.
- * This function should NOT be used by customer applications.
- * This function may be changed or removed without a major version.
- *
- * @param data String data from FeatBit.
- * @returns The parsed and processed data.
- */
-export function deserializePoll(data: string): FlagsAndSegments | undefined {
-    const parsed = tryParse(data) as FlagsAndSegments;
-
-    if (!parsed) {
-        return undefined;
-    }
-
-    return parsed;
 }
 
 /**

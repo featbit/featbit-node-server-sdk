@@ -1,4 +1,4 @@
-import { ICrypto } from "../platform/Crypto";
+import { ICrypto } from "../platform/ICrypto";
 import { MinInt } from "../constants";
 
 export class DispatchAlgorithm {

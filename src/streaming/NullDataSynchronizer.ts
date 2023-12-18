@@ -1,4 +1,4 @@
-import { IDataSynchronizer } from "./DataSynchronizer";
+import { IDataSynchronizer } from "./IDataSynchronizer";
 
 export class NullDataSynchronizer implements IDataSynchronizer {
   close(): void {

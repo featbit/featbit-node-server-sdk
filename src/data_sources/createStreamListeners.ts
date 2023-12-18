@@ -1,5 +1,5 @@
-import { IDataSourceUpdates } from "../store/DataSourceUpdates";
-import { ILogger } from "../logging/Logger";
+import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
+import { ILogger } from "../logging/ILogger";
 import { VoidFunction } from "../utils/VoidFunction";
 import {
     deserializeAll,
@@ -8,7 +8,7 @@ import {
     FlagsAndSegments
 } from "../store/serialization";
 import VersionedDataKinds from "../store/VersionedDataKinds";
-import { IStoreDataStorage } from "../store/Store";
+import { IStoreDataStorage } from "../store/store";
 import { EventName, ProcessStreamResponse } from "../streaming/types";
 
 export const createPutListener = (

@@ -1,8 +1,8 @@
-import { IOptions } from "./options/Options";
+import { IOptions } from "./options/IOptions";
 import FbClientNode from "./platform/node/FbClientNode";
-import { IFbClientWithEvents } from "./interfaces/FbClient";
+import { IFbClientWithEvents } from "./interfaces/IFbClientWithEvents";
 
-export * from './interfaces/FbClient'
+export * from './interfaces/IFbClient';
 
 /**
  * Creates an instance of the FeatBit client.

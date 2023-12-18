@@ -1,5 +1,5 @@
-import { IUser } from "../options/User";
-import { IVariation } from "../evaluation/data/Variation";
+import { IUser } from "../options/IUser";
+import { IVariation } from "../evaluation/data/IVariation";
 import { isNullOrUndefined } from "../utils/isNullOrUndefined";
 
 export interface IEvent {

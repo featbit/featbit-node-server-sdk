@@ -1,4 +1,4 @@
-import { IMatchRule } from "./Rule";
+import { IMatchRule } from "./IRule";
 
 export interface ISegment {
     id: string;

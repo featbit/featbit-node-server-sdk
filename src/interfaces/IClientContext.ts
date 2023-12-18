@@ -1,5 +1,5 @@
-import { ILogger } from "../logging/Logger";
-import { IPlatform } from "../platform/Platform";
+import { ILogger } from "../logging/ILogger";
+import { IPlatform } from "../platform/IPlatform";
 
 /**
  * Specifies the base service URIs used by SDK components.

@@ -1,13 +1,13 @@
-import { IOptions } from "./options/Options";
-import { ILogger } from "./logging/Logger";
-import { ValidatedOptions } from "./options/ValidatedOptions";
+import { IOptions } from "./options/IOptions";
+import { ILogger } from "./logging/ILogger";
+import { IValidatedOptions } from "./options/IValidatedOptions";
 import { NumberWithMinimum, TypeValidator, TypeValidators } from "./options/Validators";
 import OptionMessages from "./options/OptionMessages";
 import ServiceEndpoints from "./options/ServiceEndpoints";
-import { IStore } from "./store/Store";
-import { IClientContext } from "./interfaces/ClientContext";
-import { IDataSynchronizer } from "./streaming/DataSynchronizer";
-import { IDataSourceUpdates } from "./store/DataSourceUpdates";
+import { IStore } from "./store/store";
+import { IClientContext } from "./interfaces/IClientContext";
+import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
+import { IDataSourceUpdates } from "./store/IDataSourceUpdates";
 import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
 import { isNullOrUndefined } from "./utils/isNullOrUndefined";
@@ -42,7 +42,7 @@ const validations: Record<string, TypeValidator> = {
 /**
  * @internal
  */
-export const defaultValues: ValidatedOptions = {
+export const defaultValues: IValidatedOptions = {
   startWaitTime: 5000,
   sdkKey: '',
   pollingUri: '',
@@ -61,10 +61,10 @@ export const defaultValues: ValidatedOptions = {
 
 function validateTypesAndNames(options: IOptions): {
   errors: string[];
-  validatedOptions: ValidatedOptions;
+  validatedOptions: IValidatedOptions;
 } {
   const errors: string[] = [];
-  const validatedOptions: ValidatedOptions = {...defaultValues};
+  const validatedOptions: IValidatedOptions = {...defaultValues};
   Object.keys(options).forEach((optionName) => {
     // We need to tell typescript it doesn't actually know what options are.
     // If we don't then it complains we are doing crazy things with it.
@@ -98,7 +98,7 @@ function validateTypesAndNames(options: IOptions): {
   return {errors, validatedOptions};
 }
 
-function validateEndpoints(options: IOptions, validatedOptions: ValidatedOptions) {
+function validateEndpoints(options: IOptions, validatedOptions: IValidatedOptions) {
   const {streamingUri, pollingUri, eventsUri} = options;
   const streamingUriMissing = isNullOrUndefined(streamingUri);
   const pollingUriMissing = isNullOrUndefined(pollingUri);

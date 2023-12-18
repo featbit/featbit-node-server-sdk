@@ -1,6 +1,6 @@
 import ReasonKinds from "./ReasonKinds";
 
-export interface EvalDetail<TValue> {
+export interface IEvalDetail<TValue> {
     /**
      * The result of the flag evaluation. This will be either one of the flag's variations or
      * the default value that was passed to `LDClient.variationDetail`.

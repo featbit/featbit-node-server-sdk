@@ -1,9 +1,9 @@
-import { ILogger } from "../logging/Logger";
-import { IStore } from "../store/Store";
-import { IOptions } from "./Options";
-import { IDataSynchronizer } from "../streaming/DataSynchronizer";
+import { ILogger } from "../logging/ILogger";
+import { IStore } from "../store/store";
+import { IOptions } from "./IOptions";
+import { IDataSynchronizer } from "../streaming/IDataSynchronizer";
 
-export interface ValidatedOptions {
+export interface IValidatedOptions {
     startWaitTime: number;
     sdkKey: string;
     pollingUri: string;

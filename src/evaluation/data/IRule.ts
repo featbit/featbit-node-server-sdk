@@ -1,5 +1,5 @@
-import { ICondition } from "./Condition";
-import { IRolloutVariation } from "./RolloutVariation";
+import { ICondition } from "./ICondition";
+import { IRolloutVariation } from "./IRolloutVariation";
 
 export interface IMatchRule {
   id: string;

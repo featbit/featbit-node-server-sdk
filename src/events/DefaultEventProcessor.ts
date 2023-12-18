@@ -1,11 +1,11 @@
-import { IEventProcessor } from "./EventProcessor";
+import { IEventProcessor } from "./IEventProcessor";
 import { EventDispatcher } from "./EventDispatcher";
 import ClientContext from "../options/ClientContext";
 import { FlushEvent, IEvent, ShutdownEvent } from "./event";
 import { isNullOrUndefined } from "../utils/isNullOrUndefined";
-import { IEventQueue } from "./EventQueue";
+import { IEventQueue } from "./IEventQueue";
 import { DefaultEventQueue } from "./DefaultEventQueue";
-import { ILogger } from "../logging/Logger";
+import { ILogger } from "../logging/ILogger";
 
 export class DefaultEventProcessor implements IEventProcessor {
   private readonly logger: ILogger;

@@ -1,4 +1,4 @@
-import { IHeaders, IResponse } from "../Requests";
+import { IHeaders, IResponse } from "../requests";
 import * as http from "http";
 import HeaderWrapper from "../../streaming/HeaderWrapper";
 

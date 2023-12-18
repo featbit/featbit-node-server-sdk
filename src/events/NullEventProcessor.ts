@@ -1,4 +1,4 @@
-import { IEventProcessor } from "./EventProcessor";
+import { IEventProcessor } from "./IEventProcessor";
 import {IEvent} from "./event";
 
 export class NullEventProcessor implements IEventProcessor {

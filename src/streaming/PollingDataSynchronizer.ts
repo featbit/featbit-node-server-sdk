@@ -1,6 +1,6 @@
 import { isHttpRecoverable, PollingError } from "../errors";
-import { IDataSynchronizer } from "./DataSynchronizer";
-import { ILogger } from "../logging/Logger";
+import { IDataSynchronizer } from "./IDataSynchronizer";
+import { ILogger } from "../logging/ILogger";
 import Configuration from "../Configuration";
 import { EventName, PollingErrorHandler, ProcessStreamResponse, StreamResponseEventType } from "./types";
 import Requestor from "./Requestor";

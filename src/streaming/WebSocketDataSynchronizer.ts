@@ -1,10 +1,10 @@
-import { IDataSynchronizer } from "./DataSynchronizer";
+import { IDataSynchronizer } from "./IDataSynchronizer";
 import ClientContext from "../options/ClientContext";
 import { EventName, ProcessStreamResponse } from "./types";
-import { ILogger } from "../logging/Logger";
-import { IWebSocketWithEvents } from "../platform/WebSocket";
+import { ILogger } from "../logging/ILogger";
+import { IWebSocketWithEvents } from "../platform/IWebSocket";
 import NodeWebSocket from "../platform/node/NodeWebSocket";
-import { IStore } from "../store/Store";
+import { IStore } from "../store/store";
 
 class WebSocketDataSynchronizer implements IDataSynchronizer {
     private socket?: IWebSocketWithEvents;

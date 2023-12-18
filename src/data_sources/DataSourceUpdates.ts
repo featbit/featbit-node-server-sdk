@@ -1,21 +1,21 @@
-import { IDataSourceUpdates } from "../store/DataSourceUpdates";
+import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import {
   IStore,
   IStoreDataStorage,
   IStoreItem,
   IKeyedStoreItem
-} from "../store/Store";
+} from "../store/store";
 import { IDataKind } from "../interfaces/DataKind";
 import NamespacedDataSet from "./NamespacedDataSet";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import DependencyTracker from "./DependencyTracker";
-import { ICondition } from "../evaluation/data/Condition";
+import { ICondition } from "../evaluation/data/ICondition";
 import { isSegmentCondition } from "../evaluation/evalRules";
 
 /**
  * This type allows computing the condition dependencies of either a flag or a segment.
  */
-interface TypeWithRuleConditions {
+interface ITypeWithRuleConditions {
   rules?: [
     {
       // The shape of rules are different between flags and segments, but
@@ -31,7 +31,7 @@ function computeDependencies(namespace: string, item: IStoreItem) {
   const isSegment = namespace === VersionedDataKinds.Segments.namespace;
 
   if (isFlag || isSegment) {
-    const itemWithRuleConditions = item as TypeWithRuleConditions;
+    const itemWithRuleConditions = item as ITypeWithRuleConditions;
 
     itemWithRuleConditions?.rules?.forEach((rule) => {
       rule.conditions?.forEach((condition) => {

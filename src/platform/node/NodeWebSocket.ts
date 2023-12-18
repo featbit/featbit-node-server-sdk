@@ -1,8 +1,8 @@
-import { IWebSocket } from "../WebSocket";
+import { IWebSocket } from "../IWebSocket";
 import WebSocket from 'ws';
 import { IStreamResponse, StreamResponseEventType } from "../../streaming/types";
 import { generateConnectionToken } from "../../streaming/utils";
-import { ILogger } from "../../logging/Logger";
+import { ILogger } from "../../logging/ILogger";
 import EventEmitter from "events";
 import { ClientEmitter } from "../../utils/ClientEmitter";
 import { Emits } from "../../utils/Emits";

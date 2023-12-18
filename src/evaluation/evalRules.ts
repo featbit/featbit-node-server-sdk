@@ -1,9 +1,9 @@
-import { ITargetRule } from "./data/Rule";
-import { ICondition } from "./data/Condition";
-import { ISegment } from "./data/Segment";
+import { ITargetRule } from "./data/IRule";
+import { ICondition } from "./data/ICondition";
+import { ISegment } from "./data/ISegment";
 import Context from "../Context";
 import { Operator } from "./operator";
-import { IStore } from "../store/Store";
+import { IStore } from "../store/store";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 
 const IsInSegmentProperty = "User is in segment";

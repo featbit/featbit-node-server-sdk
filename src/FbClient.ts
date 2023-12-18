@@ -1,15 +1,15 @@
-import { IFbClient } from "./interfaces/FbClient";
-import { IPlatform } from "./platform/Platform";
+import { IFbClient } from "./interfaces/IFbClient";
+import { IPlatform } from "./platform/IPlatform";
 import Configuration from "./Configuration";
-import { ILogger } from "./logging/Logger";
+import { ILogger } from "./logging/ILogger";
 import ClientContext from "./options/ClientContext";
 import DataSourceUpdates from "./data_sources/DataSourceUpdates";
 import { createStreamListeners } from "./data_sources/createStreamListeners";
-import { EvalDetail } from "./evaluation/EvalDetail";
+import { IEvalDetail } from "./evaluation/IEvalDetail";
 import WebSocketDataSynchronizer from "./streaming/WebSocketDataSynchronizer";
 import PollingDataSynchronizer from "./streaming/PollingDataSynchronizer";
 import Requestor from "./streaming/Requestor";
-import { IDataSynchronizer } from "./streaming/DataSynchronizer";
+import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
 import VersionedDataKinds from "./store/VersionedDataKinds";
 import Evaluator from "./evaluation/Evaluator";
 import ReasonKinds from "./evaluation/ReasonKinds";
@@ -17,12 +17,12 @@ import { ClientError } from "./errors";
 import Context from "./Context";
 import { IConvertResult, ValueConverters } from "./utils/ValueConverters";
 import { NullDataSynchronizer } from "./streaming/NullDataSynchronizer";
-import { IEventProcessor } from "./events/EventProcessor";
+import { IEventProcessor } from "./events/IEventProcessor";
 import { NullEventProcessor } from "./events/NullEventProcessor";
 import { DefaultEventProcessor } from "./events/DefaultEventProcessor";
-import { IStore } from "./store/Store";
-import { IOptions } from "./options/Options";
-import { IUser } from "./options/User";
+import { IStore } from "./store/store";
+import { IOptions } from "./options/IOptions";
+import { IUser } from "./options/IUser";
 import { MetricEvent, PayloadEvent } from "./events/event";
 import { platform } from "os";
 
@@ -206,7 +206,7 @@ export class FbClient implements IFbClient {
     key: string,
     user: IUser,
     defaultValue: any
-  ): EvalDetail<boolean> {
+  ): IEvalDetail<boolean> {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.bool);
   }
 
@@ -214,7 +214,7 @@ export class FbClient implements IFbClient {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.json).value!;
   }
 
-  jsonVariationDetail(key: string, user: IUser, defaultValue: unknown): EvalDetail<unknown> {
+  jsonVariationDetail(key: string, user: IUser, defaultValue: unknown): IEvalDetail<unknown> {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.json);
   }
 
@@ -222,7 +222,7 @@ export class FbClient implements IFbClient {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.number).value!;
   }
 
-  numberVariationDetail(key: string, user: IUser, defaultValue: number): EvalDetail<number> {
+  numberVariationDetail(key: string, user: IUser, defaultValue: number): IEvalDetail<number> {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.number);
   }
 
@@ -230,13 +230,13 @@ export class FbClient implements IFbClient {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.string).value!;
   }
 
-  stringVariationDetail(key: string, user: IUser, defaultValue: string): EvalDetail<string> {
+  stringVariationDetail(key: string, user: IUser, defaultValue: string): IEvalDetail<string> {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.string);
   }
 
   getAllVariations(
     user: IUser,
-  ): EvalDetail<string>[] {
+  ): IEvalDetail<string>[] {
     const context = Context.fromUser(user);
     if (!context.valid) {
       const error = new ClientError(
@@ -286,7 +286,7 @@ export class FbClient implements IFbClient {
     user: IUser,
     defaultValue: TValue,
     typeConverter: (value: string) => IConvertResult<TValue>
-  ): EvalDetail<TValue> {
+  ): IEvalDetail<TValue> {
     if (!this.initialized()) {
       this.logger?.warn(
         'Variation called before FeatBit client initialization completed (did you wait for the' +

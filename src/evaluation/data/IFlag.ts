@@ -1,7 +1,7 @@
-import { ITargetUser } from "./TargetUser";
-import { IVariation } from "./Variation";
-import { ITargetRule } from "./Rule";
-import { IFallthrough } from "./Fallthrough";
+import { ITargetUser } from "./ITargetUser";
+import { IVariation } from "./IVariation";
+import { ITargetRule } from "./IRule";
+import { IFallthrough } from "./IFallthrough";
 
 export interface IFlag {
     fallthrough: IFallthrough;

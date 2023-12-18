@@ -1,4 +1,4 @@
-import { IInfo, IPlatformData, ISdkData } from "../Info";
+import { IInfo, IPlatformData, ISdkData } from "../IInfo";
 import * as os from "os";
 import { version, name } from '../../../package.json';
 

@@ -1,6 +1,6 @@
 import * as https from "https";
 import * as http from "http";
-import { IResponse, IRequests, IRequestOptions } from "../Requests";
+import { IResponse, IRequests, IRequestOptions } from "../requests";
 import NodeResponse from "./NodeResponse";
 
 export default class NodeRequests implements IRequests {

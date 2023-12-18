@@ -1,8 +1,8 @@
-import { IUser } from "./User";
-import { ILogger } from "../logging/Logger";
-import { IDataSynchronizer } from "../streaming/DataSynchronizer";
-import { IClientContext } from "../interfaces/ClientContext";
-import { IDataSourceUpdates } from "../store/DataSourceUpdates";
+import { IUser } from "./IUser";
+import { ILogger } from "../logging/ILogger";
+import { IDataSynchronizer } from "../streaming/IDataSynchronizer";
+import { IClientContext } from "../interfaces/IClientContext";
+import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
 
 export interface IOptions {
