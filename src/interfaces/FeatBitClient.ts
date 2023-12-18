@@ -17,8 +17,44 @@ export interface IFeatBitClient {
     boolVariationDetail(
       key: string,
       user: IUser,
-      defaultValue: any
+      defaultValue: boolean
     ): EvalDetail<boolean>;
+
+    numberVariation(
+      key: string,
+      user: IUser,
+      defaultValue: number
+    ): number;
+
+    stringVariationDetail(
+      key: string,
+      user: IUser,
+      defaultValue: string
+    ): EvalDetail<string>;
+
+    stringVariation(
+      key: string,
+      user: IUser,
+      defaultValue: string
+    ): string;
+
+    numberVariationDetail(
+      key: string,
+      user: IUser,
+      defaultValue: number
+    ): EvalDetail<number>;
+
+    jsonVariation(
+      key: string,
+      user: IUser,
+      defaultValue: unknown
+    ): unknown;
+
+    jsonVariationDetail(
+      key: string,
+      user: IUser,
+      defaultValue: unknown
+    ): EvalDetail<unknown>;
 
     getAllVariations(
       user: IUser,
@@ -28,11 +64,9 @@ export interface IFeatBitClient {
 
     isOffline(): boolean;
 
-    track(key: string, context: IUser, data?: any, metricValue?: number): void;
+    sendCustomEvent(user: IUser, eventName: string, metricValue?: number | undefined): void
 
-    identify(context: IUser): void;
-
-    flush(callback?: (err: Error | null, res: boolean) => void): Promise<void>;
+    flush(callback?: (res: boolean) => void): Promise<boolean>;
 }
 
 export interface IFeatBitClientWithEvents extends IFeatBitClient, EventEmitter {

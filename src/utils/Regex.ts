@@ -4,7 +4,7 @@ export class Regex {
   private static trueStrRegex = /^true$/i;
   private static falseStrRegex = /^false$/i;
 
-  public static fromString(patternString: string): RegExp {
+  static fromString(patternString: string): RegExp {
     let flags = '';
     const match = patternString.match(Regex.patternWithFlags);
 
@@ -16,15 +16,15 @@ export class Regex {
     return new RegExp(patternString, flags);
   }
 
-  public static isTrue(str: string): boolean {
+  static isTrue(str: string): boolean {
     return this.trueStrRegex.test(str);
   }
 
-  public static isFalse(str: string): boolean {
+  static isFalse(str: string): boolean {
     return this.falseStrRegex.test(str);
   }
 
-  public static isNullOrWhiteSpace(str: string) {
+  static isNullOrWhiteSpace(str: string) {
     return str === null || !str.replace(Regex.whiteSpaceRegex, '').length;
   }
 }

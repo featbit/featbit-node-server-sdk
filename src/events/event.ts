@@ -1,5 +1,6 @@
 import { IUser } from "../options/User";
 import { IVariation } from "../evaluation/data/Variation";
+import { isNullOrUndefined } from "../utils/isNullOrUndefined";
 
 export interface IEvent {
 }
@@ -31,6 +32,34 @@ export class ShutdownEvent extends AsyncEvent {
 
 export class PayloadEvent implements IEvent {
     toPayload(): any {};
+}
+
+export class CustomEvent extends PayloadEvent {
+  timestamp: number;
+
+  constructor(
+    public user: IUser,
+    public eventName: string,
+    public appType: string,
+    public metricValue?: number
+  ) {
+    super();
+    this.timestamp = new Date().getTime();
+  }
+
+  toPayload(): any {
+    return {
+      user: this.user,
+      metrics: [{
+        route: '',
+        timestamp: this.timestamp,
+        numericValue: this.metricValue ?? 1,
+        appType: this.appType,
+        eventName: this.eventName,
+        type: 'CustomEvent'
+      }]
+    }
+  }
 }
 
 export class EvalEvent extends PayloadEvent {

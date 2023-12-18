@@ -1,4 +1,5 @@
 import { ICrypto } from "../platform/ICrypto";
+import { MinInt } from "../constants";
 
 export class DispatchAlgorithm {
   public static isInRollout(crypto: ICrypto, key: string, rollouts: [number, number]): boolean {
@@ -23,7 +24,7 @@ export class DispatchAlgorithm {
     const hasher = crypto.createHash('md5');
     const hashedKey = hasher.update(key).digest('hex');
     const magicNumber: number = parseInt(hashedKey.substring(0, 8), 16);
-    const percentage: number = Math.abs(magicNumber / 0xfffffffffffffff);
+    const percentage: number = Math.abs(magicNumber / MinInt);
 
     return percentage;
   }

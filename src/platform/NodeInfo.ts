@@ -16,6 +16,10 @@ function processPlatformName(name: string): string {
 }
 
 export default class NodeInfo implements IInfo {
+  get appType(): string {
+    return 'NodeJS-Server-SDK';
+  }
+
   platformData(): IPlatformData {
     return {
       os: {
@@ -34,8 +38,7 @@ export default class NodeInfo implements IInfo {
     return {
       name: name,
       version: version,
-      userAgentBase: 'NodeJSClient',
-      // No wrapper name/version at the moment.
+      userAgentBase: this.appType
     };
   }
 }

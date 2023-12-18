@@ -66,6 +66,11 @@ export interface ISdkData {
  */
 export interface IInfo {
   /**
+   * Get the app type
+   */
+  get appType(): string;
+
+  /**
    * Get information about the platform.
    */
   platformData(): IPlatformData;

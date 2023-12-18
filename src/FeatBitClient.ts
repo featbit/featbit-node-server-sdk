@@ -23,6 +23,8 @@ import { DefaultEventProcessor } from "./events/DefaultEventProcessor";
 import { IStore } from "./store/Store";
 import { IOptions } from "./options/Options";
 import { IUser } from "./options/User";
+import { CustomEvent, PayloadEvent } from "./events/event";
+import { platform } from "os";
 
 enum ClientState {
   Initializing,
@@ -186,6 +188,30 @@ export class FeatBitClient implements IFeatBitClient {
     return this.evaluateCore(key, user, defaultValue, ValueConverters.bool);
   }
 
+  jsonVariation(key: string, user: IUser, defaultValue: unknown): unknown {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.json).value!;
+  }
+
+  jsonVariationDetail(key: string, user: IUser, defaultValue: unknown): EvalDetail<unknown> {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.json);
+  }
+
+  numberVariation(key: string, user: IUser, defaultValue: number): number {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.number).value!;
+  }
+
+  numberVariationDetail(key: string, user: IUser, defaultValue: number): EvalDetail<number> {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.number);
+  }
+
+  stringVariation(key: string, user: IUser, defaultValue: string): string {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.string).value!;
+  }
+
+  stringVariationDetail(key: string, user: IUser, defaultValue: string): EvalDetail<string> {
+    return this.evaluateCore(key, user, defaultValue, ValueConverters.string);
+  }
+
   getAllVariations(
     user: IUser,
   ): EvalDetail<string>[] {
@@ -216,16 +242,21 @@ export class FeatBitClient implements IFeatBitClient {
     return this.config.offline;
   }
 
-  track(key: string, context: IUser, data?: any, metricValue?: number | undefined): void {
-    throw new Error("Method not implemented.");
+  sendCustomEvent(user: IUser, eventName: string, metricValue?: number | undefined): void {
+    const customEvent = new CustomEvent(user, eventName, this.platform.info.appType, metricValue);
+    this.eventProcessor.record(customEvent);
+    return;
   }
 
-  identify(context: IUser): void {
-    throw new Error("Method not implemented.");
-  }
-
-  flush(callback?: ((err: Error | null, res: boolean) => void) | undefined): Promise<void> {
-    throw new Error("Method not implemented.");
+  async flush(callback?: (res: boolean) => void): Promise<boolean> {
+    try {
+      await this.eventProcessor.flush();
+      callback?.(true);
+      return true;
+    } catch (err) {
+      callback?.(false);
+      return false;
+    }
   }
 
   private evaluateCore<TValue>(

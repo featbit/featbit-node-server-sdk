@@ -16,7 +16,7 @@ class FeatBitClientNode extends FeatBitClient {
 
   constructor(options: IOptions) {
     const fallbackLogger = new BasicLogger({
-      level: 'debug',
+      level: 'info',
       // eslint-disable-next-line no-console
       destination: console.error,
       formatter: format,
