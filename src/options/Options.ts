@@ -9,9 +9,19 @@ export interface IOptions {
     sdkKey?: string;
 
     /**
-     * The base URI for the FeatBit Evaluation server.
+     * The streaming URI.
      */
-    baseUri?: string;
+    streamingUri?: string;
+
+    /**
+     * The streaming URI.
+     */
+    pollingUri?: string;
+
+    /**
+     * The streaming URI.
+     */
+    eventsUri?: string;
 
     context?: IUser;
 

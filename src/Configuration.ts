@@ -10,6 +10,7 @@ import { IDataSynchronizer } from "./streaming/DataSynchronizer";
 import { IDataSourceUpdates } from "./store/DataSourceUpdates";
 import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
+import { isNullOrUndefined } from "./utils/isNullOrUndefined";
 
 // Once things are internal to the implementation of the SDK we can depend on
 // types. Calls to the SDK could contain anything without any regard to typing.
@@ -22,24 +23,19 @@ import { VoidFunction } from "./utils/VoidFunction";
  */
 const validations: Record<string, TypeValidator> = {
     sdkKey: TypeValidators.String,
-    baseUri: TypeValidators.String,
-    streamUri: TypeValidators.String,
+    pollingUri: TypeValidators.String,
+    streamingUri: TypeValidators.String,
     eventsUri: TypeValidators.String,
     webSocketHandshakeTimeout: TypeValidators.Number,
     webSocketPingInterval: TypeValidators.Number,
-    capacity: TypeValidators.Number,
     logger: TypeValidators.Object,
     store: TypeValidators.ObjectOrFactory,
-    bigSegments: TypeValidators.Object,
     updateProcessor: TypeValidators.ObjectOrFactory,
     flushInterval: TypeValidators.Number,
     maxEventsInQueue: TypeValidators.Number,
     pollInterval: TypeValidators.Number,
-    proxyOptions: TypeValidators.Object,
     offline: TypeValidators.Boolean,
-    stream: TypeValidators.Boolean,
-    sendEvents: TypeValidators.Boolean,
-    application: TypeValidators.Object,
+    stream: TypeValidators.Boolean
 };
 
 /**
@@ -47,12 +43,13 @@ const validations: Record<string, TypeValidator> = {
  */
 export const defaultValues: ValidatedOptions = {
     sdkKey: '',
-    baseUri: '',
+    pollingUri: '',
+    streamingUri: '',
+    eventsUri: '',
     stream: true,
     sendEvents: true,
     webSocketHandshakeTimeout: undefined,
     webSocketPingInterval: 18 * 1000,
-    capacity: 10000,
     flushInterval: 2000,
     maxEventsInQueue: 10000,
     pollInterval: 30000,
@@ -100,11 +97,23 @@ function validateTypesAndNames(options: IOptions): {
 }
 
 function validateEndpoints(options: IOptions, validatedOptions: ValidatedOptions) {
-    const { baseUri } = options;
-    const baseUriSpecified = baseUri !== undefined && baseUri !== null;
+    const { streamingUri, pollingUri, eventsUri } = options;
+    const streamingUriMissing = isNullOrUndefined(streamingUri);
+    const pollingUriMissing = isNullOrUndefined(pollingUri);
+    const eventsUriMissing = isNullOrUndefined(eventsUri);
 
-    if (!baseUriSpecified && !validatedOptions.offline) {
-        validatedOptions.logger?.warn(OptionMessages.partialEndpoint('baseUri'));
+    if (!validatedOptions.offline && (eventsUriMissing || (streamingUriMissing && pollingUriMissing))) {
+        if (eventsUriMissing) {
+            validatedOptions.logger?.warn(OptionMessages.partialEndpoint('eventsUri'));
+        }
+
+        if (options.stream && streamingUriMissing) {
+            validatedOptions.logger?.warn(OptionMessages.partialEndpoint('streamingUri'));
+        }
+
+        if (!options.stream && pollingUriMissing) {
+            validatedOptions.logger?.warn(OptionMessages.partialEndpoint('pollingUri'));
+        }
     }
 }
 
@@ -112,8 +121,6 @@ export default class Configuration {
     public readonly sdkKey: string;
 
     public readonly serviceEndpoints: ServiceEndpoints;
-
-    public readonly eventsCapacity: number;
 
     public readonly webSocketHandshakeTimeout?: number;
 
@@ -155,11 +162,12 @@ export default class Configuration {
         validateEndpoints(options, validatedOptions);
 
         this.serviceEndpoints = new ServiceEndpoints(
-          validatedOptions.baseUri
+          validatedOptions.streamingUri,
+          validatedOptions.pollingUri,
+          validatedOptions.eventsUri
         );
 
         this.sdkKey = validatedOptions.sdkKey;
-        this.eventsCapacity = validatedOptions.capacity;
         this.webSocketHandshakeTimeout = validatedOptions.webSocketHandshakeTimeout;
         this.webSocketPingInterval = validatedOptions.webSocketPingInterval!;
 

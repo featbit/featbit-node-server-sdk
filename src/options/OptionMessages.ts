@@ -2,10 +2,6 @@
  * Messages for issues which can be encountered from processing the configuration options.
  */
 export default class OptionMessages {
-    static deprecated(oldName: string, newName: string): string {
-        return `"${oldName}" is deprecated, please use "${newName}"`;
-    }
-
     static optionBelowMinimum(name: string, value: number, min: number): string {
         return `Config option "${name}" had invalid value of ${value}, using minimum of ${min} instead`;
     }
@@ -20,14 +16,6 @@ export default class OptionMessages {
 
     static wrongOptionTypeBoolean(name: string, actualType: string): string {
         return `Config option "${name}" should be a boolean, got ${actualType}, converting to boolean`;
-    }
-
-    static invalidTagValue(name: string): string {
-        return `Config option "${name}" must only contain letters, numbers, ., _ or -.`;
-    }
-
-    static tagValueTooLong(name: string): string {
-        return `Value of "${name}" was longer than 64 characters and was discarded.`;
     }
 
     static partialEndpoint(name: string): string {
