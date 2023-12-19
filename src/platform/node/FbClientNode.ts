@@ -16,7 +16,7 @@ class FbClientNode extends FbClient {
 
   constructor(options: IOptions) {
     const fallbackLogger = new BasicLogger({
-      level: 'info',
+      level: 'debug',
       // eslint-disable-next-line no-console
       destination: console.error,
       formatter: format,
