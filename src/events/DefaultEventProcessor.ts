@@ -15,7 +15,7 @@ export class DefaultEventProcessor implements IEventProcessor {
   private closed: boolean = false;
 
   constructor(clientContext: ClientContext) {
-    const { logger, flushInterval, maxEventsInQueue } = clientContext;
+    const {logger, flushInterval, maxEventsInQueue} = clientContext;
     this.logger = logger!;
     this.flushInterval = flushInterval;
     this.eventQueue = new DefaultEventQueue(maxEventsInQueue, this.logger);

@@ -16,9 +16,10 @@ export class DefaultEventSender implements IEventSender {
     const {
       sdkKey,
       eventsUri,
-      platform } = clientContext;
+      platform
+    } = clientContext;
 
-    const { info, requests } = platform;
+    const {info, requests} = platform;
     this.defaultHeaders = defaultHeaders(sdkKey, info);
     this.eventsUri = eventsUri;
     this.requests = requests;
@@ -36,7 +37,7 @@ export class DefaultEventSender implements IEventSender {
 
     let error;
     try {
-      const { status } = await this.requests.fetch(this.eventsUri, {
+      const {status} = await this.requests.fetch(this.eventsUri, {
         headers,
         body: payload,
         method: 'POST',
@@ -47,7 +48,7 @@ export class DefaultEventSender implements IEventSender {
       }
 
       error = new UnexpectedResponseError(
-        httpErrorMessage({ status, message: 'some events were dropped' }, 'event posting'),
+        httpErrorMessage({status, message: 'some events were dropped'}, 'event posting'),
       );
 
       if (!isHttpRecoverable(status)) {

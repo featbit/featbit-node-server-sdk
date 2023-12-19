@@ -7,6 +7,7 @@
  */
 export interface IHasher {
   update(data: string): IHasher;
+
   digest(): Buffer;
 }
 

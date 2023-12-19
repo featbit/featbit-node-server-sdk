@@ -34,7 +34,8 @@ enum OperatorTypes {
 
 export class Operator {
 
-  constructor(private readonly operation: string, private readonly func: (param1: string, param2: string) => boolean) {}
+  constructor(private readonly operation: string, private readonly func: (param1: string, param2: string) => boolean) {
+  }
 
   public isMatch(value: string, conditionValue: string) {
     if (value === null || conditionValue === null) {
@@ -58,7 +59,7 @@ export class Operator {
     new Operator(OperatorTypes.BiggerEqualThan, Operator.numericOperator(1, 0));
 
 
-  private static numericOperator (
+  private static numericOperator(
     desiredComparisonResult: number,
     otherDesiredComparisonResult: number): (param1: string, param2: string) => boolean {
     return (param1: string, param2: string) => {

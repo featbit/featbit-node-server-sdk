@@ -1,5 +1,5 @@
 import { IEventProcessor } from "./IEventProcessor";
-import {IEvent} from "./event";
+import { IEvent } from "./event";
 
 export class NullEventProcessor implements IEventProcessor {
   flush(): Promise<void> {

@@ -1,3 +1,4 @@
 import EventEmitter from "events";
 
-export class ClientEmitter extends EventEmitter {}
+export class ClientEmitter extends EventEmitter {
+}

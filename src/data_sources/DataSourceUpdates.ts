@@ -7,7 +7,7 @@ import {
 } from "../store/store";
 import { IDataKind } from "../IDataKind";
 import NamespacedDataSet from "./NamespacedDataSet";
-import VersionedDataKinds from "../store/VersionedDataKinds";
+import DataKinds from "../store/DataKinds";
 import DependencyTracker from "./DependencyTracker";
 import { ICondition } from "../evaluation/data/ICondition";
 import { isSegmentCondition } from "../evaluation/evalRules";
@@ -27,8 +27,8 @@ interface ITypeWithRuleConditions {
 
 function computeDependencies(namespace: string, item: IStoreItem) {
   const ret = new NamespacedDataSet<boolean>();
-  const isFlag = namespace === VersionedDataKinds.Flags.namespace;
-  const isSegment = namespace === VersionedDataKinds.Segments.namespace;
+  const isFlag = namespace === DataKinds.Flags.namespace;
+  const isSegment = namespace === DataKinds.Segments.namespace;
 
   if (isFlag || isSegment) {
     const itemWithRuleConditions = item as ITypeWithRuleConditions;
@@ -38,7 +38,7 @@ function computeDependencies(namespace: string, item: IStoreItem) {
         if (isSegmentCondition(condition)) {
           const segmentIds: string[] = JSON.parse(condition.value);
           segmentIds?.forEach((segmentId) => {
-            ret.set(VersionedDataKinds.Segments.namespace, segmentId, true);
+            ret.set(DataKinds.Segments.namespace, segmentId, true);
           });
         }
       });
@@ -103,11 +103,11 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
     };
 
     if (checkForChanges) {
-      const oldFlags = this.store.all(VersionedDataKinds.Flags);
-      const oldSegments = this.store.all(VersionedDataKinds.Segments);
+      const oldFlags = this.store.all(DataKinds.Flags);
+      const oldSegments = this.store.all(DataKinds.Segments);
       const oldData = {
-        [VersionedDataKinds.Flags.namespace]: oldFlags,
-        [VersionedDataKinds.Segments.namespace]: oldSegments,
+        [DataKinds.Flags.namespace]: oldFlags,
+        [DataKinds.Segments.namespace]: oldSegments,
       };
       doInit(oldData);
     } else {
@@ -160,7 +160,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
 
   sendChangeEvents(dataSet: NamespacedDataSet<boolean>) {
     dataSet.enumerate((namespace, key) => {
-      if (namespace === VersionedDataKinds.Flags.namespace) {
+      if (namespace === DataKinds.Flags.namespace) {
         this.onChange(key);
       }
     });

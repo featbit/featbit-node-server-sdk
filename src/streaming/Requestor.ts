@@ -48,21 +48,21 @@ export default class Requestor implements IRequestor {
     const updatedOptions = cachedETag
       ? {
         ...options,
-        headers: { 'if-none-match': cachedETag },
+        headers: {'if-none-match': cachedETag},
       }
       : options;
 
     const res = await this.requests.fetch(requestUrl, updatedOptions);
 
     if (res.status === 304 && cacheEntry) {
-      return { res, body: cacheEntry.body };
+      return {res, body: cacheEntry.body};
     }
     const etag = res.headers.get('etag');
     const body = await res.text();
     if (etag) {
-      this.eTagCache[requestUrl] = { etag, body };
+      this.eTagCache[requestUrl] = {etag, body};
     }
-    return { res, body };
+    return {res, body};
   }
 
   async requestData(timestamp: number, cb: (err: any, body: any) => void) {
@@ -71,9 +71,9 @@ export default class Requestor implements IRequestor {
       headers: this.headers,
     };
     try {
-      const { res, body } = await this.requestWithETagCache(`${this.uri}?timestamp=${timestamp ?? 0}`, options);
+      const {res, body} = await this.requestWithETagCache(`${ this.uri }?timestamp=${ timestamp ?? 0 }`, options);
       if (res.status !== 200 && res.status !== 304) {
-        const err = new StreamingError(`Unexpected status code: ${res.status}`, res.status);
+        const err = new StreamingError(`Unexpected status code: ${ res.status }`, res.status);
         return cb(err, undefined);
       }
       return cb(undefined, res.status === 304 ? null : body);

@@ -10,7 +10,7 @@ import WebSocketDataSynchronizer from "./streaming/WebSocketDataSynchronizer";
 import PollingDataSynchronizer from "./streaming/PollingDataSynchronizer";
 import Requestor from "./streaming/Requestor";
 import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
-import VersionedDataKinds from "./store/VersionedDataKinds";
+import DataKinds from "./store/DataKinds";
 import Evaluator from "./evaluation/Evaluator";
 import ReasonKinds from "./evaluation/ReasonKinds";
 import { ClientError } from "./errors";
@@ -80,7 +80,7 @@ export class FbClient implements IFbClient {
     this.onFailed = callbacks.onFailed;
     this.onReady = callbacks.onReady;
 
-    const { onUpdate, hasEventListeners } = callbacks;
+    const {onUpdate, hasEventListeners} = callbacks;
     const config = new Configuration(options);
 
     if (!config.sdkKey && !config.offline) {
@@ -106,28 +106,28 @@ export class FbClient implements IFbClient {
       });
 
       const dataSynchronizer = config.stream
-          ? new WebSocketDataSynchronizer(
-            this.config.sdkKey,
-            clientContext,
-            () => this.store.version,
-            listeners,
-            this.config.webSocketPingInterval,
-            this.config.webSocketHandshakeTimeout
-          )
-          : new PollingDataSynchronizer(
-            config,
-            new Requestor(this.config.sdkKey, config, this.platform.info, this.platform.requests),
-            () => this.store.version,
-            listeners,
-            (e) => this.dataSourceErrorHandler(e),
-          );
+        ? new WebSocketDataSynchronizer(
+          this.config.sdkKey,
+          clientContext,
+          () => this.store.version,
+          listeners,
+          this.config.webSocketPingInterval,
+          this.config.webSocketHandshakeTimeout
+        )
+        : new PollingDataSynchronizer(
+          config,
+          new Requestor(this.config.sdkKey, config, this.platform.info, this.platform.requests),
+          () => this.store.version,
+          listeners,
+          (e) => this.dataSourceErrorHandler(e),
+        );
 
       this.dataSynchronizer = config.dataSynchronizerFactory?.(
-          clientContext,
-          dataSourceUpdates,
-          () => this.initSuccess(),
-          (e) => this.dataSourceErrorHandler(e),
-        ) ?? dataSynchronizer;
+        clientContext,
+        dataSourceUpdates,
+        () => this.initSuccess(),
+        (e) => this.dataSourceErrorHandler(e),
+      ) ?? dataSynchronizer;
     }
 
     this.start();
@@ -137,7 +137,7 @@ export class FbClient implements IFbClient {
     this.dataSynchronizer.start();
     setTimeout(() => {
       if (!this.initialized()) {
-        const msg = `FbClient failed to start successfully within ${this.config.startWaitTime} milliseconds. ` +
+        const msg = `FbClient failed to start successfully within ${ this.config.startWaitTime } milliseconds. ` +
           'This error usually indicates a connection issue with FeatBit or an invalid sdkKey.' +
           'Please double-check your sdkKey and streamingUri/pollingUri configuration. ' +
           'We will continue to initialize the FbClient, it still have a chance to get to work ' +
@@ -239,17 +239,17 @@ export class FbClient implements IFbClient {
     const context = Context.fromUser(user);
     if (!context.valid) {
       const error = new ClientError(
-        `${context.message ?? 'User not valid;'} returning default value.`,
+        `${ context.message ?? 'User not valid;' } returning default value.`,
       );
       this.onError(error);
 
       return [];
     }
 
-    const flags = this.store.all(VersionedDataKinds.Flags);
+    const flags = this.store.all(DataKinds.Flags);
     return Object.keys(flags).map(flagKey => {
       const [evalResult, _] = this.evaluator.evaluate(flagKey, context);
-      return { kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value };
+      return {kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value};
     });
   }
 
@@ -292,17 +292,17 @@ export class FbClient implements IFbClient {
         "'ready' event?) - using default value",
       );
 
-      return { kind: ReasonKinds.ClientNotReady, reason: 'client not ready', value: defaultValue };
+      return {kind: ReasonKinds.ClientNotReady, reason: 'client not ready', value: defaultValue};
     }
 
     const context = Context.fromUser(user);
     if (!context.valid) {
       const error = new ClientError(
-        `${context.message ?? 'User not valid;'} returning default value.`,
+        `${ context.message ?? 'User not valid;' } returning default value.`,
       );
       this.onError(error);
 
-      return { kind: ReasonKinds.ClientNotReady, reason: error.message, value: defaultValue };
+      return {kind: ReasonKinds.ClientNotReady, reason: error.message, value: defaultValue};
     }
 
     const [evalResult, evalEvent] = this.evaluator.evaluate(flagKey, context);
@@ -312,16 +312,16 @@ export class FbClient implements IFbClient {
       const error = new ClientError(evalResult.reason!);
       this.onError(error);
 
-      return { kind: evalResult.kind, reason: evalResult.reason, value: defaultValue };
+      return {kind: evalResult.kind, reason: evalResult.reason, value: defaultValue};
     }
 
     // send event
     this.eventProcessor.record(evalEvent);
 
-    const { isSucceeded, value } = typeConverter(evalResult.value!);
+    const {isSucceeded, value} = typeConverter(evalResult.value!);
     return isSucceeded
-      ? { kind: evalResult.kind, reason: evalResult.reason, value }
-      : { kind: ReasonKinds.WrongType, reason: 'type mismatch', value: defaultValue };
+      ? {kind: evalResult.kind, reason: evalResult.reason, value}
+      : {kind: ReasonKinds.WrongType, reason: 'type mismatch', value: defaultValue};
   }
 
   private dataSourceErrorHandler(e: any) {

@@ -5,4 +5,5 @@ export interface IWebSocket {
   close: () => void;
 }
 
-export interface IWebSocketWithEvents extends IWebSocket, EventEmitter {}
+export interface IWebSocketWithEvents extends IWebSocket, EventEmitter {
+}

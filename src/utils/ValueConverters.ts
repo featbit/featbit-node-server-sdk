@@ -1,5 +1,4 @@
 import { Regex } from "./Regex";
-import { isNullOrUndefined } from "./isNullOrUndefined";
 
 export interface IConvertResult<TValue> {
   isSucceeded: boolean,

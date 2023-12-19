@@ -20,7 +20,7 @@ export default class EvalResult {
   }
 
   static flagNotFound(flagKey: string) {
-    return new EvalResult(ReasonKinds.Error, EmptyString, `Unknown feature flag "${flagKey}"; returning default value`);
+    return new EvalResult(ReasonKinds.Error, EmptyString, `Unknown feature flag "${ flagKey }"; returning default value`);
   }
 
   static malformedFlag() {
@@ -36,7 +36,7 @@ export default class EvalResult {
   }
 
   static ruleMatched(val: string, ruleName: string) {
-    return new EvalResult(ReasonKinds.RuleMatch, val, `match rule ${ruleName}`);
+    return new EvalResult(ReasonKinds.RuleMatch, val, `match rule ${ ruleName }`);
   }
 
   static fallthrough(val: string) {

@@ -12,51 +12,52 @@
  * Interface for type validation.
  */
 export interface TypeValidator {
-    is(u: unknown): boolean;
-    getType(): string;
+  is(u: unknown): boolean;
+
+  getType(): string;
 }
 
 /**
  * Validate a factory or instance.
  */
 export class FactoryOrInstance implements TypeValidator {
-    is(factoryOrInstance: unknown) {
-        if (Array.isArray(factoryOrInstance)) {
-            return false;
-        }
-        const anyFactory = factoryOrInstance as any;
-        const typeOfFactory = typeof anyFactory;
-        return typeOfFactory === 'function' || typeOfFactory === 'object';
+  is(factoryOrInstance: unknown) {
+    if (Array.isArray(factoryOrInstance)) {
+      return false;
     }
+    const anyFactory = factoryOrInstance as any;
+    const typeOfFactory = typeof anyFactory;
+    return typeOfFactory === 'function' || typeOfFactory === 'object';
+  }
 
-    getType(): string {
-        return 'factory method or object';
-    }
+  getType(): string {
+    return 'factory method or object';
+  }
 }
 
 /**
  * Validate a basic type.
  */
 export class Type<T> implements TypeValidator {
-    private typeName: string;
+  private typeName: string;
 
-    protected typeOf: string;
+  protected typeOf: string;
 
-    constructor(typeName: string, example: T) {
-        this.typeName = typeName;
-        this.typeOf = typeof example;
+  constructor(typeName: string, example: T) {
+    this.typeName = typeName;
+    this.typeOf = typeof example;
+  }
+
+  is(u: unknown): u is T {
+    if (Array.isArray(u)) {
+      return false;
     }
+    return typeof u === this.typeOf;
+  }
 
-    is(u: unknown): u is T {
-        if (Array.isArray(u)) {
-            return false;
-        }
-        return typeof u === this.typeOf;
-    }
-
-    getType(): string {
-        return this.typeName;
-    }
+  getType(): string {
+    return this.typeName;
+  }
 }
 
 /**
@@ -66,87 +67,87 @@ export class Type<T> implements TypeValidator {
  * of classes will simply objects.
  */
 export class TypeArray<T> implements TypeValidator {
-    private typeName: string;
+  private typeName: string;
 
-    protected typeOf: string;
+  protected typeOf: string;
 
-    constructor(typeName: string, example: T) {
-        this.typeName = typeName;
-        this.typeOf = typeof example;
+  constructor(typeName: string, example: T) {
+    this.typeName = typeName;
+    this.typeOf = typeof example;
+  }
+
+  is(u: unknown): u is T {
+    if (Array.isArray(u)) {
+      if (u.length > 0) {
+        return u.every((val) => typeof val === this.typeOf);
+      }
+      return true;
     }
+    return false;
+  }
 
-    is(u: unknown): u is T {
-        if (Array.isArray(u)) {
-            if (u.length > 0) {
-                return u.every((val) => typeof val === this.typeOf);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    getType(): string {
-        return this.typeName;
-    }
+  getType(): string {
+    return this.typeName;
+  }
 }
 
 /**
  * Validate a value is a number and is greater or eval than a minimum.
  */
 export class NumberWithMinimum extends Type<number> {
-    readonly min: number;
+  readonly min: number;
 
-    constructor(min: number) {
-        super(`number with minimum value of ${min}`, 0);
-        this.min = min;
-    }
+  constructor(min: number) {
+    super(`number with minimum value of ${ min }`, 0);
+    this.min = min;
+  }
 
-    override is(u: unknown): u is number {
-        return typeof u === this.typeOf && (u as number) >= this.min;
-    }
+  override is(u: unknown): u is number {
+    return typeof u === this.typeOf && (u as number) >= this.min;
+  }
 }
 
 /**
  * Validate a value is a string and it matches the given expression.
  */
 export class StringMatchingRegex extends Type<string> {
-    readonly expression: RegExp;
+  readonly expression: RegExp;
 
-    constructor(expression: RegExp) {
-        super(`string matching ${expression}`, '');
-        this.expression = expression;
-    }
+  constructor(expression: RegExp) {
+    super(`string matching ${ expression }`, '');
+    this.expression = expression;
+  }
 
-    override is(u: unknown): u is string {
-        return !!(u as string).match(this.expression);
-    }
+  override is(u: unknown): u is string {
+    return !!(u as string).match(this.expression);
+  }
 }
 
 /**
  * Validate a value is a function.
  */
 export class Function implements TypeValidator {
-    is(u: unknown): u is (...args: any[]) => void {
-        // We cannot inspect the parameters and there isn't really
-        // a generic function type we can instantiate.
-        // So the type guard is here just to make TS comfortable
-        // calling something after using this guard.
-        return typeof u === 'function';
-    }
+  is(u: unknown): u is (...args: any[]) => void {
+    // We cannot inspect the parameters and there isn't really
+    // a generic function type we can instantiate.
+    // So the type guard is here just to make TS comfortable
+    // calling something after using this guard.
+    return typeof u === 'function';
+  }
 
-    getType(): string {
-        return 'function';
-    }
+  getType(): string {
+    return 'function';
+  }
 }
 
 export class NullableBoolean implements TypeValidator {
-    is(u: unknown): boolean {
-        return typeof u === 'boolean' || typeof u === 'undefined' || u === null;
-    }
+  is(u: unknown): boolean {
+    return typeof u === 'boolean' || typeof u === 'undefined' || u === null;
+  }
 
-    getType(): string {
-        return 'boolean | undefined | null';
-    }
+  getType(): string {
+    return 'boolean | undefined | null';
+  }
 }
 
 // Our reference SDK, Go, parses date/time strings with the time.RFC3339Nano format.
@@ -162,60 +163,60 @@ const DATE_REGEX = /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d\d*)?(Z|[-+]\d\d(:\d\
  * which if compliant with `time.RFC3339Nano` is a date.
  */
 export class DateValidator implements TypeValidator {
-    is(u: unknown): boolean {
-        return typeof u === 'number' || (typeof u === 'string' && DATE_REGEX.test(u));
-    }
+  is(u: unknown): boolean {
+    return typeof u === 'number' || (typeof u === 'string' && DATE_REGEX.test(u));
+  }
 
-    getType(): string {
-        return 'date';
-    }
+  getType(): string {
+    return 'date';
+  }
 }
 
 /**
  * Validates that a string is a valid kind.
  */
 export class KindValidator extends StringMatchingRegex {
-    constructor() {
-        super(/^(\w|\.|-)+$/);
-    }
+  constructor() {
+    super(/^(\w|\.|-)+$/);
+  }
 
-    override is(u: unknown): u is string {
-        return super.is(u) && u !== 'kind';
-    }
+  override is(u: unknown): u is string {
+    return super.is(u) && u !== 'kind';
+  }
 }
 
 /**
  * A set of standard type validators.
  */
 export class TypeValidators {
-    static readonly String = new Type<string>('string', '');
+  static readonly String = new Type<string>('string', '');
 
-    static readonly Number = new Type<number>('number', 0);
+  static readonly Number = new Type<number>('number', 0);
 
-    static readonly ObjectOrFactory = new FactoryOrInstance();
+  static readonly ObjectOrFactory = new FactoryOrInstance();
 
-    static readonly Object = new Type<object>('object', {});
+  static readonly Object = new Type<object>('object', {});
 
-    static readonly StringArray = new TypeArray<string>('string[]', '');
+  static readonly StringArray = new TypeArray<string>('string[]', '');
 
-    static readonly Boolean = new Type<boolean>('boolean', true);
+  static readonly Boolean = new Type<boolean>('boolean', true);
 
-    static readonly Function = new Function();
+  static readonly Function = new Function();
 
-    static createTypeArray<T>(typeName: string, example: T) {
-        return new TypeArray<T>(typeName, example);
-    }
+  static createTypeArray<T>(typeName: string, example: T) {
+    return new TypeArray<T>(typeName, example);
+  }
 
-    static numberWithMin(min: number): NumberWithMinimum {
-        return new NumberWithMinimum(min);
-    }
+  static numberWithMin(min: number): NumberWithMinimum {
+    return new NumberWithMinimum(min);
+  }
 
-    static stringMatchingRegex(expression: RegExp): StringMatchingRegex {
-        return new StringMatchingRegex(expression);
-    }
+  static stringMatchingRegex(expression: RegExp): StringMatchingRegex {
+    return new StringMatchingRegex(expression);
+  }
 
-    static readonly Date = new DateValidator();
+  static readonly Date = new DateValidator();
 
-    static readonly Kind = new KindValidator();
-    static readonly NullableBoolean = new NullableBoolean();
+  static readonly Kind = new KindValidator();
+  static readonly NullableBoolean = new NullableBoolean();
 }

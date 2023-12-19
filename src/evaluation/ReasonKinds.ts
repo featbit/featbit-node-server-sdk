@@ -7,10 +7,6 @@ enum ReasonKinds {
   FallThrough = 'FallThrough',
   TargetMatch = 'TargetMatch',
   RuleMatch = 'RuleMatch',
-  //MalformedFlag = 'MALFORMED_FLAG',
-  //UserNotSpecified = 'UserNotSpecified',
-  //FlagNotFound = 'FlagNotFound',
-
   WrongType = 'WrongType',
   Error = 'Error'
 }

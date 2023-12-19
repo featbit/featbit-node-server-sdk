@@ -10,34 +10,34 @@ import { TypeValidators } from "../options/Validators";
  * @returns A string representation of the value if possible.
  */
 function tryStringify(val: any) {
-    if (typeof val === 'string') {
-        return val;
-    }
-    if (val === undefined) {
-        return 'undefined';
-    }
-    if (val === null) {
-        return 'null';
-    }
-    if (Object.prototype.hasOwnProperty.call(val, 'toString')) {
-        try {
-            return val.toString();
-        } catch {
-            /* Keep going */
-        }
-    }
-
-    if (typeof val === 'bigint') {
-        return `${val}n`;
-    }
+  if (typeof val === 'string') {
+    return val;
+  }
+  if (val === undefined) {
+    return 'undefined';
+  }
+  if (val === null) {
+    return 'null';
+  }
+  if (Object.prototype.hasOwnProperty.call(val, 'toString')) {
     try {
-        return JSON.stringify(val);
-    } catch (error) {
-        if (error instanceof TypeError && error.message.indexOf('circular') >= 0) {
-            return '[Circular]';
-        }
-        return '[Not Stringifiable]';
+      return val.toString();
+    } catch {
+      /* Keep going */
     }
+  }
+
+  if (typeof val === 'bigint') {
+    return `${ val }n`;
+  }
+  try {
+    return JSON.stringify(val);
+  } catch (error) {
+    if (error instanceof TypeError && error.message.indexOf('circular') >= 0) {
+      return '[Circular]';
+    }
+    return '[Not Stringifiable]';
+  }
 }
 
 /**
@@ -47,15 +47,15 @@ function tryStringify(val: any) {
  * @returns The numeric representation or 'NaN' if not numeric.
  */
 function toNumber(val: any): string {
-    // Symbol has to be treated special because it will
-    // throw an exception if an attempt is made to convert it.
-    if (typeof val === 'symbol') {
-        return 'NaN';
-    }
-    if (typeof val === 'bigint') {
-        return `${val}n`;
-    }
-    return String(Number(val));
+  // Symbol has to be treated special because it will
+  // throw an exception if an attempt is made to convert it.
+  if (typeof val === 'symbol') {
+    return 'NaN';
+  }
+  if (typeof val === 'bigint') {
+    return `${ val }n`;
+  }
+  return String(Number(val));
 }
 
 /**
@@ -65,13 +65,13 @@ function toNumber(val: any): string {
  * @returns The integer representation or 'NaN' if not numeric.
  */
 function toInt(val: any): string {
-    if (typeof val === 'symbol') {
-        return 'NaN';
-    }
-    if (typeof val === 'bigint') {
-        return `${val}n`;
-    }
-    return String(parseInt(val, 10));
+  if (typeof val === 'symbol') {
+    return 'NaN';
+  }
+  if (typeof val === 'bigint') {
+    return `${ val }n`;
+  }
+  return String(parseInt(val, 10));
 }
 
 /**
@@ -81,10 +81,10 @@ function toInt(val: any): string {
  * @returns The integer representation or 'NaN' if not numeric.
  */
 function toFloat(val: any): string {
-    if (typeof val === 'symbol') {
-        return 'NaN';
-    }
-    return String(parseFloat(val));
+  if (typeof val === 'symbol') {
+    return 'NaN';
+  }
+  return String(parseFloat(val));
 }
 
 // Based on:
@@ -92,14 +92,14 @@ function toFloat(val: any): string {
 // The result will not match node exactly, but it should get the
 // right information through.
 const escapes: Record<string, (val: any) => string> = {
-    s: (val: any) => tryStringify(val),
-    d: (val: any) => toNumber(val),
-    i: (val: any) => toInt(val),
-    f: (val: any) => toFloat(val),
-    j: (val: any) => tryStringify(val),
-    o: (val: any) => tryStringify(val),
-    O: (val: any) => tryStringify(val),
-    c: () => '',
+  s: (val: any) => tryStringify(val),
+  d: (val: any) => toNumber(val),
+  i: (val: any) => toInt(val),
+  f: (val: any) => toFloat(val),
+  j: (val: any) => tryStringify(val),
+  o: (val: any) => tryStringify(val),
+  O: (val: any) => tryStringify(val),
+  c: () => '',
 };
 
 /**
@@ -113,42 +113,42 @@ const escapes: Record<string, (val: any) => string> = {
  * @returns Formatted string.
  */
 export default function format(...args: any[]): string {
-    const formatString = args.shift();
-    if (TypeValidators.String.is(formatString)) {
-        let out = '';
-        let i = 0;
-        while (i < formatString.length) {
-            const char = formatString.charAt(i);
-            if (char === '%') {
-                const nextIndex = i + 1;
-                if (nextIndex < formatString.length) {
-                    const nextChar = formatString.charAt(i + 1);
-                    if (nextChar in escapes && args.length) {
-                        const value = args.shift();
-                        // This rule is for math.
-                        // eslint-disable-next-line no-unsafe-optional-chaining
-                        out += escapes[nextChar]?.(value);
-                    } else if (nextChar === '%') {
-                        out += '%';
-                    } else {
-                        out += `%${nextChar}`;
-                    }
-                    i += 2;
-                }
-            } else {
-                out += char;
-                i += 1;
-            }
+  const formatString = args.shift();
+  if (TypeValidators.String.is(formatString)) {
+    let out = '';
+    let i = 0;
+    while (i < formatString.length) {
+      const char = formatString.charAt(i);
+      if (char === '%') {
+        const nextIndex = i + 1;
+        if (nextIndex < formatString.length) {
+          const nextChar = formatString.charAt(i + 1);
+          if (nextChar in escapes && args.length) {
+            const value = args.shift();
+            // This rule is for math.
+            // eslint-disable-next-line no-unsafe-optional-chaining
+            out += escapes[nextChar]?.(value);
+          } else if (nextChar === '%') {
+            out += '%';
+          } else {
+            out += `%${ nextChar }`;
+          }
+          i += 2;
         }
-        // If there are any args left after we exhaust the format string
-        // then just stick those on the end.
-        if (args.length) {
-            if (out.length) {
-                out += ' ';
-            }
-            out += args.map(tryStringify).join(' ');
-        }
-        return out;
+      } else {
+        out += char;
+        i += 1;
+      }
     }
-    return args.map(tryStringify).join(' ');
+    // If there are any args left after we exhaust the format string
+    // then just stick those on the end.
+    if (args.length) {
+      if (out.length) {
+        out += ' ';
+      }
+      out += args.map(tryStringify).join(' ');
+    }
+    return out;
+  }
+  return args.map(tryStringify).join(' ');
 }

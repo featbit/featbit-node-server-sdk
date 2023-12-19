@@ -3,11 +3,11 @@
  * user segments.
  */
 export interface IDataKind {
-    /**
-     * A string such as `"features"` or `"segments"` which can be used in keys to distinguish this
-     * kind of data from other kinds.
-     */
-    namespace: string;
+  /**
+   * A string such as `"flags"` or `"segments"` which can be used in keys to distinguish this
+   * kind of data from other kinds.
+   */
+  namespace: string;
 }
 
 

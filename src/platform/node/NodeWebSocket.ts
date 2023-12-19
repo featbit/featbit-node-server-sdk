@@ -21,14 +21,14 @@ class NodeWebSocket implements IWebSocket {
     private logger: ILogger,
     private getStoreTimestamp: () => number,
     private pingInterval: number,
-    private handshakeTimeout? : number) {
+    private handshakeTimeout?: number) {
     this.emitter = new ClientEmitter();
   }
 
   connect() {
     let that = this;
     const startTime = Date.now();
-    const url = this.streamingUri.replace(/^http/, 'ws') + `?type=server&token=${generateConnectionToken(this.sdkKey)}`;
+    const url = this.streamingUri.replace(/^http/, 'ws') + `?type=server&token=${ generateConnectionToken(this.sdkKey) }`;
     this.ws = new WebSocket(url, {
       perMessageDeflate: false,
       handshakeTimeout: that.handshakeTimeout
@@ -37,7 +37,7 @@ class NodeWebSocket implements IWebSocket {
     // Connection opened
     that.ws?.addEventListener('open', function (this: WebSocket, event) {
       // this is the websocket instance to which the current listener is binded to, it's different from that.socket
-      that.logger.info(`Stream connection succeeded, connection time: ${Date.now() - startTime} ms`);
+      that.logger.info(`Stream connection succeeded, connection time: ${ Date.now() - startTime } ms`);
       that.doDataSync();
       that.sendPingMessage();
     });
@@ -113,7 +113,7 @@ class NodeWebSocket implements IWebSocket {
           this.ws.send(JSON.stringify(payload));
           this.sendPingMessage();
         } else {
-          this.logger.debug(`socket closed at ${new Date()}`);
+          this.logger.debug(`socket closed at ${ new Date() }`);
           this.reconnect();
         }
       } catch (err) {

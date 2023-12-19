@@ -33,13 +33,13 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
 
     const startTime = Date.now();
     this.logger?.debug('Polling for feature flag and segments updates');
-    this.requestor.requestData(this.getStoreTimestamp(),(err, body) => {
+    this.requestor.requestData(this.getStoreTimestamp(), (err, body) => {
       const elapsed = Date.now() - startTime;
       const sleepFor = Math.max(this.pollingInterval - elapsed, 0);
 
       this.logger?.debug('Elapsed: %d ms, sleeping for %d ms', elapsed, sleepFor);
       if (err) {
-        const { status } = err;
+        const {status} = err;
         if (status && !isHttpRecoverable(status)) {
           const message = httpErrorMessage(err, 'polling request');
           this.logger?.error(message);
@@ -62,7 +62,7 @@ export default class PollingDataSynchronizer implements IDataSynchronizer {
               break;
           }
 
-          const { featureFlags, segments } = message.data;
+          const {featureFlags, segments} = message.data;
           const data = processStreamResponse?.deserializeData?.(featureFlags, segments);
           processStreamResponse?.processJson?.(data);
 

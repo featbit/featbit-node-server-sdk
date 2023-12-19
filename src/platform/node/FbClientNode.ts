@@ -26,8 +26,8 @@ class FbClientNode extends FbClient {
 
     const logger = options.logger ? new SafeLogger(options.logger, fallbackLogger) : fallbackLogger;
     super(
-      { ...options, logger },
-      new NodePlatform({ ...options, logger }),
+      {...options, logger},
+      new NodePlatform({...options, logger}),
       {
         onError: (err: Error) => {
           if (emitter.listenerCount('error')) {
@@ -41,8 +41,8 @@ class FbClientNode extends FbClient {
           emitter.emit('ready');
         },
         onUpdate: (key: string) => {
-          emitter.emit('update', { key });
-          emitter.emit(`update:${key}`, { key });
+          emitter.emit('update', {key});
+          emitter.emit(`update:${ key }`, {key});
         },
         hasEventListeners: () =>
           emitter

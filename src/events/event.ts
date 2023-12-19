@@ -1,6 +1,5 @@
 import { IUser } from "../options/IUser";
 import { IVariation } from "../evaluation/data/IVariation";
-import { isNullOrUndefined } from "../utils/isNullOrUndefined";
 
 export interface IEvent {
 }
@@ -31,7 +30,8 @@ export class ShutdownEvent extends AsyncEvent {
 }
 
 export class PayloadEvent implements IEvent {
-    toPayload(): any {};
+  toPayload(): any {
+  };
 }
 
 export class MetricEvent extends PayloadEvent {

@@ -9,36 +9,36 @@ import { IPlatform } from "../platform/IPlatform";
  * component types and are not accessible to custom components.
  */
 export interface IClientContext {
-    logger?: ILogger;
+  logger?: ILogger;
 
-    /**
-     * True if the SDK was configured to be completely offline.
-     */
-    offline?: boolean;
+  /**
+   * True if the SDK was configured to be completely offline.
+   */
+  offline?: boolean;
 
-    /**
-     * The configured SDK key.
-     */
-    sdkKey: string;
+  /**
+   * The configured SDK key.
+   */
+  sdkKey: string;
 
-    streamingUri: string;
+  streamingUri: string;
 
-    pollingUri: string;
+  pollingUri: string;
 
-    eventsUri: string;
+  eventsUri: string;
 
-    /**
-     * The interval in between flushes of events queue, in milliseconds.
-     */
-    flushInterval: number;
+  /**
+   * The interval in between flushes of events queue, in milliseconds.
+   */
+  flushInterval: number;
 
-    /**
-     * The max number of events in the events queue.
-     */
-    maxEventsInQueue: number;
+  /**
+   * The max number of events in the events queue.
+   */
+  maxEventsInQueue: number;
 
-    /**
-     * Interfaces providing platform specific information and functionality.
-     */
-    platform: IPlatform;
+  /**
+   * Interfaces providing platform specific information and functionality.
+   */
+  platform: IPlatform;
 }

@@ -1,8 +1,6 @@
-import { PollingError, StreamingError } from "../errors";
+import { PollingError } from "../errors";
 import { IFlag } from "../evaluation/data/IFlag";
 import { ISegment } from "../evaluation/data/ISegment";
-
-export type StreamingErrorHandler = (err: StreamingError) => void;
 
 export type PollingErrorHandler = (err: PollingError) => void;
 

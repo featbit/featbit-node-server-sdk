@@ -168,9 +168,9 @@ export default class Configuration {
     });
 
     validateEndpoints(options, validatedOptions);
-    this.streamingUri = `${canonicalizeUri(validatedOptions.streamingUri)}/streaming`;
-    this.pollingUri = `${canonicalizeUri(validatedOptions.pollingUri)}/api/public/sdk/server/latest-all`;
-    this.eventsUri = `${canonicalizeUri(validatedOptions.eventsUri)}/api/public/insight/track`;
+    this.streamingUri = `${ canonicalizeUri(validatedOptions.streamingUri) }/streaming`;
+    this.pollingUri = `${ canonicalizeUri(validatedOptions.pollingUri) }/api/public/sdk/server/latest-all`;
+    this.eventsUri = `${ canonicalizeUri(validatedOptions.eventsUri) }/api/public/insight/track`;
 
     this.startWaitTime = validatedOptions.startWaitTime;
 

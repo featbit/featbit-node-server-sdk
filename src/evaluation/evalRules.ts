@@ -4,7 +4,7 @@ import { ISegment } from "./data/ISegment";
 import Context from "../Context";
 import { Operator } from "./operator";
 import { IStore } from "../store/store";
-import VersionedDataKinds from "../store/VersionedDataKinds";
+import DataKinds from "../store/DataKinds";
 
 const IsInSegmentProperty = "User is in segment";
 const IsNotInSegmentProperty = "User is not in segment";
@@ -21,11 +21,11 @@ function isMatchCondition(condition: ICondition, context: Context) {
 }
 
 function isMatchSegment(segment: ISegment, context: Context) {
-  if(segment.excluded.includes(context.key)) {
+  if (segment.excluded.includes(context.key)) {
     return false;
   }
 
-  if(segment.included.includes(context.key)) {
+  if (segment.included.includes(context.key)) {
     return true;
   }
 
@@ -35,13 +35,13 @@ function isMatchSegment(segment: ISegment, context: Context) {
 
 function isMatchAnySegment(store: IStore, condition: ICondition, context: Context) {
   const segmentIds: string[] = JSON.parse(condition.value);
-  if(segmentIds == null || !segmentIds.length) {
+  if (segmentIds == null || !segmentIds.length) {
     return false;
   }
 
-  for(const segmentId of segmentIds) {
-    const segment = store.get(VersionedDataKinds.Segments, segmentId) as ISegment;
-    if(segment && isMatchSegment(segment, context)) {
+  for (const segmentId of segmentIds) {
+    const segment = store.get(DataKinds.Segments, segmentId) as ISegment;
+    if (segment && isMatchSegment(segment, context)) {
       return true;
     }
   }
@@ -49,14 +49,14 @@ function isMatchAnySegment(store: IStore, condition: ICondition, context: Contex
   return false;
 }
 
-export function isMatchRule(store: IStore, rule: ITargetRule, context: Context) : boolean {
-  for(const condition of rule.conditions) {
-    if(condition.property === IsInSegmentProperty) {
+export function isMatchRule(store: IStore, rule: ITargetRule, context: Context): boolean {
+  for (const condition of rule.conditions) {
+    if (condition.property === IsInSegmentProperty) {
       const match = isMatchAnySegment(store, condition, context);
       if (!match) {
         return false;
       }
-    } else if(condition.property === IsNotInSegmentProperty) {
+    } else if (condition.property === IsNotInSegmentProperty) {
       const match = isMatchAnySegment(store, condition, context);
       if (match) {
         return false;

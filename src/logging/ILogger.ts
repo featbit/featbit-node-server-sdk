@@ -15,35 +15,35 @@
  * implementation with a minimum level of `info`.
  */
 export interface ILogger {
-    /**
-     * The error logger.
-     *
-     * @param args
-     *   A sequence of any JavaScript values.
-     */
-    error(...args: any[]): void;
+  /**
+   * The error logger.
+   *
+   * @param args
+   *   A sequence of any JavaScript values.
+   */
+  error(...args: any[]): void;
 
-    /**
-     * The warning logger.
-     *
-     * @param args
-     *   A sequence of any JavaScript values.
-     */
-    warn(...args: any[]): void;
+  /**
+   * The warning logger.
+   *
+   * @param args
+   *   A sequence of any JavaScript values.
+   */
+  warn(...args: any[]): void;
 
-    /**
-     * The info logger.
-     *
-     * @param args
-     *   A sequence of any JavaScript values.
-     */
-    info(...args: any[]): void;
+  /**
+   * The info logger.
+   *
+   * @param args
+   *   A sequence of any JavaScript values.
+   */
+  info(...args: any[]): void;
 
-    /**
-     * The debug logger.
-     *
-     * @param args
-     *   A sequence of any JavaScript values.
-     */
-    debug(...args: any[]): void;
+  /**
+   * The debug logger.
+   *
+   * @param args
+   *   A sequence of any JavaScript values.
+   */
+  debug(...args: any[]): void;
 }

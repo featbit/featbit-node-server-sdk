@@ -27,7 +27,7 @@ export default class Context {
       return Context.contextForError('No user specified');
     }
 
-    const { keyId, name } = user;
+    const {keyId, name} = user;
 
     if (keyId === undefined || keyId === null || keyId.trim() === '') {
       return Context.contextForError('keyId is mandatory');

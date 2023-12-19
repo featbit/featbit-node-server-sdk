@@ -1,5 +1,5 @@
-import {IEvent} from "./event";
+import { IEvent } from "./event";
 
 export interface IEventSerializer {
-    serialize(events: IEvent[]): string;
+  serialize(events: IEvent[]): string;
 }

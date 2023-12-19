@@ -6,7 +6,7 @@
  * @ignore
  */
 export interface IDataSynchronizer {
-    start: () => void;
-    stop: () => void;
-    close: () => void;
+  start: () => void;
+  stop: () => void;
+  close: () => void;
 }

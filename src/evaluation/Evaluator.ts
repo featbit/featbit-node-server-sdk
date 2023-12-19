@@ -7,10 +7,9 @@ import { Regex } from "../utils/Regex";
 import { DispatchAlgorithm } from "./DispatchAlgorithm";
 import { IVariation } from "./data/IVariation";
 import { IStore } from "../store/store";
-import VersionedDataKinds from "../store/VersionedDataKinds";
-import {EvalEvent} from "../events/event";
-import {ITargetRule} from "./data/IRule";
-import {IRolloutVariation} from "./data/IRolloutVariation";
+import DataKinds from "../store/DataKinds";
+import { EvalEvent } from "../events/event";
+import { IRolloutVariation } from "./data/IRolloutVariation";
 
 /**
  * @internal
@@ -29,7 +28,7 @@ export default class Evaluator {
     context: Context,
     //eventFactory?: EventFactory,
   ): [EvalResult, EvalEvent | null] {
-    const flag = this.store.get(VersionedDataKinds.Flags, flagKey) as IFlag;
+    const flag = this.store.get(DataKinds.Flags, flagKey) as IFlag;
     if (!flag) {
       return [EvalResult.flagNotFound(flagKey), null];
     }
@@ -117,13 +116,13 @@ export default class Evaluator {
   ): [EvalResult, EvalEvent | null] {
     let dispatchKey: string;
 
-    for(const rule of flag.rules) {
+    for (const rule of flag.rules) {
       const match = isMatchRule(this.store, rule, context);
-      if(match) {
+      if (match) {
         const ruleDispatchKey = rule.dispatchKey;
         dispatchKey = Regex.isNullOrWhiteSpace(ruleDispatchKey)
-          ? `${flag.key}${context.key}`
-          : `${flag.key}${context.value(ruleDispatchKey)}`;
+          ? `${ flag.key }${ context.key }`
+          : `${ flag.key }${ context.value(ruleDispatchKey) }`;
 
         const rolloutVariation = rule.variations.find(v => DispatchAlgorithm.isInRollout(this.platform.crypto, dispatchKey, v.rollout))
         if (!rolloutVariation) {
@@ -138,8 +137,8 @@ export default class Evaluator {
     // match default rule
     const fallthroughDispatchKey = flag.fallthrough.dispatchKey;
     dispatchKey = Regex.isNullOrWhiteSpace(fallthroughDispatchKey)
-      ? `${flag.key}${context.key}`
-      : `${flag.key}${context.value(fallthroughDispatchKey)}`;
+      ? `${ flag.key }${ context.key }`
+      : `${ flag.key }${ context.value(fallthroughDispatchKey) }`;
 
     const defaultVariation = flag.fallthrough.variations.find(v => DispatchAlgorithm.isInRollout(this.platform.crypto, dispatchKey, v.rollout));
     if (!defaultVariation) {
@@ -155,34 +154,31 @@ export default class Evaluator {
   }
 
   private shouldSendToExperiment(
-      exptIncludeAllTargets: boolean,
-      thisRuleIncludeInExpt: boolean,
-      dispatchKey: string,
-      rolloutVariation: IRolloutVariation
+    exptIncludeAllTargets: boolean,
+    thisRuleIncludeInExpt: boolean,
+    dispatchKey: string,
+    rolloutVariation: IRolloutVariation
   ): boolean {
     if (exptIncludeAllTargets) {
       return true;
     }
 
-    if (!thisRuleIncludeInExpt)
-    {
+    if (!thisRuleIncludeInExpt) {
       return false;
     }
 
     // create a new key to calculate the experiment dispatch percentage
     const exptDispatchKeyPrefix = "expt";
-    const sendToExptKey = `${exptDispatchKeyPrefix}${dispatchKey}`;
+    const sendToExptKey = `${ exptDispatchKeyPrefix }${ dispatchKey }`;
 
     const exptRollout = rolloutVariation.exptRollout;
     const dispatchRollout = DispatchAlgorithm.dispatchRollout(rolloutVariation.rollout);
-    if (exptRollout == 0.0 || dispatchRollout == 0.0)
-    {
+    if (exptRollout == 0.0 || dispatchRollout == 0.0) {
       return false;
     }
 
     var upperBound = exptRollout / dispatchRollout;
-    if (upperBound > 1.0)
-    {
+    if (upperBound > 1.0) {
       upperBound = 1.0;
     }
 

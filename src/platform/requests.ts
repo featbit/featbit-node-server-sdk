@@ -7,72 +7,72 @@
  * Interface for headers that are part of a fetch response.
  */
 export interface IHeaders {
-    /**
-     * Get a header by name.
-     *
-     * https://developer.mozilla.org/en-US/docs/Web/API/Headers/get
-     *
-     * @param name The name of the header to get.
-     */
-    get(name: string): string | null;
+  /**
+   * Get a header by name.
+   *
+   * https://developer.mozilla.org/en-US/docs/Web/API/Headers/get
+   *
+   * @param name The name of the header to get.
+   */
+  get(name: string): string | null;
 
-    /**
-     * Returns an iterator allowing iteration of all the keys contained
-     * in this object.
-     *
-     * https://developer.mozilla.org/en-US/docs/Web/API/Headers/keys
-     *
-     */
-    keys(): Iterable<string>;
+  /**
+   * Returns an iterator allowing iteration of all the keys contained
+   * in this object.
+   *
+   * https://developer.mozilla.org/en-US/docs/Web/API/Headers/keys
+   *
+   */
+  keys(): Iterable<string>;
 
-    /**
-     * Returns an iterator allowing iteration of all the values contained
-     * in this object.
-     *
-     * https://developer.mozilla.org/en-US/docs/Web/API/Headers/values
-     */
-    values(): Iterable<string>;
+  /**
+   * Returns an iterator allowing iteration of all the values contained
+   * in this object.
+   *
+   * https://developer.mozilla.org/en-US/docs/Web/API/Headers/values
+   */
+  values(): Iterable<string>;
 
-    /**
-     * Returns an iterator allowing iteration of all the key-value pairs in
-     * the object.
-     *
-     * https://developer.mozilla.org/en-US/docs/Web/API/Headers/entries
-     */
-    entries(): Iterable<[string, string]>;
+  /**
+   * Returns an iterator allowing iteration of all the key-value pairs in
+   * the object.
+   *
+   * https://developer.mozilla.org/en-US/docs/Web/API/Headers/entries
+   */
+  entries(): Iterable<[string, string]>;
 
-    /**
-     * Returns true if the header is present.
-     * @param name The name of the header to check.
-     */
-    has(name: string): boolean;
+  /**
+   * Returns true if the header is present.
+   * @param name The name of the header to check.
+   */
+  has(name: string): boolean;
 }
 
 /**
  * Interface for fetch responses.
  */
 export interface IResponse {
-    headers: IHeaders;
-    status: number;
+  headers: IHeaders;
+  status: number;
 
-    /**
-     * Read the response and provide it as a string.
-     */
-    text(): Promise<string>;
+  /**
+   * Read the response and provide it as a string.
+   */
+  text(): Promise<string>;
 
-    /**
-     * Read the response and provide it as decoded json.
-     */
-    json(): Promise<any>;
+  /**
+   * Read the response and provide it as decoded json.
+   */
+  json(): Promise<any>;
 }
 
 export interface IRequestOptions {
-    headers?: Record<string, string>;
-    method?: string;
-    body?: string;
-    timeout?: number;
+  headers?: Record<string, string>;
+  method?: string;
+  body?: string;
+  timeout?: number;
 }
 
 export interface IRequests {
-    fetch(url: string, options?: IRequestOptions): Promise<IResponse>;
+  fetch(url: string, options?: IRequestOptions): Promise<IResponse>;
 }

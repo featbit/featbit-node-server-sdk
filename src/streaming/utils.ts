@@ -26,7 +26,7 @@ export function generateConnectionToken(text: string): string {
   // get random number less than the length of the text as the start point, and it must be greater or equal to 2
   const start = Math.max(Math.floor(Math.random() * text.length), 2);
 
-  return `${encodeNumber(start, 3)}${encodeNumber(timestampCode.length, 2)}${text.slice(0, start)}${timestampCode}${text.slice(start)}`;
+  return `${ encodeNumber(start, 3) }${ encodeNumber(timestampCode.length, 2) }${ text.slice(0, start) }${ timestampCode }${ text.slice(start) }`;
 }
 
 /********************** encode text end *****************************/
