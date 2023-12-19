@@ -1,10 +1,5 @@
 import { IDataKind } from "../IDataKind";
-import {
-    IStore,
-    IStoreDataStorage,
-    IStoreItem,
-    IStoreKindData, IKeyedStoreItem
-} from "./store";
+import { IKeyedStoreItem, IStore, IStoreDataStorage, IStoreItem, IStoreKindData } from "./store";
 
 export default class InMemoryStore implements IStore {
     version: number = 0;
@@ -38,7 +33,7 @@ export default class InMemoryStore implements IStore {
         if (items) {
             if (Object.prototype.hasOwnProperty.call(items, key)) {
                 const item = items[key];
-                if (item && !item.deleted) {
+                if (item) {
                     return item;
                 }
             }
@@ -50,7 +45,7 @@ export default class InMemoryStore implements IStore {
         const result: IStoreKindData = {};
         const items = this.allData[kind.namespace] ?? {};
         Object.entries(items).forEach(([key, item]) => {
-            if (item && !item.deleted) {
+            if (item) {
                 result[key] = item;
             }
         });
