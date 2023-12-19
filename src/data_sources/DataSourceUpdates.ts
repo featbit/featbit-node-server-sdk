@@ -5,7 +5,7 @@ import {
   IStoreItem,
   IKeyedStoreItem
 } from "../store/store";
-import { IDataKind } from "../interfaces/DataKind";
+import { IDataKind } from "../IDataKind";
 import NamespacedDataSet from "./NamespacedDataSet";
 import VersionedDataKinds from "../store/VersionedDataKinds";
 import DependencyTracker from "./DependencyTracker";

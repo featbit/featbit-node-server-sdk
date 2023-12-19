@@ -28,7 +28,7 @@ export default class Requestor implements IRequestor {
     private readonly requests: IRequests,
   ) {
     this.headers = defaultHeaders(sdkKey, info);
-    this.uri = config.serviceEndpoints.polling;
+    this.uri = config.pollingUri;
   }
 
   /**

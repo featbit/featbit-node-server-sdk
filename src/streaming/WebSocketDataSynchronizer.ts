@@ -4,11 +4,10 @@ import { EventName, ProcessStreamResponse } from "./types";
 import { ILogger } from "../logging/ILogger";
 import { IWebSocketWithEvents } from "../platform/IWebSocket";
 import NodeWebSocket from "../platform/node/NodeWebSocket";
-import { IStore } from "../store/store";
 
 class WebSocketDataSynchronizer implements IDataSynchronizer {
     private socket?: IWebSocketWithEvents;
-    private readonly streamUri: string;
+    private readonly streamingUri: string;
     private readonly logger?: ILogger;
 
     private connectionAttemptStartTime?: number;
@@ -21,14 +20,13 @@ class WebSocketDataSynchronizer implements IDataSynchronizer {
         webSocketPingInterval: number,
         webSocketHandshakeTimeout?: number,
     ) {
-        const { basicConfiguration, platform } = clientContext;
-        const { logger, serviceEndpoints } = basicConfiguration;
+        const { logger, streamingUri } = clientContext;
 
         this.logger = logger;
-        this.streamUri = serviceEndpoints.streaming;
+        this.streamingUri = streamingUri;
         this.socket = new NodeWebSocket(
           sdkKey,
-          this.streamUri,
+          this.streamingUri,
           this.logger!,
           getStoreTimestamp,
           webSocketPingInterval,

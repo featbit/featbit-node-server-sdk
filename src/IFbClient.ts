@@ -1,5 +1,5 @@
-import { IUser } from "../options/IUser";
-import { IEvalDetail } from "../evaluation/IEvalDetail";
+import { IUser } from "./options/IUser";
+import { IEvalDetail } from "./evaluation/IEvalDetail";
 
 export interface IFbClient {
 

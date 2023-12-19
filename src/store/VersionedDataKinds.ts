@@ -1,4 +1,4 @@
-import { IDataKind } from "../interfaces/DataKind";
+import { IDataKind } from "../IDataKind";
 
 export interface IVersionedDataKind extends IDataKind {
     namespace: string;

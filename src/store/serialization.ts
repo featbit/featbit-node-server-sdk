@@ -1,7 +1,7 @@
 import { IFlag } from "../evaluation/data/IFlag";
 import { ISegment } from "../evaluation/data/ISegment";
 import VersionedDataKinds, { IVersionedDataKind } from "./VersionedDataKinds";
-import { IVersionedData } from "../interfaces/IVersionedData";
+import { IVersionedData } from "../IVersionedData";
 import { getTimestampFromDateTimeString } from "../streaming/utils";
 
 /**

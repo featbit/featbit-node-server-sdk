@@ -1,4 +1,4 @@
-import { IDataKind } from "../interfaces/DataKind";
+import { IDataKind } from "../IDataKind";
 import {
     IStore,
     IStoreDataStorage,

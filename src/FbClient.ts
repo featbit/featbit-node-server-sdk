@@ -1,4 +1,4 @@
-import { IFbClient } from "./interfaces/IFbClient";
+import { IFbClient } from "./IFbClient";
 import { IPlatform } from "./platform/IPlatform";
 import Configuration from "./Configuration";
 import { ILogger } from "./logging/ILogger";
@@ -23,8 +23,7 @@ import { DefaultEventProcessor } from "./events/DefaultEventProcessor";
 import { IStore } from "./store/store";
 import { IOptions } from "./options/IOptions";
 import { IUser } from "./options/IUser";
-import { MetricEvent, PayloadEvent } from "./events/event";
-import { platform } from "os";
+import { MetricEvent } from "./events/event";
 
 enum ClientState {
   Initializing,

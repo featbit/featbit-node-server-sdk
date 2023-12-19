@@ -3,14 +3,14 @@ import { ILogger } from "./logging/ILogger";
 import { IValidatedOptions } from "./options/IValidatedOptions";
 import { NumberWithMinimum, TypeValidator, TypeValidators } from "./options/Validators";
 import OptionMessages from "./options/OptionMessages";
-import ServiceEndpoints from "./options/ServiceEndpoints";
 import { IStore } from "./store/store";
-import { IClientContext } from "./interfaces/IClientContext";
+import { IClientContext } from "./options/IClientContext";
 import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
 import { IDataSourceUpdates } from "./store/IDataSourceUpdates";
 import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
 import { isNullOrUndefined } from "./utils/isNullOrUndefined";
+import { canonicalizeUri } from "./utils/canonicalizeUri";
 
 // Once things are internal to the implementation of the SDK we can depend on
 // types. Calls to the SDK could contain anything without any regard to typing.
@@ -124,7 +124,11 @@ export default class Configuration {
 
   public readonly sdkKey: string;
 
-  public readonly serviceEndpoints: ServiceEndpoints;
+  public readonly streamingUri: string;
+
+  public readonly pollingUri: string;
+
+  public readonly eventsUri: string;
 
   public readonly webSocketHandshakeTimeout?: number;
 
@@ -164,12 +168,9 @@ export default class Configuration {
     });
 
     validateEndpoints(options, validatedOptions);
-
-    this.serviceEndpoints = new ServiceEndpoints(
-      validatedOptions.streamingUri,
-      validatedOptions.pollingUri,
-      validatedOptions.eventsUri
-    );
+    this.streamingUri = canonicalizeUri(validatedOptions.streamingUri);
+    this.pollingUri = canonicalizeUri(validatedOptions.pollingUri);
+    this.eventsUri = canonicalizeUri(validatedOptions.eventsUri);
 
     this.startWaitTime = validatedOptions.startWaitTime;
 

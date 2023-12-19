@@ -1,4 +1,4 @@
-import { IDataKind } from "../interfaces/DataKind";
+import { IDataKind } from "../IDataKind";
 
 /**
  * Represents an item which can be stored in the feature store.

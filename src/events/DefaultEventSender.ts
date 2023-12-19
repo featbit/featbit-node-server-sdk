@@ -13,16 +13,14 @@ export class DefaultEventSender implements IEventSender {
   private requests: IRequests;
 
   constructor(clientContext: ClientContext) {
-    const { basicConfiguration, platform } = clientContext;
     const {
       sdkKey,
-      serviceEndpoints: {
-        events
-      },
-    } = basicConfiguration;
+      eventsUri,
+      platform } = clientContext;
+
     const { info, requests } = platform;
     this.defaultHeaders = defaultHeaders(sdkKey, info);
-    this.eventsUri = events;
+    this.eventsUri = eventsUri;
     this.requests = requests;
   }
 

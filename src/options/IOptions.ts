@@ -1,7 +1,7 @@
 import { IUser } from "./IUser";
 import { ILogger } from "../logging/ILogger";
 import { IDataSynchronizer } from "../streaming/IDataSynchronizer";
-import { IClientContext } from "../interfaces/IClientContext";
+import { IClientContext } from "./IClientContext";
 import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
 

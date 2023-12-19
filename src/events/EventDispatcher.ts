@@ -19,8 +19,7 @@ export class EventDispatcher {
   private stopped: boolean = false;
 
   constructor(clientContext: ClientContext, queue: IEventQueue) {
-    const { basicConfiguration } = clientContext;
-    const { logger, maxEventsInQueue} = basicConfiguration;
+    const { logger, maxEventsInQueue } = clientContext;
     this.logger = logger!;
 
     this.buffer = new DefaultEventQueue(maxEventsInQueue, this.logger);
