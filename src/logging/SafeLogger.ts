@@ -34,7 +34,7 @@ export default class SafeLogger implements ILogger {
       if (!validator.is((logger as any)[level])) {
         throw new Error(`Provided logger instance must support logger.${ level }(...) method`);
         // Note that the SDK normally does not throw exceptions to the application, but that rule
-        // does not apply to LDClient.init() which will throw an exception if the parameters are so
+        // does not apply to FbClientNode.init() which will throw an exception if the parameters are so
         // invalid that we cannot proceed with creating the client. An invalid logger meets those
         // criteria since the SDK calls the logger during nearly all of its operations.
       }

@@ -39,7 +39,7 @@ export interface IOptions {
    * Whether streaming mode should be used to receive flag updates.
    *
    * This is true by default. If you set it to false, the client will use polling.
-   * Streaming should only be disabled on the advice of LaunchDarkly support.
+   * Streaming should only be disabled on the advice of FeatBit support.
    */
   stream?: boolean;
 

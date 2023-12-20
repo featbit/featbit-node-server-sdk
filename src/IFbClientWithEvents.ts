@@ -11,9 +11,9 @@ export interface IFbClientWithEvents extends IFbClient, EventEmitter {
    * details on how to manage event listeners. Here is a description of the event types defined
    * by `LDClient`.
    *
-   * - `"ready"`: Sent only once, when the client has successfully connected to LaunchDarkly.
+   * - `"ready"`: Sent only once, when the client has successfully connected to FeatBit.
    * Alternately, you can detect this with [[waitForInitialization]].
-   * - `"failed"`: Sent only once, if the client has permanently failed to connect to LaunchDarkly.
+   * - `"failed"`: Sent only once, if the client has permanently failed to connect to FeatBit.
    * Alternately, you can detect this with [[waitForInitialization]].
    * - `"error"`: Contains an error object describing some abnormal condition that the client has detected
    * (such as a network error).

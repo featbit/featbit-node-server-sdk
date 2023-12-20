@@ -1,13 +1,13 @@
-# FeatBit Server-Side SDK for Node.js
+# FeatBit Server-Side SDK for <Language>
 
 ## Introduction
 
-This is the Node.js Server-Side SDK for the 100% open-source feature flags management platform [FeatBit](https://github.com/featbit/featbit).
+This is the <Language> Server-Side SDK for the 100% open-source feature flags management platform [FeatBit](https://github.com/featbit/featbit).
 
-The FeatBit Server-Side SDK for Node.js is designed primarily for use in multi-user systems such as web servers and applications. It is not intended for use in desktop and embedded systems applications.
+The FeatBit Server-Side SDK for <Language> is designed primarily for use in multi-user systems such as web servers and applications. It is not intended for use in desktop and embedded systems applications.
 
 ## Data synchonization
-We use **websocket** or **polling** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the websocket connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
+We use **websocket** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the websocket connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
 
 ## Get Started
 
@@ -15,9 +15,9 @@ We use **websocket** or **polling** to make the local data synchronized with the
 
 ### Quick Start
 
-The following code demonstrates the basic usage of @featbit/node-server-sdk.
+The following code demonstrates the basic usage of <FeatBit.ServerSdk>.
 
-1. how to create client89
+1. how to create client
 2. how to get flag variation
 3. make sure event sent
 

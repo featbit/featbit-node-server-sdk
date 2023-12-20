@@ -3,13 +3,13 @@ import ReasonKinds from "./ReasonKinds";
 export interface IEvalDetail<TValue> {
   /**
    * The result of the flag evaluation. This will be either one of the flag's variations or
-   * the default value that was passed to `LDClient.variationDetail`.
+   * the default value that was passed to `FbClient.variationDetail`.
    */
   kind: ReasonKinds;
 
   /**
    * The result of the flag evaluation. This will be either one of the flag's variations or
-   * the default value that was passed to `LDClient.variationDetail`.
+   * the default value that was passed to `FbClient.variationDetail`.
    */
   value?: TValue;
 
