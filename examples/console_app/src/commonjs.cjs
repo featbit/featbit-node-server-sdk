@@ -18,7 +18,7 @@ fbClient.on(`update:${flagKey}`,  (ee) => {
     console.log(r2);
 })
 
-async function run1() {
+async function run() {
     try {
         await fbClient.waitForInitialization();
     } catch(err) {
@@ -33,4 +33,4 @@ async function run1() {
     fbClient.close();
 }
 
-run1()
+run()
