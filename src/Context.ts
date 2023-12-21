@@ -27,10 +27,10 @@ export default class Context {
       return Context.contextForError('No user specified');
     }
 
-    const {keyId, name} = user;
+    const {key, name} = user;
 
-    if (keyId === undefined || keyId === null || keyId.trim() === '') {
-      return Context.contextForError('keyId is mandatory');
+    if (key === undefined || key === null || key.trim() === '') {
+      return Context.contextForError('key is mandatory');
     }
 
     if (name === undefined || name === null || name.trim() === '') {
@@ -48,7 +48,7 @@ export default class Context {
   }
 
   get key(): string {
-    return this._user!.keyId;
+    return this._user!.key;
   }
 
   value(property: string): any {

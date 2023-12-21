@@ -1,9 +1,9 @@
-import { IUser } from "./IUser";
 import { ILogger } from "../logging/ILogger";
 import { IDataSynchronizer } from "../streaming/IDataSynchronizer";
 import { IClientContext } from "./IClientContext";
 import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
+import { IBootstrapProvider } from "../bootstrap/IBootstrapProvider";
 
 export interface IOptions {
   /**
@@ -19,32 +19,38 @@ export interface IOptions {
   sdkKey?: string;
 
   /**
-   * The streaming URI.
+   * The base URI of the streaming service, mandatory if the {@link stream} option is set to true.
    */
   streamingUri?: string;
 
   /**
-   * The streaming URI.
+   * The base URI of the polling service, mandatory if the {@link stream} option is set to true.
    */
   pollingUri?: string;
 
   /**
-   * The streaming URI.
+   * The base URI of the event service
    */
   eventsUri?: string;
-
-  context?: IUser;
 
   /**
    * Whether streaming mode should be used to receive flag updates.
    *
    * This is true by default. If you set it to false, the client will use polling.
-   * Streaming should only be disabled on the advice of FeatBit support.
    */
   stream?: boolean;
 
   /**
-   * The time between polling requests, in milliseconds, if less than 30 000 ms, 30 000 ms would be used. Ignored in streaming mode.
+   * Whether this client is offline. If true, no calls to FeatBit will be made.
+   *
+   * Defaults to false
+   */
+  offline?: boolean;
+
+  /**
+   * The time between polling requests, in milliseconds. Ignored in streaming mode.
+   *
+   * Defaults to 30 000 milliseconds.
    */
   pollingInterval?: number;
 
@@ -81,9 +87,17 @@ export interface IOptions {
 
   /**
    * The interval in between sending WebSocket ping messages to evaluation server, in milliseconds.
-   * The default value is 18 * 1000
+
+   * Defaults to 18 000 milliseconds.
    */
   webSocketPingInterval?: number;
+
+  /**
+   * The bootstrap provider.
+
+   * Defaults to {@link NullBootstrapProvider}.
+   */
+  bootstrapProvider?: IBootstrapProvider;
 
   /**
    * A component that obtains feature flag and segment data and puts it in the store.

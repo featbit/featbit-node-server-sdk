@@ -1,6 +1,6 @@
 import { IWebSocket } from "../IWebSocket";
 import WebSocket from 'ws';
-import { IStreamResponse, StreamResponseEventType } from "../../streaming/types";
+import { StreamResponseEventType } from "../../streaming/types";
 import { generateConnectionToken } from "../../streaming/utils";
 import { ILogger } from "../../logging/ILogger";
 import EventEmitter from "events";
@@ -37,7 +37,7 @@ class NodeWebSocket implements IWebSocket {
     // Connection opened
     that.ws?.addEventListener('open', function (this: WebSocket, event) {
       // this is the websocket instance to which the current listener is binded to, it's different from that.socket
-      that.logger.info(`Stream connection succeeded, connection time: ${ Date.now() - startTime } ms`);
+      that.logger.info(`WebSocket connection succeeded, connection time: ${ Date.now() - startTime } ms`);
       that.doDataSync();
       that.sendPingMessage();
     });
@@ -76,7 +76,7 @@ class NodeWebSocket implements IWebSocket {
 
   close(): void {
     this.closed = true;
-    this.ws?.close(4003, 'Closed by user');
+    this.ws?.close(4003, 'The client is closed by user');
     this.ws = undefined;
   }
 
@@ -127,7 +127,7 @@ class NodeWebSocket implements IWebSocket {
       this.ws = undefined;
       const waitTime = socketConnectionIntervals[Math.min(this.retryCounter++, socketConnectionIntervals.length - 1)];
       setTimeout(() => {
-        this.logger.debug('emit reconnect event');
+        this.logger.info('The client is trying to reconnect. Flag evaluation results may be stale until reconnected.');
         this.connect();
       }, waitTime);
       this.logger.debug(waitTime);

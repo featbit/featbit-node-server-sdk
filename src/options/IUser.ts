@@ -1,7 +1,7 @@
 import { IContextProperty } from "../IContextProperty";
 
 export interface IUser {
-  name: string;
-  keyId: string;
-  customizedProperties: IContextProperty[];
+  key: string;
+  name?: string;
+  customizedProperties?: IContextProperty[];
 }

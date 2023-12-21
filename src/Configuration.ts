@@ -11,6 +11,9 @@ import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
 import { isNullOrUndefined } from "./utils/isNullOrUndefined";
 import { canonicalizeUri } from "./utils/canonicalizeUri";
+import { IBootstrapProvider } from "./bootstrap/IBootstrapProvider";
+import { NullBootstrapProvider } from "./bootstrap/NullBootstrapProvider";
+import { EmptyString } from "./constants";
 
 // Once things are internal to the implementation of the SDK we can depend on
 // types. Calls to the SDK could contain anything without any regard to typing.
@@ -36,7 +39,8 @@ const validations: Record<string, TypeValidator> = {
   maxEventsInQueue: TypeValidators.Number,
   pollingInterval: TypeValidators.Number,
   offline: TypeValidators.Boolean,
-  stream: TypeValidators.Boolean
+  stream: TypeValidators.Boolean,
+  bootstrapProvider: TypeValidators.Object
 };
 
 /**
@@ -57,6 +61,7 @@ export const defaultValues: IValidatedOptions = {
   pollingInterval: 30000,
   offline: false,
   store: () => new InMemoryStore(),
+  bootstrapProvider: new NullBootstrapProvider(),
 };
 
 function validateTypesAndNames(options: IOptions): {
@@ -100,20 +105,20 @@ function validateTypesAndNames(options: IOptions): {
 
 function validateEndpoints(options: IOptions, validatedOptions: IValidatedOptions) {
   const {streamingUri, pollingUri, eventsUri} = options;
-  const streamingUriMissing = isNullOrUndefined(streamingUri);
-  const pollingUriMissing = isNullOrUndefined(pollingUri);
-  const eventsUriMissing = isNullOrUndefined(eventsUri);
+  const streamingUriMissing = isNullOrUndefined(streamingUri) || streamingUri === EmptyString;
+  const pollingUriMissing = isNullOrUndefined(pollingUri) || pollingUri === EmptyString;
+  const eventsUriMissing = isNullOrUndefined(eventsUri) || eventsUri === EmptyString;
 
   if (!validatedOptions.offline && (eventsUriMissing || (streamingUriMissing && pollingUriMissing))) {
     if (eventsUriMissing) {
       validatedOptions.logger?.error(OptionMessages.partialEndpoint('eventsUri'));
     }
 
-    if (options.stream && streamingUriMissing) {
+    if (validatedOptions.stream && streamingUriMissing) {
       validatedOptions.logger?.error(OptionMessages.partialEndpoint('streamingUri'));
     }
 
-    if (!options.stream && pollingUriMissing) {
+    if (!validatedOptions.stream && pollingUriMissing) {
       validatedOptions.logger?.error(OptionMessages.partialEndpoint('pollingUri'));
     }
   }
@@ -145,6 +150,8 @@ export default class Configuration {
   public readonly offline: boolean;
 
   public readonly stream: boolean;
+
+  public readonly bootstrapProvider: IBootstrapProvider;
 
   public readonly storeFactory: (clientContext: IClientContext) => IStore;
 
@@ -183,6 +190,11 @@ export default class Configuration {
     this.pollingInterval = validatedOptions.pollInterval;
 
     this.offline = validatedOptions.offline;
+    this.bootstrapProvider = validatedOptions.bootstrapProvider;
+    if (this.offline) {
+      this.logger?.info('Offline mode enabled. No streaming or polling will occur.');
+    }
+
     this.stream = validatedOptions.stream;
 
     if (TypeValidators.Function.is(validatedOptions.dataSynchronizer)) {

@@ -20,7 +20,7 @@ export interface IDataSourceUpdates {
    * @param callback
    *   Will be called when the store has been initialized.
    */
-  init(allData: IStoreDataStorage, callback: () => void): void;
+  init(allData: IStoreDataStorage, callback?: () => void): void;
 
   /**
    * Updates or inserts an item in the specified collection. For updates, the object will only be

@@ -23,7 +23,7 @@ const LevelNames = ['debug', 'info', 'warn', 'error', 'none'];
  * If a formatter is available, then that should be overridden
  * as well for performance.
  */
-export default class BasicLogger implements ILogger {
+export class BasicLogger implements ILogger {
   private logLevel: number;
 
   private name: string;

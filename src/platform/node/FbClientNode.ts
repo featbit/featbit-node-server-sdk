@@ -1,6 +1,6 @@
 import EventEmitter from "events";
 import { IOptions } from "../../options/IOptions";
-import BasicLogger from "../../logging/BasicLogger";
+import { BasicLogger } from "../../logging/BasicLogger";
 import { format } from "util";
 import SafeLogger from "../../logging/SafeLogger";
 import NodePlatform from "./NodePlatform";

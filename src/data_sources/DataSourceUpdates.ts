@@ -60,7 +60,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
   ) {
   }
 
-  init(allData: IStoreDataStorage, callback: () => void): void {
+  init(allData: IStoreDataStorage, callback?: () => void): void {
     const checkForChanges = this.hasEventListeners();
     const doInit = (oldData?: IStoreDataStorage) => {
       this.store.init(allData, () => {

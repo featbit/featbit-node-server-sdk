@@ -98,6 +98,9 @@ export class FbClient implements IFbClient {
     if (config.offline) {
       this.eventProcessor = new NullEventProcessor();
       this.dataSynchronizer = new NullDataSynchronizer();
+
+      // use bootstrap provider to populate store
+      this.config.bootstrapProvider.populate(dataSourceUpdates, () => this.initSuccess());
     } else {
       this.eventProcessor = new DefaultEventProcessor(clientContext);
 
@@ -134,6 +137,10 @@ export class FbClient implements IFbClient {
   }
 
   private start() {
+    if (this.config.offline) {
+      return;
+    }
+
     this.dataSynchronizer.start();
     setTimeout(() => {
       if (!this.initialized()) {
@@ -150,8 +157,6 @@ export class FbClient implements IFbClient {
 
         return this.logger?.warn(msg);
       }
-
-      this.logger?.info('FbClient started successfully.');
     }, this.config.startWaitTime);
   }
 
@@ -259,10 +264,6 @@ export class FbClient implements IFbClient {
     this.store.close();
   }
 
-  isOffline(): boolean {
-    return this.config.offline;
-  }
-
   track(user: IUser, eventName: string, metricValue?: number | undefined): void {
     const metricEvent = new MetricEvent(user, eventName, this.platform.info.appType, metricValue ?? 1);
     this.eventProcessor.record(metricEvent);
@@ -341,6 +342,7 @@ export class FbClient implements IFbClient {
   private initSuccess() {
     if (!this.initialized()) {
       this.state = ClientState.Initialized;
+      this.logger?.info('FbClient started successfully.');
       this.initResolve?.(this);
       this.onReady();
     }
