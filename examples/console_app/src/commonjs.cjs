@@ -1,5 +1,4 @@
 const fb = require('@featbit/node-server-sdk');
-const { IUser, UserBuilder } = require("../../../dist/cjs/src");
 
 const fbClient = new fb.FbClientBuilder()
     .sdkKey('use_your_sdk_key')
