@@ -37,7 +37,6 @@ class WebSocketDataSynchronizer implements IDataSynchronizer {
         this.logger?.debug(`Received ${ eventName } event`);
 
         if (event?.data) {
-          this.logger?.debug(event.data);
           const {featureFlags, segments} = event.data;
           const data = deserializeData(featureFlags, segments);
           processJson(data);

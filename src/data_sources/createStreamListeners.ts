@@ -24,7 +24,7 @@ export const createPutListener = (
       [DataKinds.Segments.namespace]: segments,
     };
 
-    logger?.debug('Initializing all data', initData);
+    logger?.debug('Initializing all data');
     dataSourceUpdates.init(initData, onPutCompleteHandler);
   },
 });
