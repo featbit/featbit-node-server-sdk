@@ -3,7 +3,7 @@ import { createEvaluationServerMock } from "../../createEvaluationServerMock";
 import { WebSocketServer } from "ws";
 
 // all tests would pass in this module, but we got some weired logs
-// so temporarily this test suite. To enable it, remove testPathIgnorePatterns in jest.config.js
+// so temporarily this test suite is skipped. To enable it, remove testPathIgnorePatterns in jest.config.js
 describe('given a FbClientNode', () => {
   let wss: WebSocketServer;
 
