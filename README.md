@@ -7,7 +7,7 @@ This is the Node.js Server-Side SDK for the 100% open-source feature flags manag
 The FeatBit Server-Side SDK for Node.js is designed primarily for use in multi-user systems such as web servers and applications. It is not intended for use in desktop and embedded systems applications.
 
 ## Data synchonization
-We use **websocket** or **polling** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the websocket/polling connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
+We use **WebSocket** or **polling** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the WebSocket/polling connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
 
 ## Get Started
 
@@ -19,7 +19,7 @@ npm install --save @featbit/node-server-sdk
 ```
 ### Prerequisite
 
-Before using the SDK, you need to obtain the environment secret and SDK URLs.
+Before using the SDK, you need to obtain the environment secret (the sdkKey) and SDK URLs.
 
 Follow the documentation below to retrieve these values
 - [How to get environment secret](https://docs.featbit.co/sdk/faq#how-to-get-the-environment-secret)
@@ -83,15 +83,8 @@ const fbClient = new FbClientBuilder()
 
 The FbClientNode is the heart of the SDK which providing access to FeatBit server. Applications should instantiate a single instance for the lifetime of the application.
 
-#### FbClientNode Using Default Options
 
-```javascript
-import { FbClientBuilder } from "@featbit/node-server-sdk";
-
-const fbClient = new FbClientBuilder()
-    .sdkKey("your_sdk_key")
-    .build();
-```
+FbClientBuilder is used to construct a FbClientNode instance. The builder exposes methods to configure the SDK, and finally to create the FbClientNode instance.
 
 #### FbClientNode Using Custom Options
 
@@ -124,7 +117,7 @@ IUser defines the attributes of a user for whom you are evaluating feature flags
 
 Besides these built-in properties, you can define any additional attributes associated with the user using custom(string key, string value) method on UserBuilder. Both built-in attributes and custom attributes can be referenced in targeting rules, and are included in analytics data.
 
-There is only one method for building IUser.
+UserBuilder is used to construct a IUser instance. The builder exposes methods to configure the IUser, and finally to create the IUser instance.
 
 ```javascript
 import { UserBuilder } from "@featbit/node-server-sdk";
