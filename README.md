@@ -77,6 +77,9 @@ const fbClient = new FbClientBuilder()
 })();
 ```
 
+## Examples
+- [Console App](./examples/console-app)
+
 ## SDK
 
 ### FbClientNode
