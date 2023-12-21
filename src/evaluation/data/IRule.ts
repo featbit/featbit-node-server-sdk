@@ -10,4 +10,5 @@ export interface IMatchRule {
 export interface ITargetRule extends IMatchRule {
   dispatchKey: string;
   variations: IRolloutVariation[];
+  includedInExpt?: boolean;
 }

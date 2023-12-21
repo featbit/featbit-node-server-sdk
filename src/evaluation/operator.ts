@@ -1,6 +1,6 @@
 import { Regex } from "../utils/Regex";
 
-enum OperatorTypes {
+export enum OperatorTypes {
   // numeric
   LessThan = "LessThan",
   BiggerThan = "BiggerThan",

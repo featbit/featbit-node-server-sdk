@@ -1,3 +1,5 @@
+import { isNullOrUndefined } from "./isNullOrUndefined";
+
 export class Regex {
   private static patternWithFlags = /\/(.*)\/([a-z]*)/i;
   private static whiteSpaceRegex = /\s/g;
@@ -25,6 +27,6 @@ export class Regex {
   }
 
   static isNullOrWhiteSpace(str: string) {
-    return str === null || !str.replace(Regex.whiteSpaceRegex, '').length;
+    return isNullOrUndefined(str) || !str.replace(Regex.whiteSpaceRegex, '').length;
   }
 }

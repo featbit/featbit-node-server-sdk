@@ -20,7 +20,7 @@ export default class EvalResult {
   }
 
   static flagNotFound(flagKey: string) {
-    return new EvalResult(ReasonKinds.Error, EmptyString, `Unknown feature flag "${ flagKey }"; returning default value`);
+    return new EvalResult(ReasonKinds.Error, EmptyString, `flag not found`);
   }
 
   static malformedFlag() {

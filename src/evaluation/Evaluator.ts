@@ -25,8 +25,7 @@ export default class Evaluator {
    */
   evaluate(
     flagKey: string,
-    context: Context,
-    //eventFactory?: EventFactory,
+    context: Context
   ): [EvalResult, EvalEvent | null] {
     const flag = this.store.get(DataKinds.Flags, flagKey) as IFlag;
     if (!flag) {
@@ -54,7 +53,7 @@ export default class Evaluator {
    * @internal
    */
   private evalTargets(flag: IFlag, context: Context): [EvalResult | null, EvalEvent | null] {
-    const target = flag.targetUsers.find(t => t.keyIds.indexOf(context.key))
+    const target = flag.targetUsers.find(t => t.keyIds.includes(context.key))
 
     if (target) {
       const targetedVariation = this.getVariation(flag, target.variationId);
@@ -135,12 +134,12 @@ export default class Evaluator {
     }
 
     // match default rule
-    const fallthroughDispatchKey = flag.fallthrough.dispatchKey;
+    const fallthroughDispatchKey = flag.fallthrough?.dispatchKey;
     dispatchKey = Regex.isNullOrWhiteSpace(fallthroughDispatchKey)
       ? `${ flag.key }${ context.key }`
       : `${ flag.key }${ context.value(fallthroughDispatchKey) }`;
 
-    const defaultVariation = flag.fallthrough.variations.find(v => DispatchAlgorithm.isInRollout(this.platform.crypto, dispatchKey, v.rollout));
+    const defaultVariation = flag.fallthrough?.variations.find(v => DispatchAlgorithm.isInRollout(this.platform.crypto, dispatchKey, v.rollout));
     if (!defaultVariation) {
       return this.malformedFlag();
     }
@@ -190,7 +189,7 @@ export default class Evaluator {
 
     const sendToExperiment = this.shouldSendToExperiment(
       flag.exptIncludeAllTargets,
-      flag.fallthrough.includedInExpt,
+      flag.fallthrough?.includedInExpt,
       dispatchKey,
       rolloutVariation);
 

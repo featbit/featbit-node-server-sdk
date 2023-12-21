@@ -4,6 +4,8 @@ import { ITargetRule } from "./IRule";
 import { IFallthrough } from "./IFallthrough";
 
 export interface IFlag {
+  id: string;
+  variationType: string;
   fallthrough: IFallthrough;
   version: number;
   key: string;

@@ -33,10 +33,6 @@ export default class Context {
       return Context.contextForError('key is mandatory');
     }
 
-    if (name === undefined || name === null || name.trim() === '') {
-      return Context.contextForError('name is mandatory');
-    }
-
     const context = new Context(true);
     context._user = user;
 
