@@ -44,7 +44,7 @@ class NodeWebSocket implements IWebSocket {
 
     // Connection closed
     that.ws?.addEventListener('close', function (event) {
-      that.logger.debug('WebSocket received close event');
+      that.logger.warn('WebSocket received close event');
       if (event.code === 4003) { // do not reconnect when 4003
         return;
       }
@@ -93,7 +93,7 @@ class NodeWebSocket implements IWebSocket {
         this.logger.debug('requesting data');
         this.ws?.send(JSON.stringify(payload));
       } else {
-        this.logger.debug(`not requesting data because socket not open`);
+        this.logger.error(`not requesting data because socket not open`);
       }
     } catch (err) {
       this.logger.debug(err);
@@ -127,7 +127,7 @@ class NodeWebSocket implements IWebSocket {
       this.ws = undefined;
       const waitTime = socketConnectionIntervals[Math.min(this.retryCounter++, socketConnectionIntervals.length - 1)];
       setTimeout(() => {
-        this.logger.info('The client is trying to reconnect. Flag evaluation results may be stale until reconnected.');
+        this.logger.info(`The client is trying to reconnect, flag evaluation results may be stale until reconnected, waited for: ${ waitTime } milliseconds`);
         this.connect();
       }, waitTime);
       this.logger.debug(waitTime);

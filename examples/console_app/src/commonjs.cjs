@@ -30,7 +30,7 @@ async function run() {
         `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
 
     // make sure the events are flushed before exit
-    fbClient.close();
+    // fbClient.close();
 }
 
 run()
