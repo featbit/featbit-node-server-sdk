@@ -44,7 +44,7 @@ class NodeWebSocket implements IWebSocket {
 
     // Connection closed
     that.ws?.addEventListener('close', function (event) {
-      that.logger.warn('WebSocket received close event');
+      that.logger.warn('WebSocket closed');
       if (event.code === 4003) { // do not reconnect when 4003
         return;
       }
