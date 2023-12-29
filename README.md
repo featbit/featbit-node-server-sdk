@@ -65,15 +65,15 @@ const fbClient = new FbClientBuilder()
   //   .build();
 
   // evaluate a feature flag
-  const boolVariation = fbClient.boolVariation(flagKey, user, false);
+  const boolVariation = await fbClient.boolVariation(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariation} for user ${user.Key}`);
 
   // evaluate a boolean flag for a given user with evaluation detail
-  const boolVariationDetail = fbClient.boolVariationDetail(flagKey, user, false);
+  const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariationDetail.value} for user ${user.Key}` +
   `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
   
-  await fbClient.close();
+  await fbClient.flush();
 })();
 ```
 
@@ -180,15 +180,15 @@ const fbClient = new FbClientBuilder()
           .build();
 
   // evaluate a feature flag
-  const boolVariation = fbClient.boolVariation(flagKey, user, false);
+  const boolVariation = await fbClient.boolVariation(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariation} for user ${user.Key}`);
 
   // evaluate a boolean flag for a given user with evaluation detail
-  const boolVariationDetail = fbClient.boolVariationDetail(flagKey, user, false);
+  const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariationDetail.value} for user ${user.Key}` +
           `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
 
-  await fbClient.close();
+  await fbClient.flush();
 })();
 ```
 

@@ -1,4 +1,4 @@
-import ReasonKinds from "./ReasonKinds";
+import { ReasonKinds } from "./ReasonKinds";
 import { EmptyString } from "../constants";
 
 /**

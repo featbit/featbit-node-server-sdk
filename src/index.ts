@@ -1,12 +1,14 @@
 export { IFbClient } from './IFbClient';
 export { FbClientBuilder} from './FbClientBuilder';
 export { UserBuilder } from './options/UserBuilder';
-
+export { ReasonKinds } from './evaluation/ReasonKinds';
 export { IUser } from './options/IUser';
 export { ILogger } from "./logging/ILogger";
 export { BasicLogger } from "./logging/BasicLogger";
-
+export { IEvalDetail } from "./evaluation/IEvalDetail";
 export { IClientContext } from "./options/IClientContext";
 export { IDataSourceUpdates } from "./store/IDataSourceUpdates";
 export { IDataSynchronizer } from "./streaming/IDataSynchronizer";
-
+export { IContextProperty } from "./IContextProperty";
+export { IFbClientWithEvents } from "./IFbClientWithEvents";
+export { IOptions } from "./options/IOptions";

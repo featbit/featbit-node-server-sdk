@@ -7,7 +7,7 @@ import InMemoryStore from "../../src/store/InMemoryStore";
 import Evaluator from "../../src/evaluation/Evaluator";
 import { UserBuilder } from "../../src";
 import Context from "../../src/Context";
-import ReasonKinds from "../../src/evaluation/ReasonKinds";
+import { ReasonKinds } from "../../src/evaluation/ReasonKinds";
 import { EmptyString } from "../../src/constants";
 import { FlagBuilder } from "../../src/evaluation/FlagBuilder";
 import { deserializeAll } from "../../src/store/serialization";

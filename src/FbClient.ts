@@ -12,7 +12,7 @@ import Requestor from "./streaming/Requestor";
 import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
 import DataKinds from "./store/DataKinds";
 import Evaluator from "./evaluation/Evaluator";
-import ReasonKinds from "./evaluation/ReasonKinds";
+import { ReasonKinds } from "./evaluation/ReasonKinds";
 import { ClientError } from "./errors";
 import Context from "./Context";
 import { IConvertResult, ValueConverters } from "./utils/ValueConverters";
@@ -202,45 +202,45 @@ export class FbClient implements IFbClient {
     key: string,
     user: IUser,
     defaultValue: boolean
-  ): boolean {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.bool).value!;
+  ): Promise<boolean> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.bool).value!);
   }
 
   boolVariationDetail(
     key: string,
     user: IUser,
     defaultValue: any
-  ): IEvalDetail<boolean> {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.bool);
+  ): Promise<IEvalDetail<boolean>> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.bool));
   }
 
-  jsonVariation(key: string, user: IUser, defaultValue: unknown): unknown {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.json).value!;
+  jsonVariation(key: string, user: IUser, defaultValue: any): Promise<any> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.json).value!);
   }
 
-  jsonVariationDetail(key: string, user: IUser, defaultValue: unknown): IEvalDetail<unknown> {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.json);
+  jsonVariationDetail(key: string, user: IUser, defaultValue: any): Promise<IEvalDetail<any>> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.json));
   }
 
-  numberVariation(key: string, user: IUser, defaultValue: number): number {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.number).value!;
+  numberVariation(key: string, user: IUser, defaultValue: number): Promise<number> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.number).value!);
   }
 
-  numberVariationDetail(key: string, user: IUser, defaultValue: number): IEvalDetail<number> {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.number);
+  numberVariationDetail(key: string, user: IUser, defaultValue: number): Promise<IEvalDetail<number>> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.number));
   }
 
-  stringVariation(key: string, user: IUser, defaultValue: string): string {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.string).value!;
+  stringVariation(key: string, user: IUser, defaultValue: string): Promise<string> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.string).value!);
   }
 
-  stringVariationDetail(key: string, user: IUser, defaultValue: string): IEvalDetail<string> {
-    return this.evaluateCore(key, user, defaultValue, ValueConverters.string);
+  stringVariationDetail(key: string, user: IUser, defaultValue: string): Promise<IEvalDetail<string>> {
+    return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.string));
   }
 
   getAllVariations(
     user: IUser,
-  ): IEvalDetail<string>[] {
+  ): Promise<IEvalDetail<string>[]> {
     const context = Context.fromUser(user);
     if (!context.valid) {
       const error = new ClientError(
@@ -248,14 +248,16 @@ export class FbClient implements IFbClient {
       );
       this.onError(error);
 
-      return [];
+      return Promise.resolve([]);
     }
 
     const flags = this.store.all(DataKinds.Flags);
-    return Object.keys(flags).map(flagKey => {
+    const result = Object.keys(flags).map(flagKey => {
       const [evalResult, _] = this.evaluator.evaluate(flagKey, context);
       return {kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value};
     });
+
+    return Promise.resolve(result);
   }
 
   async close(): Promise<void> {

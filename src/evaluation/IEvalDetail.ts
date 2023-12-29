@@ -1,4 +1,4 @@
-import ReasonKinds from "./ReasonKinds";
+import { ReasonKinds } from "./ReasonKinds";
 
 export interface IEvalDetail<TValue> {
   /**

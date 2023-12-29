@@ -13,8 +13,8 @@ const user: IUser = new UserBuilder()
   .build();
 
 // listen to flag update event
-fbClient.on(`update:${flagKey}`,  (ee: any) => {
-  const r2 = fbClient.boolVariation(flagKey, user, false);
+fbClient.on(`update:${flagKey}`,  async (ee: any) => {
+  const r2 = await fbClient.boolVariation(flagKey, user, false);
   console.log(r2);
 })
 
@@ -25,7 +25,7 @@ async function run() {
     //console.log(err);
   }
 
-  const boolVariationDetail = fbClient.boolVariationDetail(flagKey, user, false);
+  const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariationDetail.value} for user ${user.key} ` +
     `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
 

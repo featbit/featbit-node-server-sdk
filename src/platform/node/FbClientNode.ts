@@ -12,6 +12,7 @@ import { FbClient } from "../../FbClient";
  * @ignore
  */
 class FbClientNode extends FbClient {
+
   emitter: EventEmitter;
 
   constructor(options: IOptions) {

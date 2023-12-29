@@ -47,7 +47,7 @@ export interface IFbClient {
     key: string,
     user: IUser,
     defaultValue: boolean
-  ): boolean;
+  ): Promise<boolean>;
 
   /**
    * Calculates the boolean value of a feature flag for a given user, and returns an object that
@@ -70,7 +70,7 @@ export interface IFbClient {
     key: string,
     user: IUser,
     defaultValue: boolean
-  ): IEvalDetail<boolean>;
+  ): Promise<IEvalDetail<boolean>>;
 
   /**
    * Calculates the number value of a feature flag for a given user.
@@ -92,7 +92,7 @@ export interface IFbClient {
     key: string,
     user: IUser,
     defaultValue: number
-  ): number;
+  ): Promise<number>;
 
   /**
    * Calculates the number value of a feature flag for a given user, and returns an object that
@@ -115,7 +115,7 @@ export interface IFbClient {
     key: string,
     user: IUser,
     defaultValue: number
-  ): IEvalDetail<number>;
+  ): Promise<IEvalDetail<number>>;
 
   /**
    * Calculates the string value of a feature flag for a given user.
@@ -137,7 +137,7 @@ export interface IFbClient {
     key: string,
     user: IUser,
     defaultValue: string
-  ): string;
+  ): Promise<string>;
 
   /**
    * Calculates the string value of a feature flag for a given user, and returns an object that
@@ -160,7 +160,7 @@ export interface IFbClient {
     key: string,
     user: IUser,
     defaultValue: string
-  ): IEvalDetail<string>;
+  ): Promise<IEvalDetail<string>>;
 
   /**
    * Calculates the JSON value of a feature flag for a given user.
@@ -181,8 +181,8 @@ export interface IFbClient {
   jsonVariation(
     key: string,
     user: IUser,
-    defaultValue: unknown
-  ): unknown;
+    defaultValue: any
+  ): Promise<any>;
 
   /**
    * Calculates the JSON value of a feature flag for a given user, and returns an object that
@@ -204,8 +204,8 @@ export interface IFbClient {
   jsonVariationDetail(
     key: string,
     user: IUser,
-    defaultValue: unknown
-  ): IEvalDetail<unknown>;
+    defaultValue: any
+  ): Promise<IEvalDetail<any>>;
 
   /**
    * Returns the variation of all feature flags for a given user, which can be passed to front-end code.
@@ -217,7 +217,7 @@ export interface IFbClient {
    */
   getAllVariations(
     user: IUser,
-  ): IEvalDetail<string>[];
+  ): Promise<IEvalDetail<string>[]>;
 
   /**
    * Shuts down the client and releases any resources it is using.

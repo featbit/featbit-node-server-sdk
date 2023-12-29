@@ -27,8 +27,8 @@ import { JsonBootstrapProvider } from "./bootstrap/JsonBootstrapProvider";
 export class FbClientBuilder {
   private _options: IOptions;
 
-  constructor() {
-    this._options = {};
+  constructor(options?: IOptions) {
+    this._options = options ?? {};
   }
 
   /**
