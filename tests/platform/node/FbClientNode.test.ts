@@ -1,7 +1,7 @@
-import { FbClientBuilder, UserBuilder } from "../../../src";
 import { createEvaluationServerMock } from "../../createEvaluationServerMock";
 import { WebSocketServer } from "ws";
 import { TestLogger } from "../../../src/integrations";
+import { FbClientBuilder, UserBuilder } from "../../../src";
 
 // all tests would pass in this module, but we got some weired logs
 // so temporarily this test suite is skipped. To enable it, remove testPathIgnorePatterns in jest.config.js
