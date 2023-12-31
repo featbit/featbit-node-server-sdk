@@ -20,9 +20,6 @@ npm run esm
 
 ### CommonJs
 
-Open the package.json file and change the `type` field to `commonjs`:
-
-
 ```bash
 npm run cjs
 ```
