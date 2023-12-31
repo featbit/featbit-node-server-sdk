@@ -127,6 +127,7 @@ export class FbClient implements IFbClient {
 
       this.dataSynchronizer = config.dataSynchronizerFactory?.(
         clientContext,
+        this.store,
         dataSourceUpdates,
         () => this.initSuccess(),
         (e) => this.dataSourceErrorHandler(e),
@@ -283,7 +284,7 @@ export class FbClient implements IFbClient {
     }
   }
 
-  private evaluateCore<TValue>(
+  evaluateCore<TValue>(
     flagKey: string,
     user: IUser,
     defaultValue: TValue,
@@ -312,6 +313,14 @@ export class FbClient implements IFbClient {
 
     if (evalResult.kind === ReasonKinds.Error) {
       // error happened when evaluate flag, return default value
+      const error = new ClientError(evalResult.reason!);
+      this.onError(error);
+
+      return {kind: evalResult.kind, reason: evalResult.reason, value: defaultValue};
+    }
+
+    if (evalResult.kind === ReasonKinds.FlagNotFound) {
+      // flag not found, return default value
       const error = new ClientError(evalResult.reason!);
       this.onError(error);
 

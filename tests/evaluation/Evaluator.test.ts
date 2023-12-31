@@ -9,7 +9,7 @@ import { UserBuilder } from "../../src";
 import Context from "../../src/Context";
 import { ReasonKinds } from "../../src/evaluation/ReasonKinds";
 import { EmptyString } from "../../src/constants";
-import { FlagBuilder } from "../../src/evaluation/FlagBuilder";
+import { FlagBuilder } from "../../src/integrations/test_data/FlagBuilder";
 import { deserializeAll } from "../../src/store/serialization";
 import DataKinds from "../../src/store/DataKinds";
 import { OperatorTypes } from "../../src/evaluation/operator";
@@ -34,7 +34,7 @@ describe('given a Evaluator', () => {
   it('evaluate flag not found', () => {
     const [evalResult, evalEvent] = evaluator.evaluate('hello', defaultContext);
 
-    expect(evalResult.kind).toBe(ReasonKinds.Error);
+    expect(evalResult.kind).toBe(ReasonKinds.FlagNotFound);
     expect(evalResult.value).toBe(EmptyString);
     expect(evalResult.reason).toBe('flag not found');
   });

@@ -157,6 +157,7 @@ export default class Configuration {
 
   public readonly dataSynchronizerFactory?: (
     clientContext: IClientContext,
+    store: IStore,
     dataSourceUpdates: IDataSourceUpdates,
     initSuccessHandler: VoidFunction,
     errorHandler?: (e: Error) => void,

@@ -8,5 +8,6 @@ export enum ReasonKinds {
   TargetMatch = 'TargetMatch',
   RuleMatch = 'RuleMatch',
   WrongType = 'WrongType',
+  FlagNotFound = 'FlagNotFound',
   Error = 'Error'
 }

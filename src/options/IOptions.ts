@@ -4,6 +4,7 @@ import { IClientContext } from "./IClientContext";
 import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
 import { IBootstrapProvider } from "../bootstrap/IBootstrapProvider";
+import { IStore } from "../store/store";
 
 export interface IOptions {
   /**
@@ -108,6 +109,7 @@ export interface IOptions {
     | object
     | ((
     clientContext: IClientContext,
+    store: IStore,
     dataSourceUpdates: IDataSourceUpdates,
     initSuccessHandler: VoidFunction,
     errorHandler?: (e: Error) => void,

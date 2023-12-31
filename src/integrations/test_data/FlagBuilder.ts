@@ -1,10 +1,10 @@
 // used only by tests
-import { IFlag } from "./data/IFlag";
-import { IVariation } from "./data/IVariation";
-import { ITargetUser } from "./data/ITargetUser";
-import { ITargetRule } from "./data/IRule";
-import { IFallthrough } from "./data/IFallthrough";
-import { EmptyString } from "../constants";
+import { IFlag } from "../../evaluation/data/IFlag";
+import { IVariation } from "../../evaluation/data/IVariation";
+import { ITargetUser } from "../../evaluation/data/ITargetUser";
+import { ITargetRule } from "../../evaluation/data/IRule";
+import { IFallthrough } from "../../evaluation/data/IFallthrough";
+import { EmptyString } from "../../constants";
 
 export class FlagBuilder {
   private _id: string = `xxxxx-${new Date().getTime()}-xxxxxx`;

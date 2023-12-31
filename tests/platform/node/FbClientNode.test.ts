@@ -1,11 +1,17 @@
 import { FbClientBuilder, UserBuilder } from "../../../src";
 import { createEvaluationServerMock } from "../../createEvaluationServerMock";
 import { WebSocketServer } from "ws";
+import { TestLogger } from "../../../src/integrations";
 
 // all tests would pass in this module, but we got some weired logs
 // so temporarily this test suite is skipped. To enable it, remove testPathIgnorePatterns in jest.config.js
 describe('given a FbClientNode', () => {
   let wss: WebSocketServer;
+  let testLogger: TestLogger;
+
+  beforeEach(() => {
+    testLogger = new TestLogger();
+  });
 
   beforeAll(async () => {
     wss = createEvaluationServerMock();
@@ -20,6 +26,7 @@ describe('given a FbClientNode', () => {
       .sdkKey('sdk-key')
       .streamingUri('ws://localhost:6100')
       .eventsUri('http://localhost:6100')
+      .logger(testLogger)
       .build();
 
     await fbClient.waitForInitialization();
@@ -33,6 +40,7 @@ describe('given a FbClientNode', () => {
       .streamingUri('ws://localhost1:6100')
       .startWaitTime(100)
       .eventsUri('http://localhost1:6100')
+      .logger(testLogger)
       .build();
 
     try {
@@ -48,6 +56,7 @@ describe('given a FbClientNode', () => {
       .sdkKey('sdk-key')
       .streamingUri('ws://localhost:6100')
       .eventsUri('http://localhost1:6100')
+      .logger(testLogger)
       .build();
 
     try {
@@ -67,6 +76,7 @@ describe('given a FbClientNode', () => {
       .sdkKey('sdk-key')
       .streamingUri('ws://localhost:6100')
       .eventsUri('http://localhost1:6100')
+      .logger(testLogger)
       .build();
 
     try {
@@ -88,6 +98,7 @@ describe('given a FbClientNode', () => {
       .sdkKey('sdk-key')
       .streamingUri('ws://localhost:6100')
       .eventsUri('http://localhost1:6100')
+      .logger(testLogger)
       .build();
 
     try {

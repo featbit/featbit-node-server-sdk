@@ -1,5 +1,6 @@
 import { IUser } from "./options/IUser";
 import { IEvalDetail } from "./evaluation/IEvalDetail";
+import { IConvertResult } from "./utils/ValueConverters";
 
 /**
  * The FeatBit SDK client object.
@@ -206,6 +207,33 @@ export interface IFbClient {
     user: IUser,
     defaultValue: any
   ): Promise<IEvalDetail<any>>;
+
+  /**
+   * This method is exposed only for testing purpose, please DO NOT USE IT
+   *
+   * Calculates the value of a feature flag for a given user, and returns a {@link IEvalDetail} object that
+   * describes the way the value was determined.
+   *
+   * If an error makes it impossible to evaluate the flag (for instance, the feature flag key
+   * does not match any existing flag), {@link defaultValue} is returned.
+   *
+   * @param flagKey
+   *  The unique key of the feature flag.
+   * @param user
+   *  The user for which the feature flag value should be calculated.
+   * @param defaultValue
+   *  The default value to return if the flag cannot be evaluated.
+   * @param typeConverter
+   *  the function to convert result.
+   *
+   *  @returns {@link IEvalDetail} object describing the way the value was determined.
+   */
+  evaluateCore<TValue>(
+    flagKey: string,
+    user: IUser,
+    defaultValue: TValue,
+    typeConverter: (value: string) => IConvertResult<TValue>
+  ): IEvalDetail<TValue>;
 
   /**
    * Returns the variation of all feature flags for a given user, which can be passed to front-end code.

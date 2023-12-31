@@ -59,10 +59,6 @@ export interface IStore {
    *
    * @param key
    *   The unique key of the entity within the specified collection.
-   *
-   * @param callback
-   *   Will be called with the retrieved entity, or null if not found. The actual type of the result
-   *   value is {@link VersionedData}.
    */
   get(kind: IDataKind, key: string): IStoreItem | null
 
@@ -75,7 +71,7 @@ export interface IStore {
    *   The type of data to be accessed. The store should not make any assumptions about the format
    *   of the data, but just return an object in which each key is the `key` property of an entity
    *   and the value is the entity. The actual type of this parameter is
-   *   {@link interfaces.DataKind}.
+   *   {@link IDataKind}.
    */
   all(kind: IDataKind): IStoreKindData;
 
@@ -121,13 +117,13 @@ export interface IStore {
    *
    * @param kind
    *   The type of data to be accessed. The actual type of this parameter is
-   *   {@link interfaces.DataKind}.
+   *   {@link IDataKind}.
    *
    * @param data
    *   The contents of the entity, as an object that can be converted to JSON. The store
    *   should check the `version` property of this object, and should *not* overwrite any
    *   existing data if the existing `version` is greater than or equal to that value.
-   *   The actual type of this parameter is {@link interfaces.VersionedData}.
+   *   The actual type of this parameter is {@link IKeyedStoreItem}.
    *
    * @param callback
    *   Will be called after the upsert operation is complete.

@@ -12,3 +12,6 @@ export { IDataSynchronizer } from "./streaming/IDataSynchronizer";
 export { IContextProperty } from "./IContextProperty";
 export { IFbClientWithEvents } from "./IFbClientWithEvents";
 export { IOptions } from "./options/IOptions";
+export { IFallthrough } from "./evaluation/data/IFallthrough";
+export { IStore } from "./store/store";
+export * as integrations from './integrations';
