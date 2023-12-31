@@ -1,4 +1,4 @@
-import { IFbClientWithEvents } from "./IFbClientWithEvents";
+import { IFbClient } from "./IFbClient";
 import { IOptions } from "./options/IOptions";
 import FbClientNode from "./platform/node/FbClientNode";
 import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
@@ -14,15 +14,15 @@ import { JsonBootstrapProvider } from "./bootstrap/JsonBootstrapProvider";
  *
  * Applications should instantiate a single instance for the lifetime of the application.
  * The client will begin attempting to connect to FeatBit as soon as it is created. To
- * determine when it is ready to use, call {@link FbClient.waitForInitialization}, or register an
- * event listener for the `"ready"` event using {@link FbClient.on}.
+ * determine when it is ready to use, call {@link IFbClient.waitForInitialization}, or register an
+ * event listener for the `"ready"` event using {@link IFbClient.on}.
  *
  * **Important:** Do **not** try to instantiate `FbClient` with its constructor
  * (`new FbClientNode()`); the SDK does not currently support
  * this.
  *
  * @return
- *   The new {@link FbClientNode} instance.
+ *   The new {@link IFbClient} instance.
  */
 export class FbClientBuilder {
   private _options: IOptions;
@@ -34,7 +34,7 @@ export class FbClientBuilder {
   /**
    * Creates a new instance of the FeatBit client.
    */
-  build(): IFbClientWithEvents {
+  build(): IFbClient {
     return new FbClientNode(this._options);
   }
 

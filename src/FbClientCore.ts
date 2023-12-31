@@ -1,4 +1,4 @@
-import { IFbClient } from "./IFbClient";
+import { IFbClientCore } from "./IFbClientCore";
 import { IPlatform } from "./platform/IPlatform";
 import Configuration from "./Configuration";
 import { ILogger } from "./logging/ILogger";
@@ -42,7 +42,7 @@ export interface IClientCallbacks {
   hasEventListeners: () => boolean;
 }
 
-export class FbClient implements IFbClient {
+export class FbClientCore implements IFbClientCore {
   private state: ClientState = ClientState.Initializing;
 
   private store: IStore;
@@ -53,13 +53,13 @@ export class FbClient implements IFbClient {
 
   private evaluator: Evaluator;
 
-  private initResolve?: (value: IFbClient | PromiseLike<IFbClient>) => void;
+  private initResolve?: (value: IFbClientCore | PromiseLike<IFbClientCore>) => void;
 
   private initReject?: (err: Error) => void;
 
   private rejectionReason: Error | undefined;
 
-  private initializedPromise?: Promise<IFbClient>;
+  private initializedPromise?: Promise<IFbClientCore>;
 
   private logger?: ILogger;
 
@@ -165,7 +165,7 @@ export class FbClient implements IFbClient {
     return this.state === ClientState.Initialized;
   }
 
-  waitForInitialization(): Promise<IFbClient> {
+  waitForInitialization(): Promise<IFbClientCore> {
     // An initialization promise is only created if someone is going to use that promise.
     // If we always created an initialization promise, and there was no call waitForInitialization
     // by the time the promise was rejected, then that would result in an unhandled promise

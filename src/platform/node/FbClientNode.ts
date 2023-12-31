@@ -6,12 +6,12 @@ import SafeLogger from "../../logging/SafeLogger";
 import NodePlatform from "./NodePlatform";
 import { Emits } from "../../utils/Emits";
 import { ClientEmitter } from "../../utils/ClientEmitter";
-import { FbClient } from "../../FbClient";
+import { FbClientCore } from "../../FbClientCore";
 
 /**
  * @ignore
  */
-class FbClientNode extends FbClient {
+class FbClientNode extends FbClientCore {
 
   emitter: EventEmitter;
 
