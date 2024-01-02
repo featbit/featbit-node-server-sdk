@@ -6,8 +6,8 @@ This is the Node.js Server-Side SDK for the 100% open-source feature flags manag
 
 The FeatBit Server-Side SDK for Node.js is designed primarily for use in multi-user systems such as web servers and applications. It is not intended for use in desktop and embedded systems applications.
 
-## Data synchonization
-We use **WebSocket** or **polling** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the WebSocket/polling connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
+## Data synchronization
+We use **WebSocket** or **Polling** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the WebSocket/Polling connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
 
 ## Get Started
 
@@ -27,7 +27,7 @@ Follow the documentation below to retrieve these values
 
 ### Quick Start
 
-The following code demonstrates the basic usage of @featbit/node-server-sdk.
+The following code demonstrates the basic usage of `@featbit/node-server-sdk`.
 
 ```javascript
 import { FbClientBuilder } from "@featbit/node-server-sdk";
@@ -53,8 +53,8 @@ const fbClient = new FbClientBuilder()
   
   // create a user
   const user = new UserBuilder()
-    .name('my name')
-    .key('THE_KEY_ID')
+    .key('a-unique-key-of-user')
+    .name('bob')
     .custom('sex', 'female')
     .custom('age', 18)
     .build();
@@ -78,7 +78,7 @@ const fbClient = new FbClientBuilder()
 ```
 
 ## Examples
-- [Console App](./examples/console-app)
+- [Console App](./examples/console_app)
 
 ## SDK
 
@@ -89,7 +89,7 @@ The FbClientNode is the heart of the SDK which providing access to FeatBit serve
 
 FbClientBuilder is used to construct a FbClientNode instance. The builder exposes methods to configure the SDK, and finally to create the FbClientNode instance.
 
-#### FbClientNode Using Custom Options
+#### FbClient Using Streaming
 
 ```javascript
 import { FbClientBuilder } from "@featbit/node-server-sdk";
@@ -100,7 +100,7 @@ const fbClient = new FbClientBuilder()
     .eventsUri("http://localhost:5100")
     .build();
 ```
-#### FbClientNode Using polling
+#### FbClient Using Polling
 
 ```javascript
 import { FbClientBuilder } from "@featbit/node-server-sdk";
@@ -118,16 +118,16 @@ const fbClient = new FbClientBuilder()
 
 IUser defines the attributes of a user for whom you are evaluating feature flags. IUser has two built-in attributes: key and name. The only mandatory attribute of a IUser is the key, which must uniquely identify each user.
 
-Besides these built-in properties, you can define any additional attributes associated with the user using custom(string key, string value) method on UserBuilder. Both built-in attributes and custom attributes can be referenced in targeting rules, and are included in analytics data.
+Besides these built-in properties, you can define any additional attributes associated with the user using `custom(string key, string value)` method on UserBuilder. Both built-in attributes and custom attributes can be referenced in targeting rules, and are included in analytics data.
 
-UserBuilder is used to construct a IUser instance. The builder exposes methods to configure the IUser, and finally to create the IUser instance.
+UserBuilder is used to construct a `IUser` instance. The builder exposes methods to configure the IUser, and finally to create the IUser instance.
 
 ```javascript
 import { UserBuilder } from "@featbit/node-server-sdk";
 
 const bob = new UserBuilder()
-    .name("Bob")
     .key("unique_key_for_bob")
+    .name("Bob")
     .custom('age', 18)
     .custom('country', 'FR')
     .build();
