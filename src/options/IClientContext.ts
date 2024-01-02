@@ -21,10 +21,19 @@ export interface IClientContext {
    */
   sdkKey: string;
 
+  /**
+   * The base URI of the streaming service
+   */
   streamingUri: string;
 
+  /**
+   * The base URI of the polling service
+   */
   pollingUri: string;
 
+  /**
+   * The base URI of the event service
+   */
   eventsUri: string;
 
   /**

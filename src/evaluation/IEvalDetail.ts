@@ -2,8 +2,7 @@ import { ReasonKinds } from "./ReasonKinds";
 
 export interface IEvalDetail<TValue> {
   /**
-   * The result of the flag evaluation. This will be either one of the flag's variations or
-   * the default value that was passed to `FbClient.variationDetail`.
+   * An enum indicating the category of the reason.
    */
   kind: ReasonKinds;
 
@@ -14,7 +13,7 @@ export interface IEvalDetail<TValue> {
   value?: TValue;
 
   /**
-   * An object describing the main factor that influenced the flag evaluation value.
+   * A string describing the main factor that influenced the flag evaluation value.
    */
   reason?: string;
 }

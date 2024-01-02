@@ -25,7 +25,7 @@ export interface IOptions {
   streamingUri?: string;
 
   /**
-   * The base URI of the polling service, mandatory if the {@link stream} option is set to true.
+   * The base URI of the polling service, mandatory if the {@link stream} option is set to false.
    */
   pollingUri?: string;
 

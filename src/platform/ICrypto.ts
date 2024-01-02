@@ -1,9 +1,9 @@
 /**
- * Interface implemented by platform provided hasher.
+ * Interface implemented by platform-provided hasher.
  *
  * The hash implementation must support 'sha256' and 'sha1'.
  *
- * The has implementation must support digesting to 'hex' or 'base64'.
+ * The hash implementation must support digesting to 'hex' or 'base64'.
  */
 export interface IHasher {
   update(data: string): IHasher;
