@@ -21,12 +21,19 @@ export interface IOptions {
   sdkKey?: string;
 
   /**
-   * The base URI of the data-sync service, mandatory if the {@link stream} option is set to true.
+   * The mode to sync flag end segment data with the FeatBit server. See {@link DataSyncModeEnum} for possible values.
+   *
+   * Defaults to {@link DataSyncModeEnum.STREAMING}.
+   */
+  dataSyncMode?: DataSyncModeEnum;
+
+  /**
+   * The base URI of the data-sync service, mandatory if the {@link dataSyncMode} is set to {@link DataSyncModeEnum.STREAMING}.
    */
   streamingUri?: string;
 
   /**
-   * The base URI of the polling service, mandatory if the {@link stream} option is set to false.
+   * The base URI of the polling service, mandatory if the {@link dataSyncMode} option is set to {@link DataSyncModeEnum.POLLING}.
    */
   pollingUri?: string;
 
@@ -34,13 +41,6 @@ export interface IOptions {
    * The base URI of the event service
    */
   eventsUri?: string;
-
-  /**
-   * The mode to sync flag end segment data with the FeatBit server. See {@link DataSyncModeEnum} for possible values.
-   *
-   * This is {@link DataSyncModeEnum.STREAMING} by default. If you set it to {@link DataSyncModeEnum.POLLING}, the client will use polling.
-   */
-  dataSyncMode?: DataSyncModeEnum;
 
   /**
    * Whether this client is offline. If true, no calls to FeatBit will be made.
@@ -104,7 +104,7 @@ export interface IOptions {
   /**
    * A component that obtains feature flag and segment data and puts it in the store.
    *
-   * By default, this is the client's default data-sync or polling component.
+   * Defaults to {@link WebSocketDataSynchronizer}.
    */
   dataSynchronizer?:
     | object
