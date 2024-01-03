@@ -26,9 +26,7 @@ describe('given a Evaluator', () => {
   const store: IStore = new InMemoryStore();
   const evaluator = new Evaluator(platform, store);
 
-  const defaultUser = new UserBuilder()
-    .key('u1')
-    .build();
+  const defaultUser = new UserBuilder('u1').build();
   const defaultContext = Context.fromUser(defaultUser);
 
   it('evaluate flag not found', () => {
@@ -143,8 +141,7 @@ describe('given a Evaluator', () => {
     store.init(initData, () => {});
 
     const context = Context.fromUser(
-      new UserBuilder()
-        .key('u1')
+      new UserBuilder('u1')
         .custom('vip', 'svip')
         .build()
     );

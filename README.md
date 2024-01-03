@@ -52,17 +52,11 @@ const fbClient = new FbClientBuilder()
   const flagKey = "game-runner";
   
   // create a user
-  const user = new UserBuilder()
-    .key('a-unique-key-of-user')
+  const user = new UserBuilder('a-unique-key-of-user')
     .name('bob')
     .custom('sex', 'female')
     .custom('age', 18)
     .build();
-
-  // Or create an anonymous user
-  // const user = new UserBuilder()
-  //   .anonymous('aa')
-  //   .build();
 
   // evaluate a feature flag
   const boolVariation = await fbClient.boolVariation(flagKey, user, false);
@@ -125,15 +119,11 @@ UserBuilder is used to construct a `IUser` instance. The builder exposes methods
 ```javascript
 import { UserBuilder } from "@featbit/node-server-sdk";
 
-const bob = new UserBuilder()
-    .key("unique_key_for_bob")
+const bob = new UserBuilder("unique_key_for_bob")
     .name("Bob")
     .custom('age', 18)
     .custom('country', 'FR')
     .build();
-
-// create an anonymous user
-const anonymous = new UserBuilder().anonymous().build();
 ```
 
 ### Evaluating flags
@@ -175,9 +165,7 @@ const fbClient = new FbClientBuilder()
   const flagKey = "game-runner";
 
   // create a user
-  const user = new UserBuilder()
-          .anonymous()
-          .build();
+  const user = new UserBuilder('anonymous').build();
 
   // evaluate a feature flag
   const boolVariation = await fbClient.boolVariation(flagKey, user, false);

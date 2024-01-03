@@ -1,4 +1,5 @@
 import { IUser } from "./IUser";
+import {IContextProperty} from "../IContextProperty";
 
 /**
  * Creates an instance of the FeatBit user.
@@ -7,39 +8,29 @@ import { IUser } from "./IUser";
  *   The new {@link IUser} instance.
  */
 export class UserBuilder {
-  private _user: IUser;
+  private _key: string = '';
+  private _name: string = '';
+  private _custom: IContextProperty[] = [];
 
-  constructor() {
-    this._user = {
-      name: '',
-      key: '',
-      customizedProperties: []
-    };
-  }
-
-  anonymous(name: string = 'anonymous', key: string = 'anonymous'): UserBuilder {
-    this._user.name = name;
-    this._user.key = key;
-    return this;
+  constructor(key: string) {
+    this._key = key;
   }
 
   name(name: string): UserBuilder {
-    this._user.name = name;
-    return this;
-  }
-
-  key(key: string): UserBuilder {
-    this._user.key = key;
+    this._name = name;
     return this;
   }
 
   custom(propertyName: string, value: string): UserBuilder {
-
-    this._user.customizedProperties?.push({ name: propertyName, value: value });
+    this._custom?.push({ name: propertyName, value: value });
     return this;
   }
 
   build(): IUser {
-    return this._user;
+    return {
+      name: this._name,
+      key: this._key,
+      customizedProperties: this._custom
+    };
   }
 }

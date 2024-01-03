@@ -65,7 +65,7 @@ describe('given a FbClientNode', () => {
     }
 
     expect(fbClient.initialized()).toBeTruthy();
-    const user = new UserBuilder().key('u1').build();
+    const user = new UserBuilder('u1').build();
     const variation = await fbClient.boolVariation('example-flag', user, true);
 
     expect(variation).toEqual(true);
@@ -85,7 +85,7 @@ describe('given a FbClientNode', () => {
     }
 
     expect(fbClient.initialized()).toBeTruthy();
-    const user = new UserBuilder().key('u1').build();
+    const user = new UserBuilder('u1').build();
     const variationDetail = await fbClient.boolVariationDetail('example-flag', user, true);
 
     expect(variationDetail.value).toBe(true);
@@ -107,7 +107,7 @@ describe('given a FbClientNode', () => {
     }
 
     expect(fbClient.initialized()).toBeTruthy();
-    const user = new UserBuilder().key('u1').build();
+    const user = new UserBuilder('u1').build();
     const results = await fbClient.getAllVariations(user);
 
     expect(results.length).toBe(1);

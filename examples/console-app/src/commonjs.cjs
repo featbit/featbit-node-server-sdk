@@ -8,8 +8,7 @@ const fbClient = new fb.FbClientBuilder()
 
 const flagKey = 'ff1';
 
-const user = new fb.UserBuilder()
-    .anonymous('aa')
+const user = new fb.UserBuilder('anonymous')
     .build();
 
 // listen to flag update event
