@@ -68,7 +68,7 @@ describe('given a FbClientNode', () => {
     const user = new UserBuilder().key('u1').build();
     const variation = await fbClient.boolVariation('example-flag', user, true);
 
-    expect(variation).toBeFalsy();
+    expect(variation).toEqual(true);
   });
 
   it('get variation detail', async () => {
@@ -88,9 +88,9 @@ describe('given a FbClientNode', () => {
     const user = new UserBuilder().key('u1').build();
     const variationDetail = await fbClient.boolVariationDetail('example-flag', user, true);
 
-    expect(variationDetail.value).toBe(false);
-    expect(variationDetail.reason).toBe('match rule Rule 2');
-    expect(variationDetail.kind).toBe('RuleMatch');
+    expect(variationDetail.value).toBe(true);
+    expect(variationDetail.reason).toBe('fall through targets and rules');
+    expect(variationDetail.kind).toBe('FallThrough');
   });
 
   it('get all variations', async () => {
@@ -113,8 +113,8 @@ describe('given a FbClientNode', () => {
     expect(results.length).toBe(1);
     const result0 = results[0];
 
-    expect(result0.value).toBe('false');
-    expect(result0.reason).toBe('match rule Rule 2');
-    expect(result0.kind).toBe('RuleMatch');
+    expect(result0.value).toBe('true');
+    expect(result0.reason).toBe('fall through targets and rules');
+    expect(result0.kind).toBe('FallThrough');
   });
 });

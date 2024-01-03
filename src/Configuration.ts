@@ -14,6 +14,7 @@ import { canonicalizeUri } from "./utils/canonicalizeUri";
 import { IBootstrapProvider } from "./bootstrap/IBootstrapProvider";
 import { NullBootstrapProvider } from "./bootstrap/NullBootstrapProvider";
 import { EmptyString } from "./constants";
+import { DataSyncModeEnum } from "./data-sync";
 
 // Once things are internal to the implementation of the SDK we can depend on
 // types. Calls to the SDK could contain anything without any regard to typing.
@@ -39,7 +40,7 @@ const validations: Record<string, TypeValidator> = {
   maxEventsInQueue: TypeValidators.Number,
   pollingInterval: TypeValidators.Number,
   offline: TypeValidators.Boolean,
-  stream: TypeValidators.Boolean,
+  dataSyncMode: TypeValidators.String,
   bootstrapProvider: TypeValidators.Object
 };
 
@@ -52,7 +53,7 @@ export const defaultValues: IValidatedOptions = {
   pollingUri: '',
   streamingUri: '',
   eventsUri: '',
-  stream: true,
+  dataSyncMode: DataSyncModeEnum.STREAMING,
   sendEvents: true,
   webSocketHandshakeTimeout: undefined,
   webSocketPingInterval: 18 * 1000,
@@ -114,11 +115,11 @@ function validateEndpoints(options: IOptions, validatedOptions: IValidatedOption
       validatedOptions.logger?.error(OptionMessages.partialEndpoint('eventsUri'));
     }
 
-    if (validatedOptions.stream && streamingUriMissing) {
+    if (validatedOptions.dataSyncMode === DataSyncModeEnum.STREAMING && streamingUriMissing) {
       validatedOptions.logger?.error(OptionMessages.partialEndpoint('streamingUri'));
     }
 
-    if (!validatedOptions.stream && pollingUriMissing) {
+    if (validatedOptions.dataSyncMode === DataSyncModeEnum.POLLING && pollingUriMissing) {
       validatedOptions.logger?.error(OptionMessages.partialEndpoint('pollingUri'));
     }
   }
@@ -149,7 +150,7 @@ export default class Configuration {
 
   public readonly offline: boolean;
 
-  public readonly stream: boolean;
+  public readonly dataSyncMode: DataSyncModeEnum;
 
   public readonly bootstrapProvider: IBootstrapProvider;
 
@@ -196,7 +197,7 @@ export default class Configuration {
       this.logger?.info('Offline mode enabled. No data-sync or polling will occur.');
     }
 
-    this.stream = validatedOptions.stream;
+    this.dataSyncMode = validatedOptions.dataSyncMode;
 
     if (TypeValidators.Function.is(validatedOptions.dataSynchronizer)) {
       // @ts-ignore

@@ -24,6 +24,7 @@ import { IStore } from "./store/store";
 import { IOptions } from "./options/IOptions";
 import { IUser } from "./options/IUser";
 import { MetricEvent } from "./events/event";
+import { DataSyncModeEnum } from "./data-sync";
 
 enum ClientState {
   Initializing,
@@ -108,7 +109,17 @@ export class FbClientCore implements IFbClientCore {
         put: () => this.initSuccess(),
       });
 
-      const dataSynchronizer = config.stream
+
+
+      const dataSynchronizer = config.dataSynchronizerFactory?.(
+        clientContext,
+        this.store,
+        dataSourceUpdates,
+        () => this.initSuccess(),
+        (e) => this.dataSourceErrorHandler(e),
+      );
+
+      this.dataSynchronizer = dataSynchronizer ?? config.dataSyncMode === DataSyncModeEnum.STREAMING
         ? new WebSocketDataSynchronizer(
           this.config.sdkKey,
           clientContext,
@@ -124,14 +135,6 @@ export class FbClientCore implements IFbClientCore {
           listeners,
           (e) => this.dataSourceErrorHandler(e),
         );
-
-      this.dataSynchronizer = config.dataSynchronizerFactory?.(
-        clientContext,
-        this.store,
-        dataSourceUpdates,
-        () => this.initSuccess(),
-        (e) => this.dataSourceErrorHandler(e),
-      ) ?? dataSynchronizer;
     }
 
     this.start();

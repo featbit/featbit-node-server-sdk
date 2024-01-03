@@ -5,6 +5,7 @@ import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
 import { IBootstrapProvider } from "../bootstrap/IBootstrapProvider";
 import { IStore } from "../store/store";
+import { DataSyncModeEnum } from "../data-sync/DataSyncMode";
 
 export interface IOptions {
   /**
@@ -35,12 +36,11 @@ export interface IOptions {
   eventsUri?: string;
 
   /**
-   * Whether data-sync mode should be used to receive flag updates.
+   * The mode to sync flag end segment data with the FeatBit server. See {@link DataSyncModeEnum} for possible values.
    *
-   * This is true by default. If you set it to false, the client will use polling.
+   * This is {@link DataSyncModeEnum.STREAMING} by default. If you set it to {@link DataSyncModeEnum.POLLING}, the client will use polling.
    */
-  stream?: boolean;
-  dataSyncMode?: string;
+  dataSyncMode?: DataSyncModeEnum;
 
   /**
    * Whether this client is offline. If true, no calls to FeatBit will be made.

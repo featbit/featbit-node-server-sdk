@@ -2,6 +2,7 @@ import { ILogger } from "../logging/ILogger";
 import { IStore } from "../store/store";
 import { IOptions } from "./IOptions";
 import { IDataSynchronizer } from "../data-sync/IDataSynchronizer";
+import { DataSyncModeEnum } from "../data-sync";
 
 export interface IValidatedOptions {
   startWaitTime: number;
@@ -9,7 +10,7 @@ export interface IValidatedOptions {
   pollingUri: string;
   streamingUri: string;
   eventsUri: string;
-  stream: boolean;
+  dataSyncMode: DataSyncModeEnum;
   webSocketHandshakeTimeout?: number;
   webSocketPingInterval?: number;
   flushInterval: number;

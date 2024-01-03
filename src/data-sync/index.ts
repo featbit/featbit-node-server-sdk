@@ -1,3 +1,4 @@
+export * from './DataSyncMode';
 export * from './HeaderWrapper';
 export * from './IDataSynchronizer';
 export * from './IRequestor';

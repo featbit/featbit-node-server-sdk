@@ -8,6 +8,7 @@ import { VoidFunction } from "./utils/VoidFunction";
 import { ILogger } from "./logging/ILogger";
 import { IBootstrapProvider } from "./bootstrap/IBootstrapProvider";
 import { JsonBootstrapProvider } from "./bootstrap/JsonBootstrapProvider";
+import { DataSyncModeEnum } from "./data-sync";
 
 /**
  * Creates an instance of the FeatBit client.
@@ -79,10 +80,10 @@ export class FbClientBuilder {
   }
 
   /**
-   * Refer to {@link IOptions.stream}.
+   * Refer to {@link IOptions.dataSyncMode}.
    */
-  stream(stream: boolean): FbClientBuilder {
-    this._options.stream = stream;
+  dataSyncMode(mode: DataSyncModeEnum): FbClientBuilder {
+    this._options.dataSyncMode = mode;
     return this;
   }
 

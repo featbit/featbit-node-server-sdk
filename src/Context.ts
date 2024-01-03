@@ -49,7 +49,7 @@ export default class Context {
 
   value(property: string): any {
     const propertyName = property as keyof IUser;
-    return this._user?.[propertyName];
+    return this._user?.[propertyName] ?? this._user?.customizedProperties?.find(x => x.name === propertyName)?.value;
   }
 
   private static contextForError(message: string) {

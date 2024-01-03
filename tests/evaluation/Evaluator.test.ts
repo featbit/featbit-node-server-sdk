@@ -145,7 +145,7 @@ describe('given a Evaluator', () => {
     const context = Context.fromUser(
       new UserBuilder()
         .key('u1')
-        .custom('level', 'svip')
+        .custom('vip', 'svip')
         .build()
     );
     const [evalResult, evalEvent] = evaluator.evaluate('hello', context);

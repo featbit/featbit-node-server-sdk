@@ -103,11 +103,11 @@ const fbClient = new FbClientBuilder()
 #### FbClient Using Polling
 
 ```javascript
-import { FbClientBuilder } from "@featbit/node-server-sdk";
+import { FbClientBuilder, DateSyncMode } from "@featbit/node-server-sdk";
 
 const fbClient = new FbClientBuilder()
     .sdkKey("your_sdk_key")
-    .stream(false)
+    .dataSyncMode(DateSyncMode.POLLING)
     .pollingUri('http://localhost:5100')
     .eventsUri("http://localhost:5100")
     .pollingInterval(10000)

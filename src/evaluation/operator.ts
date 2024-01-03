@@ -96,7 +96,7 @@ export class Operator {
     new Operator(OperatorTypes.StartsWith, (param1: string, param2: string) => param1.startsWith(param2));
 
   public static readonly EndsWith: Operator =
-    new Operator(OperatorTypes.StartsWith, (param1: string, param2: string) => param1.endsWith(param2));
+    new Operator(OperatorTypes.EndsWith, (param1: string, param2: string) => param1.endsWith(param2));
 
   /*********************** regex *******************************/
   public static readonly MatchRegex: Operator =
