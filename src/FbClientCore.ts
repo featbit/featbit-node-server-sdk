@@ -109,8 +109,6 @@ export class FbClientCore implements IFbClientCore {
         put: () => this.initSuccess(),
       });
 
-
-
       const dataSynchronizer = config.dataSynchronizerFactory?.(
         clientContext,
         this.store,
