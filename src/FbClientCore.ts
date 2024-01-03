@@ -311,16 +311,8 @@ export class FbClientCore implements IFbClientCore {
 
     const [evalResult, evalEvent] = this.evaluator.evaluate(flagKey, context);
 
-    if (evalResult.kind === ReasonKinds.Error) {
+    if (evalResult.kind === ReasonKinds.Error || evalResult.kind === ReasonKinds.FlagNotFound) {
       // error happened when evaluate flag, return default value
-      const error = new ClientError(evalResult.reason!);
-      this.onError(error);
-
-      return {kind: evalResult.kind, reason: evalResult.reason, value: defaultValue};
-    }
-
-    if (evalResult.kind === ReasonKinds.FlagNotFound) {
-      // flag not found, return default value
       const error = new ClientError(evalResult.reason!);
       this.onError(error);
 

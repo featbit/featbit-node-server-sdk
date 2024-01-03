@@ -40,6 +40,7 @@ export interface IOptions {
    * This is true by default. If you set it to false, the client will use polling.
    */
   stream?: boolean;
+  dataSyncMode?: string;
 
   /**
    * Whether this client is offline. If true, no calls to FeatBit will be made.

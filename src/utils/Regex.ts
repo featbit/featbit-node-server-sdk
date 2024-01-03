@@ -3,8 +3,6 @@ import { isNullOrUndefined } from "./isNullOrUndefined";
 export class Regex {
   private static patternWithFlags = /\/(.*)\/([a-z]*)/i;
   private static whiteSpaceRegex = /\s/g;
-  private static trueStrRegex = /^true$/i;
-  private static falseStrRegex = /^false$/i;
 
   static fromString(patternString: string): RegExp {
     let flags = '';
@@ -16,14 +14,6 @@ export class Regex {
     }
 
     return new RegExp(patternString, flags);
-  }
-
-  static isTrue(str: string): boolean {
-    return this.trueStrRegex.test(str);
-  }
-
-  static isFalse(str: string): boolean {
-    return this.falseStrRegex.test(str);
   }
 
   static isNullOrWhiteSpace(str: string) {

@@ -2,7 +2,7 @@ import { ReasonKinds } from "./ReasonKinds";
 
 export interface IEvalDetail<TValue> {
   /**
-   * An enum indicating the category of the reason.
+   * An enum indicating the category of the reason. See {@link ReasonKinds}
    */
   kind: ReasonKinds;
 

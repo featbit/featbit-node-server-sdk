@@ -7,11 +7,11 @@ export interface IConvertResult<TValue> {
 
 export class ValueConverters {
   static bool(value: string): IConvertResult<boolean> {
-    if (Regex.isTrue(value)) {
+    if (value?.toUpperCase() === 'TRUE') {
       return ValueConverters.success<boolean>(true);
     }
 
-    if (Regex.isFalse(value)) {
+    if (value?.toUpperCase() === 'FALSE') {
       return ValueConverters.success<boolean>(false);
     }
 

@@ -110,9 +110,9 @@ export class Operator {
     new Operator(OperatorTypes.IsOneOf, (param1: string, param2: string) => {
       try {
         const values: string[] = JSON.parse(param2);
-        return !values.includes(param1);
+        return values.includes(param1);
       } catch (e) {
-        return true;
+        return false;
       }
     });
 
@@ -120,7 +120,7 @@ export class Operator {
     new Operator(OperatorTypes.NotOneOf, (param1: string, param2: string) => {
       try {
         const values: string[] = JSON.parse(param2);
-        return values.includes(param1);
+        return !values.includes(param1);
       } catch (e) {
         return false;
       }
@@ -128,10 +128,10 @@ export class Operator {
 
   /*********************** is true/ is false *******************************/
   public static readonly IsTrue: Operator =
-    new Operator(OperatorTypes.IsTrue, (param1: string, _: string) => Regex.fromString('/^true$/i').test(param1));
+    new Operator(OperatorTypes.IsTrue, (param1: string, _: string) => param1?.toUpperCase() === 'TRUE');
 
   public static readonly IsFalse: Operator =
-    new Operator(OperatorTypes.IsTrue, (param1: string, _: string) => Regex.fromString('/^false$/i').test(param1));
+    new Operator(OperatorTypes.IsTrue, (param1: string, _: string) => param1?.toUpperCase() === 'FALSE');
 
   public static All = [
     // numeric
