@@ -25,7 +25,7 @@ export class DefaultEventSender implements IEventSender {
     this.requests = requests;
   }
 
-  async send(payload: string): Promise<IEventSenderResult> {
+  async send(payload: string, retry: boolean): Promise<IEventSenderResult> {
     const res: IEventSenderResult = {
       status: DeliveryStatus.Succeeded,
     };
@@ -62,9 +62,16 @@ export class DefaultEventSender implements IEventSender {
       return res;
     }
 
+    // recoverable but not retrying
+    if (error && !retry) {
+      res.status = DeliveryStatus.Failed;
+      res.error = error;
+      return res;
+    }
+
     // wait 1 second before retrying
     await sleep();
 
-    return this.send(payload);
+    return this.send(payload, false);
   }
 }

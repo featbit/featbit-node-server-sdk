@@ -101,7 +101,7 @@ export class EventDispatcher {
       const slice = events.slice(i, i + length);
       const payload = this.serializer.serialize(slice);
 
-      const {status} = await this.sender.send(payload);
+      const {status} = await this.sender.send(payload, true);
       if (status === DeliveryStatus.FailedAndMustShutDown) {
         this.stopped = true;
       }

@@ -10,5 +10,5 @@ export interface IEventSenderResult {
 }
 
 export interface IEventSender {
-  send(payload: string): Promise<IEventSenderResult>;
+  send(payload: string, retry: boolean): Promise<IEventSenderResult>;
 }
