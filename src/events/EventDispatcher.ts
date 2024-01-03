@@ -46,6 +46,7 @@ export class EventDispatcher {
           this.addEventToBuffer(event);
         } else if (event instanceof FlushEvent) {
           await this.triggerFlush(event);
+          event.complete();
         } else if (event instanceof ShutdownEvent) {
           await this.triggerFlush(event);
           event.complete();

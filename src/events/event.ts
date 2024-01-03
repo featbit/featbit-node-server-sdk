@@ -47,9 +47,17 @@ export class MetricEvent extends PayloadEvent {
     this.timestamp = new Date().getTime();
   }
 
+  private userPayload() {
+    return {
+      keyId: this.user.key,
+      name: this.user.name,
+      customizedProperties: this.user.customizedProperties
+    }
+  }
+
   toPayload(): any {
     return {
-      user: this.user,
+      user: this.userPayload(),
       metrics: [{
         route: 'index/metric',
         timestamp: this.timestamp,
@@ -75,9 +83,17 @@ export class EvalEvent extends PayloadEvent {
     this.timestamp = new Date().getTime();
   }
 
+  private userPayload() {
+    return {
+      keyId: this.user.key,
+      name: this.user.name,
+      customizedProperties: this.user.customizedProperties
+    }
+  }
+
   toPayload(): any {
     return {
-      user: this.user,
+      user: this.userPayload(),
       variations: [{
         featureFlagKey: this.flagKey,
         sendToExperiment: this.sendToExperiment,
