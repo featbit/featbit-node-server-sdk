@@ -21,15 +21,18 @@ export class DefaultEventProcessor implements IEventProcessor {
     this.eventQueue = new DefaultEventQueue(maxEventsInQueue, this.logger);
     this.eventDispatcher = new EventDispatcher(clientContext, this.eventQueue);
 
-    this.start();
+    this.flushLoop();
   }
 
-  private start() {
+  private flushLoop() {
     if (this.closed) {
       return;
     }
 
-    setTimeout(() => this.record(new FlushEvent()), this.flushInterval);
+    setTimeout(async () => {
+      await this.flush();
+      this.flushLoop();
+    }, this.flushInterval);
   }
 
   flush(): Promise<any> {

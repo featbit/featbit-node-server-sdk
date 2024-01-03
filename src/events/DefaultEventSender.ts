@@ -6,10 +6,10 @@ import { isHttpRecoverable, UnexpectedResponseError } from "../errors";
 import sleep from "../utils/sleep";
 
 export class DefaultEventSender implements IEventSender {
-  private defaultHeaders: {
+  private readonly defaultHeaders: {
     [key: string]: string;
   };
-  private eventsUri: string;
+  private readonly eventsUri: string;
   private requests: IRequests;
 
   constructor(clientContext: ClientContext) {

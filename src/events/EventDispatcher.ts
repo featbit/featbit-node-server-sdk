@@ -10,7 +10,7 @@ import { DefaultEventSerializer } from "./DefaultEventSerializer";
 import sleep from "../utils/sleep";
 
 export class EventDispatcher {
-  private logger: ILogger;
+  private readonly logger: ILogger;
   private sender: IEventSender;
   private buffer: IEventQueue;
   private serializer: IEventSerializer;
@@ -26,7 +26,7 @@ export class EventDispatcher {
     this.sender = new DefaultEventSender(clientContext);
     this.serializer = new DefaultEventSerializer();
 
-    this.dispatchLoop(queue);
+    this.dispatchLoop(queue).then();
   }
 
   private async dispatchLoop(queue: IEventQueue) {
@@ -47,8 +47,10 @@ export class EventDispatcher {
         } else if (event instanceof FlushEvent) {
           await this.triggerFlush(event);
         } else if (event instanceof ShutdownEvent) {
-          this.stopped = true;
           await this.triggerFlush(event);
+          event.complete();
+          this.stopped = true;
+          running = false;
         }
       } catch (err) {
         this.logger.error('Unexpected error in event dispatcher.', err);
@@ -72,7 +74,6 @@ export class EventDispatcher {
 
   private async triggerFlush(event: AsyncEvent) {
     if (this.stopped) {
-      event.complete();
       return;
     }
 
@@ -80,7 +81,6 @@ export class EventDispatcher {
       this.logger.debug('Flush empty buffer.');
       // There are no events to flush. If we don't complete the message, then the async task may never
       // complete (if it had a non-zero positive timeout, then it would complete after the timeout).
-      event.complete();
       return;
     }
 
