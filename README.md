@@ -78,7 +78,7 @@ const fbClient = new FbClientBuilder()
 ```
 
 ## Examples
-- [Console App](./examples/console_app)
+- [Console App](./examples/console-app)
 
 ## SDK
 
