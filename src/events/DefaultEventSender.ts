@@ -57,9 +57,7 @@ export class DefaultEventSender implements IEventSender {
         return res;
       }
     } catch (err) {
-      res.status = DeliveryStatus.Failed;
-      res.error = err;
-      return res;
+      error = err;
     }
 
     // recoverable but not retrying
