@@ -1,5 +1,4 @@
 export * from './data';
-export * from './collection';
 export * from './DispatchAlgorithm';
 export * from './EvalResult';
 export * from './evalRules';
