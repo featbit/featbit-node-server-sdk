@@ -1,4 +1,4 @@
-import Requestor from "../../src/streaming/Requestor";
+import Requestor from "../../src/data-sync/Requestor";
 import { IHeaders, IRequestOptions, IRequests, IResponse } from "../../src/platform/requests";
 import Configuration from "../../src/Configuration";
 import NodeInfo from "../../src/platform/node/NodeInfo";

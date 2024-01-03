@@ -22,7 +22,7 @@ export interface IClientContext {
   sdkKey: string;
 
   /**
-   * The base URI of the streaming service
+   * The base URI of the data-sync service
    */
   streamingUri: string;
 

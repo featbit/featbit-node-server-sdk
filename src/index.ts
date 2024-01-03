@@ -6,7 +6,7 @@ export * from './logging';
 export * from './options';
 export * from './platform';
 export * from './store';
-export * from './streaming';
+export * from './data-sync';
 export * from './utils';
 export * as integrations from './integrations';
 

@@ -9,7 +9,7 @@ import {
 } from "../store/serialization";
 import DataKinds from "../store/DataKinds";
 import { IStoreDataStorage } from "../store/store";
-import { EventName, ProcessStreamResponse } from "../streaming/types";
+import { EventName, ProcessStreamResponse } from "../data-sync/types";
 
 export const createPutListener = (
   dataSourceUpdates: IDataSourceUpdates,

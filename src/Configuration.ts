@@ -5,7 +5,7 @@ import { NumberWithMinimum, TypeValidator, TypeValidators } from "./options/Vali
 import OptionMessages from "./options/OptionMessages";
 import { IStore } from "./store/store";
 import { IClientContext } from "./options/IClientContext";
-import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
+import { IDataSynchronizer } from "./data-sync/IDataSynchronizer";
 import { IDataSourceUpdates } from "./store/IDataSourceUpdates";
 import InMemoryStore from "./store/InMemoryStore";
 import { VoidFunction } from "./utils/VoidFunction";
@@ -193,7 +193,7 @@ export default class Configuration {
     this.offline = validatedOptions.offline;
     this.bootstrapProvider = validatedOptions.bootstrapProvider;
     if (this.offline) {
-      this.logger?.info('Offline mode enabled. No streaming or polling will occur.');
+      this.logger?.info('Offline mode enabled. No data-sync or polling will occur.');
     }
 
     this.stream = validatedOptions.stream;

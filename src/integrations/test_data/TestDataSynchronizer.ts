@@ -1,7 +1,7 @@
-import { IDataSynchronizer } from "../../streaming/IDataSynchronizer";
+import { IDataSynchronizer } from "../../data-sync/IDataSynchronizer";
 import { IFlag } from "../../evaluation/data/IFlag";
 import { ISegment } from "../../evaluation/data/ISegment";
-import { EventName, ProcessStreamResponse } from "../../streaming/types";
+import { EventName, ProcessStreamResponse } from "../../data-sync/types";
 import { IDataSourceUpdates } from "../../store/IDataSourceUpdates";
 import { VoidFunction } from "../../utils/VoidFunction";
 import { IDataKind } from "../../IDataKind";

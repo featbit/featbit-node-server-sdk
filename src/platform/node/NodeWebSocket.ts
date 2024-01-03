@@ -1,7 +1,7 @@
 import { IWebSocket } from "../IWebSocket";
 import WebSocket from 'ws';
-import { StreamResponseEventType } from "../../streaming/types";
-import { generateConnectionToken } from "../../streaming/utils";
+import { StreamResponseEventType } from "../../data-sync/types";
+import { generateConnectionToken } from "../../data-sync/utils";
 import { ILogger } from "../../logging/ILogger";
 import EventEmitter from "events";
 import { ClientEmitter } from "../../utils/ClientEmitter";

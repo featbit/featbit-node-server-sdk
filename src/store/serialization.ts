@@ -2,7 +2,7 @@ import { IFlag } from "../evaluation/data/IFlag";
 import { ISegment } from "../evaluation/data/ISegment";
 import DataKinds from "./DataKinds";
 import { IVersionedData } from "../IVersionedData";
-import { getTimestampFromDateTimeString } from "../streaming/utils";
+import { getTimestampFromDateTimeString } from "../data-sync/utils";
 import { IDataKind } from "../IDataKind";
 
 export interface FlagsAndSegments {

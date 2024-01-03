@@ -1,7 +1,7 @@
 import { IFbClient } from "./IFbClient";
 import { IOptions } from "./options/IOptions";
 import FbClientNode from "./platform/node/FbClientNode";
-import { IDataSynchronizer } from "./streaming/IDataSynchronizer";
+import { IDataSynchronizer } from "./data-sync/IDataSynchronizer";
 import { IClientContext } from "./options/IClientContext";
 import { IDataSourceUpdates } from "./store/IDataSourceUpdates";
 import { VoidFunction } from "./utils/VoidFunction";

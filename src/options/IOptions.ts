@@ -1,5 +1,5 @@
 import { ILogger } from "../logging/ILogger";
-import { IDataSynchronizer } from "../streaming/IDataSynchronizer";
+import { IDataSynchronizer } from "../data-sync/IDataSynchronizer";
 import { IClientContext } from "./IClientContext";
 import { IDataSourceUpdates } from "../store/IDataSourceUpdates";
 import { VoidFunction } from "../utils/VoidFunction";
@@ -20,7 +20,7 @@ export interface IOptions {
   sdkKey?: string;
 
   /**
-   * The base URI of the streaming service, mandatory if the {@link stream} option is set to true.
+   * The base URI of the data-sync service, mandatory if the {@link stream} option is set to true.
    */
   streamingUri?: string;
 
@@ -35,7 +35,7 @@ export interface IOptions {
   eventsUri?: string;
 
   /**
-   * Whether streaming mode should be used to receive flag updates.
+   * Whether data-sync mode should be used to receive flag updates.
    *
    * This is true by default. If you set it to false, the client will use polling.
    */
@@ -50,7 +50,7 @@ export interface IOptions {
   offline?: boolean;
 
   /**
-   * The time between polling requests, in milliseconds. Ignored in streaming mode.
+   * The time between polling requests, in milliseconds. Ignored in data-sync mode.
    *
    * Defaults to 30 000 milliseconds.
    */
@@ -104,7 +104,7 @@ export interface IOptions {
   /**
    * A component that obtains feature flag and segment data and puts it in the store.
    *
-   * By default, this is the client's default streaming or polling component.
+   * By default, this is the client's default data-sync or polling component.
    */
   dataSynchronizer?:
     | object

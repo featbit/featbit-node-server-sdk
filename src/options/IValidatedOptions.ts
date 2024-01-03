@@ -1,7 +1,7 @@
 import { ILogger } from "../logging/ILogger";
 import { IStore } from "../store/store";
 import { IOptions } from "./IOptions";
-import { IDataSynchronizer } from "../streaming/IDataSynchronizer";
+import { IDataSynchronizer } from "../data-sync/IDataSynchronizer";
 
 export interface IValidatedOptions {
   startWaitTime: number;
