@@ -4,7 +4,7 @@ import TestDataSynchronizer from "./TestDataSynchronizer";
 import { IClientContext } from "../../options/IClientContext";
 import { IDataSourceUpdates } from "../../store/IDataSourceUpdates";
 import { VoidFunction } from "../../utils/VoidFunction";
-import { createStreamListeners } from "../../data_sources/createStreamListeners";
+import { createStreamListeners } from "../../data-sources/createStreamListeners";
 import { IStore } from "../../store/store";
 import DataKinds from "../../store/DataKinds";
 

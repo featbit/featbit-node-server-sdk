@@ -1,6 +1,6 @@
 import { JsonBootstrapProvider } from "../../src/bootstrap/JsonBootstrapProvider";
 import testData from "./featbit-bootstrap.json";
-import DataSourceUpdates from "../../src/data_sources/DataSourceUpdates";
+import DataSourceUpdates from "../../src/data-sources/DataSourceUpdates";
 import { IStore } from "../../src/store/store";
 import InMemoryStore from "../../src/store/InMemoryStore";
 import DataKinds from "../../src/store/DataKinds";

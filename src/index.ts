@@ -1,5 +1,5 @@
 export * from './bootstrap';
-export * from './data_sources';
+export * from './data-sources';
 export * from './evaluation';
 export * from './events';
 export * from './logging';
