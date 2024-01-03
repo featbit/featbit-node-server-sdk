@@ -4,7 +4,6 @@ import { IDataKind } from "../IDataKind";
  * Represents an item which can be stored in the feature store.
  */
 export interface IStoreItem {
-  deleted?: boolean;
   version: number;
 
   // The actual data associated with the item.
@@ -87,30 +86,6 @@ export interface IStore {
    *   Will be called when the store has been initialized.
    */
   init(allData: IStoreDataStorage, callback: () => void): void;
-
-  /**
-   * Delete an entity from the store.
-   *
-   * Deletion should be implemented by storing a placeholder object with the property
-   * `deleted: true` and a `version` property equal to the provided version. In other words,
-   * it should be exactly the same as calling `upsert` with such an object.
-   *
-   * @param kind
-   *   The type of data to be accessed. The actual type of this parameter is
-   *   {@link interfaces.DataKind}.
-   *
-   * @param key
-   *   The unique key of the entity within the specified collection.
-   *
-   * @param version
-   *   A number that must be greater than the `version` property of the existing entity in
-   *   order for it to be deleted. If it is less than or equal to the existing version, the
-   *   method should do nothing.
-   *
-   * @param callback
-   *   Will be called when the delete operation is complete.
-   */
-  delete(kind: IDataKind, key: string, version: number, callback: () => void): void;
 
   /**
    * Add an entity or update an existing entity.

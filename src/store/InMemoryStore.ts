@@ -69,12 +69,6 @@ export default class InMemoryStore implements IStore {
     callback?.();
   }
 
-  delete(kind: IDataKind, key: string, version: number, callback: () => void): void {
-    const deletedItem = {version, deleted: true};
-    this.addItem(kind, key, deletedItem);
-    callback?.();
-  }
-
   upsert(kind: IDataKind, data: IKeyedStoreItem, callback: () => void): void {
     this.addItem(kind, data.key, data);
     callback?.();
