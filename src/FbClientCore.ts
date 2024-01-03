@@ -109,15 +109,7 @@ export class FbClientCore implements IFbClientCore {
         put: () => this.initSuccess(),
       });
 
-      const dataSynchronizer = config.dataSynchronizerFactory?.(
-        clientContext,
-        this.store,
-        dataSourceUpdates,
-        () => this.initSuccess(),
-        (e) => this.dataSourceErrorHandler(e),
-      );
-
-      this.dataSynchronizer = dataSynchronizer ?? config.dataSyncMode === DataSyncModeEnum.STREAMING
+      const dataSynchronizer = config.dataSyncMode === DataSyncModeEnum.STREAMING
         ? new WebSocketDataSynchronizer(
           this.config.sdkKey,
           clientContext,
@@ -133,6 +125,14 @@ export class FbClientCore implements IFbClientCore {
           listeners,
           (e) => this.dataSourceErrorHandler(e),
         );
+
+      this.dataSynchronizer = config.dataSynchronizerFactory?.(
+          clientContext,
+          this.store,
+          dataSourceUpdates,
+          () => this.initSuccess(),
+          (e) => this.dataSourceErrorHandler(e),
+      ) ?? dataSynchronizer;
     }
 
     this.start();

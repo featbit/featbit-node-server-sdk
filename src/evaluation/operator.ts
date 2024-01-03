@@ -103,7 +103,7 @@ export class Operator {
     new Operator(OperatorTypes.MatchRegex, (pattern: string, param2: string) => Regex.fromString(pattern).test(param2));
 
   public static readonly NotMatchRegex: Operator =
-    new Operator(OperatorTypes.MatchRegex, (pattern: string, param2: string) => !Regex.fromString(pattern).test(param2));
+    new Operator(OperatorTypes.NotMatchRegex, (pattern: string, param2: string) => !Regex.fromString(pattern).test(param2));
 
   /*********************** is one of/ not one of *******************************/
   public static readonly IsOneOf: Operator =
@@ -131,7 +131,7 @@ export class Operator {
     new Operator(OperatorTypes.IsTrue, (param1: string, _: string) => param1?.toUpperCase() === 'TRUE');
 
   public static readonly IsFalse: Operator =
-    new Operator(OperatorTypes.IsTrue, (param1: string, _: string) => param1?.toUpperCase() === 'FALSE');
+    new Operator(OperatorTypes.IsFalse, (param1: string, _: string) => param1?.toUpperCase() === 'FALSE');
 
   public static All = [
     // numeric
