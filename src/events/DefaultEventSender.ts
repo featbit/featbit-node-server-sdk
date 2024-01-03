@@ -43,7 +43,7 @@ export class DefaultEventSender implements IEventSender {
         method: 'POST',
       });
 
-      if (status <= 204) {
+      if (status >= 200 && status <= 299) {
         return res;
       }
 
