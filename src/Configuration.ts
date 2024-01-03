@@ -194,7 +194,7 @@ export default class Configuration {
     this.offline = validatedOptions.offline;
     this.bootstrapProvider = validatedOptions.bootstrapProvider;
     if (this.offline) {
-      this.logger?.info('Offline mode enabled. No data-sync will occur.');
+      this.logger?.info('Offline mode enabled. No data synchronization with the FeatBit server will occur.');
     }
 
     this.dataSyncMode = validatedOptions.dataSyncMode;
