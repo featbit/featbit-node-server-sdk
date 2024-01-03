@@ -1,6 +1,6 @@
-const fb = require('@featbit/node-server-sdk');
+const { FbClientBuilder, UserBuilder } = require('@featbit/node-server-sdk');
 
-const fbClient = new fb.FbClientBuilder()
+const fbClient = new FbClientBuilder()
     .sdkKey('use_your_sdk_key')
     .streamingUri('ws://localhost:5100')
     .eventsUri('http://localhost:5100')
@@ -8,7 +8,7 @@ const fbClient = new fb.FbClientBuilder()
 
 const flagKey = 'ff1';
 
-const user = new fb.UserBuilder('anonymous')
+const user = new UserBuilder('anonymous')
     .build();
 
 // listen to flag update event
@@ -29,7 +29,7 @@ async function run() {
         `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
 
     // make sure the events are flushed before exit
-    // fbClient.close();
+    await fbClient.flush();
 }
 
 run()
