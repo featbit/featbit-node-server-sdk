@@ -194,7 +194,7 @@ export default class Configuration {
     this.offline = validatedOptions.offline;
     this.bootstrapProvider = validatedOptions.bootstrapProvider;
     if (this.offline) {
-      this.logger?.info('Offline mode enabled. No data-sync or polling will occur.');
+      this.logger?.info('Offline mode enabled. No data-sync will occur.');
     }
 
     this.dataSyncMode = validatedOptions.dataSyncMode;
