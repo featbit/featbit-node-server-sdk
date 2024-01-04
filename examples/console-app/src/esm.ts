@@ -1,4 +1,5 @@
 import { FbClientBuilder, IUser, UserBuilder } from "@featbit/node-server-sdk";
+//import { FbClientBuilder, IUser, UserBuilder } from "../../../src";
 
 const fbClient = new FbClientBuilder()
   .sdkKey('use_your_sdk_key')
@@ -8,8 +9,7 @@ const fbClient = new FbClientBuilder()
 
 const flagKey = 'ff1';
 
-const user: IUser = new UserBuilder('anonymous')
-  .build();
+const user: IUser = new UserBuilder('anonymous').build();
 
 // listen to flag update event
 fbClient.on(`update:${flagKey}`,  async (ee: any) => {

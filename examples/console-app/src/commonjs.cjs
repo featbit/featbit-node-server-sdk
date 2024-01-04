@@ -8,8 +8,7 @@ const fbClient = new FbClientBuilder()
 
 const flagKey = 'ff1';
 
-const user = new UserBuilder('anonymous')
-    .build();
+const user = new UserBuilder('anonymous').build();
 
 // listen to flag update event
 fbClient.on(`update:${flagKey}`,  async (ee) => {

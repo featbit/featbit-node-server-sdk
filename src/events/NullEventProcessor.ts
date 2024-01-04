@@ -3,10 +3,11 @@ import { IEvent } from "./event";
 
 export class NullEventProcessor implements IEventProcessor {
   flush(): Promise<void> {
-    return Promise.resolve(undefined);
+    return Promise.resolve();
   }
 
-  close(): void {
+  close(): Promise<void> {
+    return Promise.resolve();
   }
 
   record(event: IEvent | null): boolean {

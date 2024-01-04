@@ -5,7 +5,7 @@ export interface IEventQueue {
 
   clear(): void;
 
-  pop(): IEvent | undefined;
+  shift(): IEvent | undefined;
 
   close(): void;
 

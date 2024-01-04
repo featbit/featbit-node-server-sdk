@@ -35,7 +35,7 @@ export class EventDispatcher {
     let running = true;
     while (running) {
       try {
-        const event = queue.pop();
+        const event = queue.shift();
 
         if (event === undefined) {
           await sleep(1000);

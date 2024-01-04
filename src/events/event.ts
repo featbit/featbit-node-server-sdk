@@ -5,7 +5,7 @@ export interface IEvent {
 }
 
 export class AsyncEvent implements IEvent {
-  private isCompletedPromise?: Promise<AsyncEvent>;
+  private readonly isCompletedPromise?: Promise<AsyncEvent>;
   private resolveFn?: (value: AsyncEvent) => void;
 
   constructor() {

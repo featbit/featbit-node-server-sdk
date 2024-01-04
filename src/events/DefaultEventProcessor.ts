@@ -51,8 +51,6 @@ export class DefaultEventProcessor implements IEventProcessor {
       return;
     }
 
-    this.record(new FlushEvent());
-
     // send a shutdown event to dispatcher
     const shutdown = new ShutdownEvent();
     this.record(shutdown);

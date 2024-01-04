@@ -1,7 +1,7 @@
 import { IEvent } from "./event";
 
 export interface IEventProcessor {
-  close(): void;
+  close(): Promise<void>;
 
   flush(): Promise<void>;
 

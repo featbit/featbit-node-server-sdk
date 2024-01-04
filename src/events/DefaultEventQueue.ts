@@ -28,8 +28,8 @@ export class DefaultEventQueue implements IEventQueue {
     this.events = [];
   }
 
-  pop(): IEvent | undefined {
-    return this.events.pop();
+  shift(): IEvent | undefined {
+    return this.events.shift();
   }
 
   close(): void {
