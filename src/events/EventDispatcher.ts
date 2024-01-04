@@ -89,11 +89,12 @@ export class EventDispatcher {
     this.buffer.clear();
     try {
       await this.flushEvents(snapshot);
-      event.complete();
       this.logger.debug(`${ snapshot.length } events has been flushed.`);
     } catch (err) {
       this.logger.warn('Exception happened when flushing events', err);
     }
+
+    event.complete();
   }
 
   private async flushEvents(events: IEvent[]) {
