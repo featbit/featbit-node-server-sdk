@@ -46,10 +46,8 @@ export class EventDispatcher {
           this.addEventToBuffer(event);
         } else if (event instanceof FlushEvent) {
           await this.triggerFlush(event);
-          event.complete();
         } else if (event instanceof ShutdownEvent) {
           await this.triggerFlush(event);
-          event.complete();
           this.stopped = true;
           running = false;
         }
@@ -75,10 +73,12 @@ export class EventDispatcher {
 
   private async triggerFlush(event: AsyncEvent) {
     if (this.stopped) {
+      event.complete();
       return;
     }
 
     if (this.buffer.isEmpty) {
+      event.complete();
       this.logger.debug('Flush empty buffer.');
       // There are no events to flush. If we don't complete the message, then the async task may never
       // complete (if it had a non-zero positive timeout, then it would complete after the timeout).
@@ -89,6 +89,7 @@ export class EventDispatcher {
     this.buffer.clear();
     try {
       await this.flushEvents(snapshot);
+      event.complete();
       this.logger.debug(`${ snapshot.length } events has been flushed.`);
     } catch (err) {
       this.logger.warn('Exception happened when flushing events', err);

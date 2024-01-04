@@ -30,7 +30,12 @@ export class DefaultEventProcessor implements IEventProcessor {
     }
 
     setTimeout(async () => {
-      await this.flush();
+      try {
+        await this.flush();
+      } catch (err) {
+        this.logger.error('Unexpected error while flushing events in event processor.', err);
+      }
+
       this.flushLoop();
     }, this.flushInterval);
   }
