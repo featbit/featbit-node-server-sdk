@@ -9,7 +9,7 @@ export interface IFbClient extends IFbClientCore, EventEmitter {
    * This is the standard `on` method inherited from Node's `EventEmitter`; see the
    * {@link https://nodejs.org/api/events.html#events_class_eventemitter|Node API docs} for more
    * details on how to manage event listeners. Here is a description of the event types defined
-   * by `LDClient`.
+   * by `FbClient`.
    *
    * - `"ready"`: Sent only once, when the client has successfully connected to FeatBit.
    * Alternately, you can detect this with [[waitForInitialization]].
