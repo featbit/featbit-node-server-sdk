@@ -1,9 +1,9 @@
 # Console example for FeatBit Node.js Server-Side SDK
 
 ## Introduction
-The current example APP contains two files in src folder:
+The current example APP contains two files in `src` folder:
 - `esm.ts`: example for using ES module and typescript.
-- `commonjs.cjs`: example for using commonjs.
+- `cjs.js`: example for using commonjs.
 
 
 ## Get started

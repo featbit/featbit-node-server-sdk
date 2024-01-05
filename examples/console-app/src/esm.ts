@@ -7,21 +7,21 @@ const fbClient = new FbClientBuilder()
   .eventsUri('http://localhost:5100')
   .build();
 
-const flagKey = 'ff1';
+const flagKey = 'game-runner';
 
 const user: IUser = new UserBuilder('anonymous').build();
 
 // listen to flag update event
-fbClient.on(`update:${flagKey}`,  async (ee: any) => {
-  const r2 = await fbClient.boolVariation(flagKey, user, false);
-  console.log(r2);
+fbClient.on(`update:${flagKey}`, async () => {
+  const variation = await fbClient.boolVariation(flagKey, user, false);
+  console.log(`flag '${flagKey}' update event received, returns ${variation} for user ${user.key}`);
 })
 
 async function run() {
   try {
     await fbClient.waitForInitialization();
-  } catch(err) {
-    //console.log(err);
+  } catch (err) {
+    console.log(err);
   }
 
   const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
