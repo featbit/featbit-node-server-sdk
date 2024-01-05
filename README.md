@@ -45,7 +45,7 @@ const fbClient = new FbClientBuilder()
     await fbClient.waitForInitialization();
   } catch(err) {
     // failed to initialize the SDK
-    // console.log(err);
+    console.log(err);
   }
 
   // flag to be evaluated
@@ -58,7 +58,7 @@ const fbClient = new FbClientBuilder()
     .custom('age', 18)
     .build();
 
-  // evaluate a feature flag
+  // evaluate a feature flag for a given user
   const boolVariation = await fbClient.boolVariation(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariation} for user ${user.Key}`);
 
@@ -66,8 +66,9 @@ const fbClient = new FbClientBuilder()
   const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
   console.log(`flag '${flagKey}' returns ${boolVariationDetail.value} for user ${user.Key}` +
   `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
-  
-  await fbClient.flush();
+
+  // make sure the events are flushed before exit
+  await fbClient.close();
 })();
 ```
 
@@ -78,10 +79,9 @@ const fbClient = new FbClientBuilder()
 
 ### FbClientNode
 
-The FbClientNode is the heart of the SDK which providing access to FeatBit server. Applications should instantiate a single instance for the lifetime of the application.
+The `FbClientNode` is the heart of the SDK which provides access to FeatBit server. Applications should instantiate a single instance for the lifetime of the application.
 
-
-FbClientBuilder is used to construct a FbClientNode instance. The builder exposes methods to configure the SDK, and finally to create the FbClientNode instance.
+`FbClientBuilder` is used to construct a `FbClientNode` instance. The builder exposes methods to configure the SDK, and finally to create the `FbClientNode` instance.
 
 #### FbClient Using Streaming
 
@@ -143,41 +143,24 @@ Variation calls take the feature flag key, a IUser, and a default value. If any 
 evaluate the flag (for instance, the feature flag key does not match any existing flag), default value is returned.
 
 ```javascript
-import { FbClientBuilder } from "@featbit/node-server-sdk";
+// flag to be evaluated
+const flagKey = "game-runner";
 
-// setup SDK options
-const fbClient = new FbClientBuilder()
-    .sdkKey("your_sdk_key")
-    .streamingUri('ws://localhost:5100')
-    .eventsUri("http://localhost:5100")
+// create a user
+const user = new UserBuilder('a-unique-key-of-user')
+    .name('bob')
+    .custom('sex', 'female')
+    .custom('age', 18)
     .build();
 
-(async () => {
-  // wait for the SDK to be initialized
-  try {
-    await fbClient.waitForInitialization();
-  } catch(err) {
-    // failed to initialize the SDK
-    // console.log(err);
-  }
+// evaluate a feature flag for a given user
+const boolVariation = await fbClient.boolVariation(flagKey, user, false);
+console.log(`flag '${flagKey}' returns ${boolVariation} for user ${user.Key}`);
 
-  // flag to be evaluated
-  const flagKey = "game-runner";
-
-  // create a user
-  const user = new UserBuilder('anonymous').build();
-
-  // evaluate a feature flag
-  const boolVariation = await fbClient.boolVariation(flagKey, user, false);
-  console.log(`flag '${flagKey}' returns ${boolVariation} for user ${user.Key}`);
-
-  // evaluate a boolean flag for a given user with evaluation detail
-  const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
-  console.log(`flag '${flagKey}' returns ${boolVariationDetail.value} for user ${user.Key}` +
-          `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
-
-  await fbClient.flush();
-})();
+// evaluate a boolean flag for a given user with evaluation detail
+const boolVariationDetail = await fbClient.boolVariationDetail(flagKey, user, false);
+console.log(`flag '${flagKey}' returns ${boolVariationDetail.value} for user ${user.Key}` +
+    `Reason Kind: ${boolVariationDetail.kind}, Reason Description: ${boolVariationDetail.reason}`);
 ```
 
 ### Offline Mode
@@ -249,4 +232,4 @@ please create an issue.
   feature, [submit an issue](https://github.com/featbit/dotnet-server-sdk/issues/new).
 
 ## See Also
-[Connect To Node.js Sdk](https://docs.featbit.co/getting-started/connect-an-sdk#node.js)
+- [Connect To Node.js Sdk](https://docs.featbit.co/getting-started/connect-an-sdk#node.js)
