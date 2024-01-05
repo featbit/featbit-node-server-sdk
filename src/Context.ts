@@ -11,8 +11,7 @@ export default class Context {
   public readonly message?: string;
 
   /**
-   * Contexts should be created using the static factory method {@link Context.fromLDContext}.
-   * @param kind The kind of the context.
+   * Contexts should be created using the static factory method {@link Context.fromUser}.
    *
    * The factory methods are static functions within the class because they access private
    * implementation details, so they cannot be free functions.
@@ -48,7 +47,7 @@ export default class Context {
   }
 
   value(property: string): any {
-    if (property === 'keyId' || property === 'key') {
+    if (property === 'keyId') {
       return this._user?.key;
     } else if (property === 'name') {
       return this._user?.name;
