@@ -48,7 +48,7 @@ export default class Context {
   }
 
   value(property: string): any {
-    if (property === 'keyId') {
+    if (property === 'keyId' || property === 'key') {
       return this._user?.key;
     } else if (property === 'name') {
       return this._user?.name;
