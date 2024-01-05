@@ -5,7 +5,7 @@
   "type": "commonjs",
   "scripts": {
     "esm": "tsx src/esm.ts",
-    "cjs": "tsx src/commonjs.cjs"
+    "cjs": "tsx src/cjs.js"
   },
   "author": "",
   "license": "ISC",
