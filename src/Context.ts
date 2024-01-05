@@ -48,8 +48,13 @@ export default class Context {
   }
 
   value(property: string): any {
-    const propertyName = property as keyof IUser;
-    return this._user?.[propertyName] ?? this._user?.customizedProperties?.find(x => x.name === propertyName)?.value;
+    if (property === 'keyId') {
+      return this._user?.key;
+    } else if (property === 'name') {
+      return this._user?.name;
+    } else {
+      return this._user?.customizedProperties?.find(x => x.name === property)?.value;
+    }
   }
 
   private static contextForError(message: string) {
