@@ -34,7 +34,7 @@ describe('given a Evaluator', () => {
 
     expect(evalResult.kind).toBe(ReasonKinds.FlagNotFound);
     expect(evalResult.value).toBe(EmptyString);
-    expect(evalResult.reason).toBe('flag not found');
+    expect(evalResult.reason).toBe('flag not found: hello');
   });
 
   it('evaluate malformed flag', () => {
