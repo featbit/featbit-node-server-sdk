@@ -7,7 +7,7 @@ import EventEmitter from "events";
 import { ClientEmitter } from "../../utils/ClientEmitter";
 import { Emits } from "../../utils/Emits";
 
-const socketConnectionIntervals = [30 * 1000, 60 * 1000, 5 * 60 * 1000, 10 * 60 * 1000, 15 * 60 * 1000];
+const socketConnectionIntervals = [1000, 3000, 5000, 7000, 11000, 13000, 30000, 60000];
 
 class NodeWebSocket implements IWebSocket {
   emitter: EventEmitter;
@@ -114,7 +114,6 @@ class NodeWebSocket implements IWebSocket {
           this.sendPingMessage();
         } else {
           this.logger.debug(`socket closed at ${ new Date() }`);
-          this.reconnect();
         }
       } catch (err) {
         this.logger.debug(err);
@@ -126,11 +125,11 @@ class NodeWebSocket implements IWebSocket {
     if (!this.closed) {
       this.ws = undefined;
       const waitTime = socketConnectionIntervals[Math.min(this.retryCounter++, socketConnectionIntervals.length - 1)];
+      this.logger.info(`The client will try to reconnect in ${ waitTime } milliseconds.`);
       setTimeout(() => {
         this.logger.info(`The client is trying to reconnect, flag evaluation results may be stale until reconnected, waited for: ${ waitTime } milliseconds`);
         this.connect();
       }, waitTime);
-      this.logger.debug(waitTime);
     }
   }
 }
