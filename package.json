@@ -27,7 +27,7 @@
   "author": "featbit.co",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/featbit/featbit-node-server-sdkissues"
+    "url": "https://github.com/featbit/featbit-node-server-sdk/issues"
   },
   "homepage": "https://github.com/featbit/featbit-node-server-sdk#readme",
   "devDependencies": {
