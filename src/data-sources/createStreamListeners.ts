@@ -38,7 +38,7 @@ export const createPatchListener = (
   deserializeData: deserializePatch,
   processJson: async (data: IPatchData[]) => {
     data?.forEach(item => {
-      logger?.debug(`Updating ${ item.data.key } in ${ DataKinds.Flags.namespace }`);
+      logger?.debug(`Updating ${ item.data.key } in ${ item.kind.namespace }`);
       dataSourceUpdates.upsert(item.kind, item.data, onPatchCompleteHandler);
     })
   },
