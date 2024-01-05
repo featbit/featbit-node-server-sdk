@@ -9,14 +9,3 @@ export interface IDataKind {
    */
   namespace: string;
 }
-
-
-
-
-
-
-
-
-
-
-
