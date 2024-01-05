@@ -307,7 +307,7 @@ export class FbClientCore implements IFbClientCore {
       );
       this.onError(error);
 
-      return {kind: ReasonKinds.ClientNotReady, reason: error.message, value: defaultValue};
+      return {kind: ReasonKinds.Error, reason: error.message, value: defaultValue};
     }
 
     const [evalResult, evalEvent] = this.evaluator.evaluate(flagKey, context);
