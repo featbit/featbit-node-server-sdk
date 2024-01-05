@@ -211,7 +211,7 @@ export class FbClientCore implements IFbClientCore {
   boolVariationDetail(
     key: string,
     user: IUser,
-    defaultValue: any
+    defaultValue: boolean
   ): Promise<IEvalDetail<boolean>> {
     return Promise.resolve(this.evaluateCore(key, user, defaultValue, ValueConverters.bool));
   }
