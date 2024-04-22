@@ -37,6 +37,11 @@ export const createPatchListener = (
 ) => ({
   deserializeData: deserializePatch,
   processJson: async (data: IPatchData[]) => {
+    if (data?.length === 0) {
+      onPatchCompleteHandler?.();
+      return;
+    }
+    
     data?.forEach(item => {
       logger?.debug(`Updating ${ item.data.key } in ${ item.kind.namespace }`);
       dataSourceUpdates.upsert(item.kind, item.data, onPatchCompleteHandler);

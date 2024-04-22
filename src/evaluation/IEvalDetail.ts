@@ -2,6 +2,11 @@ import { ReasonKinds } from "./ReasonKinds";
 
 export interface IEvalDetail<TValue> {
   /**
+   * The unique key of the feature flag.
+   */
+  flagKey: string;
+
+  /**
    * An enum indicating the category of the reason. See {@link ReasonKinds}
    */
   kind: ReasonKinds;

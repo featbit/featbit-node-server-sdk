@@ -56,7 +56,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
   constructor(
     private readonly store: IStore,
     private readonly hasEventListeners: () => boolean,
-    private readonly onChange: (key: string) => void,
+    private readonly onChange: (keys: string[]) => void,
   ) {
   }
 
@@ -95,6 +95,7 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
                 );
               });
             });
+
             this.sendChangeEvents(updatedItems);
           }
         });
@@ -159,10 +160,13 @@ export default class DataSourceUpdates implements IDataSourceUpdates {
   }
 
   sendChangeEvents(dataSet: NamespacedDataSet<boolean>) {
+    const updatedKeys: string[] = [];
     dataSet.enumerate((namespace, key) => {
       if (namespace === DataKinds.Flags.namespace) {
-        this.onChange(key);
+        updatedKeys.push(key);
       }
     });
+
+    this.onChange(updatedKeys);
   }
 }

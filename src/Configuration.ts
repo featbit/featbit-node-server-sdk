@@ -189,7 +189,7 @@ export default class Configuration {
 
     this.flushInterval = validatedOptions.flushInterval;
     this.maxEventsInQueue = validatedOptions.maxEventsInQueue;
-    this.pollingInterval = validatedOptions.pollInterval;
+    this.pollingInterval = validatedOptions.pollingInterval;
 
     this.offline = validatedOptions.offline;
     this.bootstrapProvider = validatedOptions.bootstrapProvider;

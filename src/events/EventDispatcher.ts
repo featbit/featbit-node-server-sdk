@@ -98,6 +98,7 @@ export class EventDispatcher {
   }
 
   private async flushEvents(events: IEvent[]) {
+    events = this.getUniqueEvents(events);
     const total = events.length;
     for (let i = 0; i < total; i += this.maxEventPerRequest) {
       const length = Math.min(this.maxEventPerRequest, total - i);
@@ -109,5 +110,19 @@ export class EventDispatcher {
         this.stopped = true;
       }
     }
+  }
+
+  private getUniqueEvents(events: IEvent[]): IEvent[] {
+    const uniqueEvents: IEvent[] = [];
+    const hashes: string[] = [];
+
+    for (const event of events) {
+      if (!hashes.includes(event.hash)) {
+        uniqueEvents.push(event);
+        hashes.push(event.hash);
+      }
+    }
+
+    return uniqueEvents;
   }
 }
