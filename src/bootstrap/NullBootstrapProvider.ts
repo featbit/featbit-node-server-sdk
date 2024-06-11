@@ -14,12 +14,8 @@ export class NullBootstrapProvider implements IBootstrapProvider {
 
   populate(dataSourceUpdates: IDataSourceUpdates, callback?: () => void): Promise<void> {
     return new Promise((resolve, reject) => {
-      const internalCallback = () => {
-        resolve();
-        callback?.();
-      }
-
-      dataSourceUpdates.init(this.dataSet!, internalCallback);
+      resolve();
+      callback?.();
     });
   }
 }

@@ -2,6 +2,7 @@ import Requestor from "../../src/data-sync/Requestor";
 import { IHeaders, IRequestOptions, IRequests, IResponse } from "../../src/platform/requests";
 import Configuration from "../../src/Configuration";
 import NodeInfo from "../../src/platform/node/NodeInfo";
+import { version } from "../../src/version";
 
 describe('given a requestor', () => {
   let requestor: Requestor;
@@ -76,7 +77,7 @@ describe('given a requestor', () => {
       expect(requestsMade.length).toBe(1);
       expect(requestsMade[0].url).toBe('http://localhost:5100/api/public/sdk/server/latest-all?timestamp=0');
       expect(requestsMade[0].options.headers?.authorization).toBe('sdkKey');
-      expect(requestsMade[0].options.headers?.['user-agent']).toBe('NodeJS-Server-SDK/1.0.0');
+      expect(requestsMade[0].options.headers?.['user-agent']).toBe(`NodeJS-Server-SDK/${version}`);
       done();
     });
   });

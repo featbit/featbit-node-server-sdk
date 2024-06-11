@@ -131,7 +131,7 @@ const bob = new UserBuilder("unique_key_for_bob")
 By using the feature flag data it has already received, the SDK **locally calculates** the value of a feature flag for a
 given user.
 
-There is a `Variation` method that returns a flag value, and a `VariationDetail` method that returns an object
+There is a `variation` method that returns a flag value, and a `variationDetail` method that returns an object
 describing how the value was determined for each type.
 
 - boolVariation/boolVariationDetail

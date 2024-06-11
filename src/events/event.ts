@@ -2,11 +2,17 @@ import { IUser } from "../options/IUser";
 import { IVariation } from "../evaluation/data/IVariation";
 
 export interface IEvent {
+  hash: string;
 }
 
 export class AsyncEvent implements IEvent {
   private readonly isCompletedPromise?: Promise<AsyncEvent>;
   private resolveFn?: (value: AsyncEvent) => void;
+  timestamp = (new Date()).getTime();
+
+  get hash(): string {
+    return this.timestamp.toString();
+  }
 
   constructor() {
     this.isCompletedPromise = new Promise<AsyncEvent>((resolve) => {
@@ -30,13 +36,17 @@ export class ShutdownEvent extends AsyncEvent {
 }
 
 export class PayloadEvent implements IEvent {
+  timestamp = (new Date()).getTime();
+
+  get hash(): string {
+    return this.timestamp.toString();
+  }
+
   toPayload(): any {
   };
 }
 
 export class MetricEvent extends PayloadEvent {
-  timestamp: number;
-
   constructor(
     public user: IUser,
     public eventName: string,
@@ -68,11 +78,18 @@ export class MetricEvent extends PayloadEvent {
       }]
     }
   }
+
+  get hash(): string {
+    const payload = this.toPayload();
+    const hasObject = {
+      user: payload.user,
+      metrics: payload.metrics.map((m: any) => ({...m, timestamp: undefined}))
+    }
+    return JSON.stringify(hasObject);
+  }
 }
 
 export class EvalEvent extends PayloadEvent {
-  timestamp: number;
-
   constructor(
     public user: IUser,
     public flagKey: string,
@@ -101,5 +118,15 @@ export class EvalEvent extends PayloadEvent {
         variation: this.variation
       }]
     }
+  }
+
+  get hash(): string {
+    const payload = this.toPayload();
+    const hasObject = {
+      user: payload.user,
+      variations: payload.variations.map((m: any) => ({...m, timestamp: undefined}))
+    }
+
+    return JSON.stringify(hasObject);
   }
 }

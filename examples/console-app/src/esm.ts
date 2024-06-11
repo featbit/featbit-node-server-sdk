@@ -1,19 +1,29 @@
-import { FbClientBuilder, IUser, UserBuilder } from "@featbit/node-server-sdk";
-//import { FbClientBuilder, IUser, UserBuilder } from "../../../src";
+//import { DataSyncModeEnum, FbClientBuilder, IUser, UserBuilder } from "@featbit/node-server-sdk";
+import { FbClientBuilder, IUser, UserBuilder, DataSyncModeEnum } from "../../../src";
 
+// use websocket streaming
+// const fbClient = new FbClientBuilder()
+//     .sdkKey('USE_YOUR_SDK_KEY')
+//     .streamingUri('ws://localhost:5100')
+//     .eventsUri('http://localhost:5100')
+//     .build();
+
+// use polling
 const fbClient = new FbClientBuilder()
-  .sdkKey('use_your_sdk_key')
-  .streamingUri('ws://localhost:5100')
+  .sdkKey('USE_YOUR_SDK_KEY')
+  .pollingUri('http://localhost:5100')
+  .pollingInterval(5000)
+  .dataSyncMode(DataSyncModeEnum.POLLING)
   .eventsUri('http://localhost:5100')
   .build();
 
-const flagKey = 'game-runner';
+const flagKey = 'robot';
 
 const user: IUser = new UserBuilder('anonymous').build();
 
 // listen to flag update event
 fbClient.on(`update:${flagKey}`, async () => {
-  const variation = await fbClient.boolVariation(flagKey, user, false);
+  const variation = await fbClient.stringVariation(flagKey, user, 'abb');
   console.log(`flag '${flagKey}' update event received, returns ${variation} for user ${user.key}`);
 })
 

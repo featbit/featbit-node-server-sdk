@@ -37,7 +37,7 @@ export interface IClientCallbacks {
   onFailed: (err: Error) => void;
   onReady: () => void;
   // Called whenever flags change, if there are listeners.
-  onUpdate: (key: string) => void;
+  onUpdate: (keys: string[]) => void;
   // Method to check if event listeners have been registered.
   // If none are registered, then onUpdate will never be called.
   hasEventListeners: () => boolean;
@@ -96,17 +96,20 @@ export class FbClientCore implements IFbClientCore {
     const dataSourceUpdates = new DataSourceUpdates(this.store, hasEventListeners, onUpdate);
     this.evaluator = new Evaluator(this.platform, this.store);
 
+    // use bootstrap provider to populate store
+    this.config.bootstrapProvider.populate(dataSourceUpdates);
+
     if (config.offline) {
       this.eventProcessor = new NullEventProcessor();
       this.dataSynchronizer = new NullDataSynchronizer();
 
-      // use bootstrap provider to populate store
-      this.config.bootstrapProvider.populate(dataSourceUpdates, () => this.initSuccess());
+      this.initSuccess();
     } else {
       this.eventProcessor = new DefaultEventProcessor(clientContext);
 
       const listeners = createStreamListeners(dataSourceUpdates, this.logger, {
         put: () => this.initSuccess(),
+        patch: () => this.initSuccess()
       });
 
       const dataSynchronizer = config.dataSyncMode === DataSyncModeEnum.STREAMING
@@ -256,7 +259,7 @@ export class FbClientCore implements IFbClientCore {
     const flags = this.store.all(DataKinds.Flags);
     const result = Object.keys(flags).map(flagKey => {
       const [evalResult, _] = this.evaluator.evaluate(flagKey, context);
-      return {kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value};
+      return {flagKey, kind: evalResult.kind, reason: evalResult.reason, value: evalResult.value};
     });
 
     return Promise.resolve(result);
@@ -297,7 +300,7 @@ export class FbClientCore implements IFbClientCore {
         "'ready' event?) - using default value",
       );
 
-      return {kind: ReasonKinds.ClientNotReady, reason: 'client not ready', value: defaultValue};
+      return {flagKey, kind: ReasonKinds.ClientNotReady, reason: 'client not ready', value: defaultValue};
     }
 
     const context = Context.fromUser(user);
@@ -307,7 +310,7 @@ export class FbClientCore implements IFbClientCore {
       );
       this.onError(error);
 
-      return {kind: ReasonKinds.Error, reason: error.message, value: defaultValue};
+      return {flagKey, kind: ReasonKinds.Error, reason: error.message, value: defaultValue};
     }
 
     const [evalResult, evalEvent] = this.evaluator.evaluate(flagKey, context);
@@ -317,7 +320,7 @@ export class FbClientCore implements IFbClientCore {
       const error = new ClientError(evalResult.reason!);
       this.onError(error);
 
-      return {kind: evalResult.kind, reason: evalResult.reason, value: defaultValue};
+      return {flagKey, kind: evalResult.kind, reason: evalResult.reason, value: defaultValue};
     }
 
     // send event
@@ -325,8 +328,8 @@ export class FbClientCore implements IFbClientCore {
 
     const {isSucceeded, value} = typeConverter(evalResult.value!);
     return isSucceeded
-      ? {kind: evalResult.kind, reason: evalResult.reason, value}
-      : {kind: ReasonKinds.WrongType, reason: 'type mismatch', value: defaultValue};
+      ? {flagKey, kind: evalResult.kind, reason: evalResult.reason, value}
+      : {flagKey, kind: ReasonKinds.WrongType, reason: 'type mismatch', value: defaultValue};
   }
 
   private dataSourceErrorHandler(e: any) {
