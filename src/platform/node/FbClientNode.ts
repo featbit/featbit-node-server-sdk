@@ -42,7 +42,7 @@ class FbClientNode extends FbClientCore {
           emitter.emit('ready');
         },
         onUpdate: (keys: string[]) => {
-          emitter.emit('update', [keys]);
+          emitter.emit('update', keys);
           keys.forEach((key) => emitter.emit(`update:${ key }`, key));
         },
         hasEventListeners: () =>
