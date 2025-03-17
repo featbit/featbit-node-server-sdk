@@ -73,11 +73,10 @@ describe('given a requestor', () => {
     requestor.requestData(0, (err, body) => {
       expect(err).toBeUndefined();
       expect(body).toEqual(testResponse);
-
       expect(requestsMade.length).toBe(1);
       expect(requestsMade[0].url).toBe('http://localhost:5100/api/public/sdk/server/latest-all?timestamp=0');
-      expect(requestsMade[0].options.headers?.authorization).toBe('sdkKey');
-      expect(requestsMade[0].options.headers?.['user-agent']).toBe(`NodeJS-Server-SDK/${version}`);
+      expect(requestsMade[0].options.headers?.Authorization).toBe('sdkKey');
+      expect(requestsMade[0].options.headers?.['X-User-Agent']).toBe(`NodeJS-Server-SDK/${version}`);
       done();
     });
   });
