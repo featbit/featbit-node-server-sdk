@@ -1,1 +1,1 @@
-export const version = "1.1.1"; export const name = "@featbit/node-server-sdk";
+export const version = "1.2.2"; export const name = "@featbit/node-server-sdk";

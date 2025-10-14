@@ -38,6 +38,7 @@ const validations: Record<string, TypeValidator> = {
   dataSynchronizer: TypeValidators.ObjectOrFactory,
   flushInterval: TypeValidators.Number,
   maxEventsInQueue: TypeValidators.Number,
+  disableEvents: TypeValidators.Boolean,
   pollingInterval: TypeValidators.Number,
   offline: TypeValidators.Boolean,
   dataSyncMode: TypeValidators.String,
@@ -59,6 +60,7 @@ export const defaultValues: IValidatedOptions = {
   webSocketPingInterval: 18 * 1000,
   flushInterval: 2000,
   maxEventsInQueue: 10000,
+  disableEvents: false,
   pollingInterval: 30000,
   offline: false,
   store: () => new InMemoryStore(),
@@ -146,6 +148,8 @@ export default class Configuration {
 
   public readonly maxEventsInQueue: number;
 
+  public readonly disableEvents: boolean;
+
   public readonly pollingInterval: number;
 
   public readonly offline: boolean;
@@ -189,6 +193,7 @@ export default class Configuration {
 
     this.flushInterval = validatedOptions.flushInterval;
     this.maxEventsInQueue = validatedOptions.maxEventsInQueue;
+    this.disableEvents = validatedOptions.disableEvents;
     this.pollingInterval = validatedOptions.pollingInterval;
 
     this.offline = validatedOptions.offline;

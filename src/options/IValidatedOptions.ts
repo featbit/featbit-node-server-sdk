@@ -15,6 +15,7 @@ export interface IValidatedOptions {
   webSocketPingInterval?: number;
   flushInterval: number;
   maxEventsInQueue: number;
+  disableEvents: boolean;
   pollingInterval: number;
   offline: boolean;
   store: IStore | ((options: IOptions) => IStore);

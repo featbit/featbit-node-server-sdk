@@ -105,7 +105,11 @@ export class FbClientCore implements IFbClientCore {
 
       this.initSuccess();
     } else {
-      this.eventProcessor = new DefaultEventProcessor(clientContext);
+      if (this.config.disableEvents) {
+        this.eventProcessor = new NullEventProcessor();
+      } else {
+        this.eventProcessor = new DefaultEventProcessor(clientContext);
+      }
 
       const listeners = createStreamListeners(dataSourceUpdates, this.logger, {
         put: () => this.initSuccess(),

@@ -6,15 +6,17 @@ const {DataSyncModeEnum, FbClientBuilder, UserBuilder} = require('@featbit/node-
 //     .sdkKey('USE_YOUR_SDK_KEY')
 //     .streamingUri('ws://localhost:5100')
 //     .eventsUri('http://localhost:5100')
+//     .disableEvents(true)
 //     .build();
 
 // use polling
 const fbClient = new FbClientBuilder()
-    .sdkKey('USE_YOUR_SDK_KEY')
-    .pollingUri('http://localhost:5100')
+    .sdkKey('USE_YOUR_SERVER_SDK_KEY')
+    .pollingUri('https://app-eval.featbit.co')
     .pollingInterval(5000)
     .dataSyncMode(DataSyncModeEnum.POLLING)
-    .eventsUri('http://localhost:5100')
+    //.disableEvents(true)
+    .eventsUri('https://app-eval.featbit.co')
     .build();
 
 const flagKey = 'robot';
