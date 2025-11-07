@@ -1,4 +1,5 @@
-const {DataSyncModeEnum, FbClientBuilder, UserBuilder} = require('@featbit/node-server-sdk');
+const { DataSyncModeEnum, FbClientBuilder, UserBuilder, BasicLogger } = require('@featbit/node-server-sdk');
+const { format } = require("util");
 //import { DataSyncModeEnum, FbClientBuilder, IUser, UserBuilder } from "../../../src";
 
 // use websocket streaming
@@ -6,6 +7,12 @@ const {DataSyncModeEnum, FbClientBuilder, UserBuilder} = require('@featbit/node-
 //     .sdkKey('USE_YOUR_SDK_KEY')
 //     .streamingUri('ws://localhost:5100')
 //     .eventsUri('http://localhost:5100')
+//     .logLevel('info')
+//     .logger(new BasicLogger({
+//         level: 'debug',
+//         // eslint-disable-next-line no-console
+//         destination: console.error,
+//     }))
 //     .disableEvents(true)
 //     .build();
 
@@ -15,6 +22,13 @@ const fbClient = new FbClientBuilder()
     .pollingUri('https://app-eval.featbit.co')
     .pollingInterval(5000)
     .dataSyncMode(DataSyncModeEnum.POLLING)
+    //.logLevel('info')
+    .logger(new BasicLogger({
+        level: 'debug',
+        // eslint-disable-next-line no-console
+        destination: console.error,
+        formatter: format,
+    }))
     //.disableEvents(true)
     .eventsUri('https://app-eval.featbit.co')
     .build();

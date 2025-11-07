@@ -6,6 +6,7 @@ import { VoidFunction } from "../utils/VoidFunction";
 import { IBootstrapProvider } from "../bootstrap/IBootstrapProvider";
 import { IStore } from "../store/store";
 import { DataSyncModeEnum } from "../data-sync/DataSyncMode";
+import { ILogLevel } from "../logging";
 
 export interface IOptions {
   /**
@@ -84,9 +85,20 @@ export interface IOptions {
    * the Winston logging package.
    *
    * If you do not set this property, the SDK uses {@link BasicLogger} with a
-   * minimum level of `info`.
+   * default level of `info`.
    */
   logger?: ILogger;
+
+  /**
+   * Configures the log level for the default logger.
+   *
+   * The value can be any one of the following:
+   * 'debug', 'info', 'warn', 'error', 'none'
+   *
+   * If logger option is specified, this option would be ignored
+   * If you do not set this property, the SDK uses a default level of `info`.
+   */
+  logLevel?: ILogLevel;
 
   /**
    *  Timeout in milliseconds for the WebSocket handshake request. This is reset after every redirection.

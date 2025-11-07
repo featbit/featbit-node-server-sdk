@@ -23,9 +23,19 @@ class FbClientNode extends FbClientCore {
       formatter: format,
     });
 
+    let logger;
+    if (options.logger) {
+      logger = new SafeLogger(options.logger, fallbackLogger)
+    } else {
+      logger = new BasicLogger({
+        level: options.logLevel ?? "info",
+        destination: console.log,
+        formatter: format,
+      });
+    }
+
     const emitter = new ClientEmitter();
 
-    const logger = options.logger ? new SafeLogger(options.logger, fallbackLogger) : fallbackLogger;
     super(
       {...options, logger},
       new NodePlatform({...options, logger}),

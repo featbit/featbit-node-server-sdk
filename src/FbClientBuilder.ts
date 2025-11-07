@@ -9,6 +9,7 @@ import { ILogger } from "./logging/ILogger";
 import { IBootstrapProvider } from "./bootstrap/IBootstrapProvider";
 import { JsonBootstrapProvider } from "./bootstrap/JsonBootstrapProvider";
 import { DataSyncModeEnum } from "./data-sync";
+import { ILogLevel } from "./logging";
 
 /**
  * Creates an instance of the FeatBit client.
@@ -124,6 +125,15 @@ export class FbClientBuilder {
    */
   logger(logger: ILogger): FbClientBuilder {
     this._options.logger = logger;
+    return this;
+  }
+
+
+  /**
+   * Refer to {@link IOptions.logLevel}.
+   */
+  logLevel(level: ILogLevel): FbClientBuilder {
+    this._options.logLevel = level;
     return this;
   }
 

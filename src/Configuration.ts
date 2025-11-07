@@ -34,6 +34,7 @@ const validations: Record<string, TypeValidator> = {
   webSocketHandshakeTimeout: TypeValidators.Number,
   webSocketPingInterval: TypeValidators.Number,
   logger: TypeValidators.Object,
+  logLevel: TypeValidators.String,
   store: TypeValidators.ObjectOrFactory,
   dataSynchronizer: TypeValidators.ObjectOrFactory,
   flushInterval: TypeValidators.Number,

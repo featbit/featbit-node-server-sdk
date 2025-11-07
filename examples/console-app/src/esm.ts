@@ -1,11 +1,19 @@
-//import { DataSyncModeEnum, FbClientBuilder, IUser, UserBuilder } from "@featbit/node-server-sdk";
-import { FbClientBuilder, IUser, UserBuilder, DataSyncModeEnum } from "../../../src";
+import { DataSyncModeEnum, FbClientBuilder, IUser, UserBuilder, BasicLogger } from "@featbit/node-server-sdk";
+const { format } = require("util");
+//import { FbClientBuilder, IUser, UserBuilder, DataSyncModeEnum, BasicLogger} from "../../../src";
 
 // use websocket streaming
 // const fbClient = new FbClientBuilder()
 //     .sdkKey('USE_YOUR_SDK_KEY')
 //     .streamingUri('ws://localhost:5100')
 //     .eventsUri('http://localhost:5100')
+//     .logLevel('info')
+//     .logger(new BasicLogger({
+//         level: 'debug',
+//         // eslint-disable-next-line no-console
+//         destination: console.error,
+//         formatter: format,
+//     }))
 //     .disableEvents(true)
 //     .build();
 
@@ -14,6 +22,13 @@ const fbClient = new FbClientBuilder()
   .sdkKey('USE_YOUR_SERVER_SDK_KEY')
   .pollingUri('http://localhost:5100')
   .pollingInterval(5000)
+  //.logLevel('info')
+  .logger(new BasicLogger({
+      level: 'debug',
+      // eslint-disable-next-line no-console
+      destination: console.error,
+      formatter: format,
+  }))
   .dataSyncMode(DataSyncModeEnum.POLLING)
 //.disableEvents(true)
   .eventsUri('http://localhost:5100')
