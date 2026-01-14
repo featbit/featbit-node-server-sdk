@@ -30,7 +30,7 @@ Follow the documentation below to retrieve these values
 The following code demonstrates the basic usage of `@featbit/node-server-sdk`.
 
 ```javascript
-import { FbClientBuilder } from "@featbit/node-server-sdk";
+import { FbClientBuilder, UserBuilder } from "@featbit/node-server-sdk";
 
 // setup SDK options
 const fbClient = new FbClientBuilder()
