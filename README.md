@@ -126,6 +126,21 @@ const bob = new UserBuilder("unique_key_for_bob")
     .build();
 ```
 
+Alternatively, you can create a user object directly without using `UserBuilder`:
+
+```typescript
+import { IUser } from "@featbit/node-server-sdk";
+
+const bob: IUser = {
+	key: "unique_key_for_bob",
+	name: "Bob",
+	customizedProperties: [
+		{ name: "age", value: "18" },
+		{ name: "country", value: "FR" },
+	],
+};
+```
+
 ### Evaluating flags
 
 By using the feature flag data it has already received, the SDK **locally calculates** the value of a feature flag for a
