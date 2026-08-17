@@ -30,7 +30,7 @@ Follow the documentation below to retrieve these values
 The following code demonstrates the basic usage of `@featbit/node-server-sdk`.
 
 ```javascript
-import { FbClientBuilder } from "@featbit/node-server-sdk";
+import { FbClientBuilder, UserBuilder } from "@featbit/node-server-sdk";
 
 // setup SDK options
 const fbClient = new FbClientBuilder()
@@ -124,6 +124,21 @@ const bob = new UserBuilder("unique_key_for_bob")
     .custom('age', 18)
     .custom('country', 'FR')
     .build();
+```
+
+Alternatively, you can create a user object directly without using `UserBuilder`:
+
+```typescript
+import { IUser } from "@featbit/node-server-sdk";
+
+const bob: IUser = {
+	key: "unique_key_for_bob",
+	name: "Bob",
+	customizedProperties: [
+		{ name: "age", value: "18" },
+		{ name: "country", value: "FR" },
+	],
+};
 ```
 
 ### Evaluating flags
