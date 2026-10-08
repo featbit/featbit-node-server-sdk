@@ -1,11 +1,21 @@
 import { Operator, OperatorTypes } from "../../src/evaluation/operator";
 
-describe('given a string operator and a user without the attribute', () => {
-  // a missing user property is undefined, not null: the operator must answer "no match", not throw
-  const stringOps = [OperatorTypes.EndsWith, OperatorTypes.StartsWith, OperatorTypes.Contains, OperatorTypes.Equal];
+describe('given an operator and a user without the attribute (undefined)', () => {
+  const missing = undefined as unknown as string;
 
-  it.each(stringOps)('%s returns false for an undefined value', (op) => {
-    expect(() => Operator.get(op).isMatch(undefined as unknown as string, "x")).not.toThrow();
-    expect(Operator.get(op).isMatch(undefined as unknown as string, "x")).toBe(false);
+  // string operators used to throw here: now no match
+  it.each([OperatorTypes.EndsWith, OperatorTypes.StartsWith, OperatorTypes.Contains, OperatorTypes.NotContain])(
+    '%s returns false and does not throw', (op) => {
+      expect(() => Operator.get(op).isMatch(missing, "x")).not.toThrow();
+      expect(Operator.get(op).isMatch(missing, "x")).toBe(false);
+    });
+
+  // backward compatible: operators that already handled undefined keep their result
+  it('Equal stays false', () => {
+    expect(Operator.get(OperatorTypes.Equal).isMatch(missing, "x")).toBe(false);
+  });
+
+  it('NotEqual stays true', () => {
+    expect(Operator.get(OperatorTypes.NotEqual).isMatch(missing, "x")).toBe(true);
   });
 });

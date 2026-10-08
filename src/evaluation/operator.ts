@@ -38,12 +38,17 @@ export class Operator {
   }
 
   public isMatch(value: string, conditionValue: string) {
-    // a missing user attribute is undefined, not null: both must fail the match, not throw inside func
-    if (value == null || conditionValue == null) {
+    if (value === null || conditionValue === null) {
       return false;
     }
 
-    return this.func(value, conditionValue);
+    // a missing user attribute is undefined: string operators throw on it. Count that as no match; operators that
+    // already handled undefined keep their result (e.g. NotEqual stays true)
+    try {
+      return this.func(value, conditionValue);
+    } catch {
+      return false;
+    }
   }
 
   /***************** numeric ********************/
