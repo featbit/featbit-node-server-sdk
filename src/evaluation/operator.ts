@@ -38,7 +38,8 @@ export class Operator {
   }
 
   public isMatch(value: string, conditionValue: string) {
-    if (value === null || conditionValue === null) {
+    // a missing user attribute is undefined, not null: both must fail the match, not throw inside func
+    if (value == null || conditionValue == null) {
       return false;
     }
 
