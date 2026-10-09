@@ -114,6 +114,8 @@ IUser defines the attributes of a user for whom you are evaluating feature flags
 
 Besides these built-in properties, you can define any additional attributes associated with the user using `custom(string key, string value)` method on UserBuilder. Both built-in attributes and custom attributes can be referenced in targeting rules, and are included in analytics data.
 
+If a user attribute is missing or null, conditions on that attribute do not match, including negated operators such as `NotEqual` and `NotOneOf`. An existing empty-string value is compared normally. Evaluation continues with subsequent rules and then the flag's default rule if none match.
+
 UserBuilder is used to construct a `IUser` instance. The builder exposes methods to configure the IUser, and finally to create the IUser instance.
 
 ```javascript

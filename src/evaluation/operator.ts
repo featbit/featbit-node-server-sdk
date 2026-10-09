@@ -37,8 +37,8 @@ export class Operator {
   constructor(private readonly operation: string, private readonly func: (param1: string, param2: string) => boolean) {
   }
 
-  public isMatch(value: string, conditionValue: string) {
-    if (value === null || conditionValue === null) {
+  public isMatch(value: string | null | undefined, conditionValue: string | null | undefined) {
+    if (value === null || value === undefined || conditionValue === null || conditionValue === undefined) {
       return false;
     }
 
