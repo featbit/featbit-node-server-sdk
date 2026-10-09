@@ -1,5 +1,6 @@
-import { DataSyncModeEnum, FbClientBuilder, IUser, UserBuilder, BasicLogger } from "@featbit/node-server-sdk";
-const { format } = require("util");
+import { DataSyncModeEnum, FbClientBuilder, UserBuilder, BasicLogger } from "@featbit/node-server-sdk";
+import type { IUser } from "@featbit/node-server-sdk";
+import { format } from "node:util";
 //import { FbClientBuilder, IUser, UserBuilder, DataSyncModeEnum, BasicLogger} from "../../../src";
 
 // use websocket streaming

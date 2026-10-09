@@ -50,7 +50,7 @@ async function run() {
         console.log(err);
     }
 
-    const variationDetail = await fbClient.stringVariation(flagKey, user, 'aaa');
+    const variationDetail = await fbClient.stringVariationDetail(flagKey, user, 'aaa');
     console.log(`flag '${flagKey}' returns ${variationDetail.value} for user ${user.key} ` +
         `Reason Kind: ${variationDetail.kind}, Reason Description: ${variationDetail.reason}`);
 
