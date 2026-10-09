@@ -37,18 +37,12 @@ export class Operator {
   constructor(private readonly operation: string, private readonly func: (param1: string, param2: string) => boolean) {
   }
 
-  public isMatch(value: string, conditionValue: string) {
-    if (value === null || conditionValue === null) {
+  public isMatch(value: string | null | undefined, conditionValue: string | null | undefined) {
+    if (value === null || value === undefined || conditionValue === null || conditionValue === undefined) {
       return false;
     }
 
-    // a missing user attribute is undefined: string operators throw on it. Count that as no match; operators that
-    // already handled undefined keep their result (e.g. NotEqual stays true)
-    try {
-      return this.func(value, conditionValue);
-    } catch {
-      return false;
-    }
+    return this.func(value, conditionValue);
   }
 
   /***************** numeric ********************/

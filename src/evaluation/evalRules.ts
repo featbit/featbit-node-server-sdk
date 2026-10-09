@@ -14,7 +14,14 @@ export function isSegmentCondition(condition: ICondition) {
 }
 
 function isMatchCondition(condition: ICondition, context: Context) {
+  if (condition.property === null || condition.property === undefined || condition.property.trim() === '') {
+    return false;
+  }
+
   const value = context.value(condition.property);
+  if (value === null || value === undefined) {
+    return false;
+  }
 
   const operator = Operator.get(condition.op);
   return operator.isMatch(value, condition.value);
