@@ -274,6 +274,8 @@ By default, the SDK automatically sends events (flag evaluation events and metri
 
 If you prefer to disable this event collection while the SDK is in online mode, you can configure this behavior using the disableEvents option.
 
+To use per-flag insights collection controlled by `insightsEnabled`, keep `disableEvents` set to `false` (the default), or explicitly call `.disableEvents(false)`. Setting `disableEvents` to `true` disables all event collection, regardless of each flag's `insightsEnabled` setting.
+
 ```javascript
 import { FbClientBuilder } from "@featbit/node-server-sdk";
 
