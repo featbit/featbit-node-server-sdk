@@ -106,6 +106,9 @@ export class EventDispatcher {
       const payload = this.serializer.serialize(slice);
 
       const {status} = await this.sender.send(payload, true);
+      if (status === DeliveryStatus.Succeeded) {
+        this.logger.debug(`Successfully sent ${ slice.length } events. Payload: %s`, payload);
+      }
       if (status === DeliveryStatus.FailedAndMustShutDown) {
         this.stopped = true;
       }

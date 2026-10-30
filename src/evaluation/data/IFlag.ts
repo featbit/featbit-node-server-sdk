@@ -10,6 +10,8 @@ export interface IFlag {
   version: number;
   key: string;
   isEnabled: boolean;
+  /** Whether to record evaluation events. Defaults to true when omitted. */
+  insightsEnabled?: boolean;
   targetUsers: ITargetUser[];
   variations: IVariation[];
   disabledVariationId: string;
