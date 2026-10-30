@@ -25,6 +25,7 @@ import { IOptions } from "./options/IOptions";
 import { IUser } from "./options/IUser";
 import { MetricEvent } from "./events/event";
 import { DataSyncModeEnum } from "./data-sync";
+import { IFlag } from "./evaluation/data/IFlag";
 
 enum ClientState {
   Initializing,
@@ -327,8 +328,11 @@ export class FbClientCore implements IFbClientCore {
       return {flagKey, kind: evalResult.kind, reason: evalResult.reason, value: defaultValue};
     }
 
-    // send event
-    this.eventProcessor.record(evalEvent);
+    // Only an explicit false disables evaluation insights for this flag.
+    const flag = this.store.get(DataKinds.Flags, flagKey) as IFlag;
+    if (flag.insightsEnabled !== false) {
+      this.eventProcessor.record(evalEvent);
+    }
 
     const {isSucceeded, value} = typeConverter(evalResult.value!);
     return isSucceeded
