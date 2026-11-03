@@ -272,9 +272,7 @@ const fbClient = new FbClientBuilder()
 
 By default, the SDK automatically sends events (flag evaluation events and metric events for A/B testing) to the FeatBit server, unless the SDK is in offline mode.
 
-If you prefer to disable this event collection while the SDK is in online mode, you can configure this behavior using the disableEvents option.
-
-To use per-flag insights collection controlled by `insightsEnabled`, keep `disableEvents` set to `false` (the default), or explicitly call `.disableEvents(false)`. Setting `disableEvents` to `true` disables all event collection, regardless of each flag's `insightsEnabled` setting.
+If you prefer to disable this event collection while the SDK is in online mode, you can configure this behavior using the `disableEvents` option.
 
 ```javascript
 import { FbClientBuilder } from "@featbit/node-server-sdk";
@@ -283,6 +281,13 @@ const fbClient = new FbClientBuilder()
         .disableEvents(true)
         .build();
 ```
+
+Flag evaluation event collection is also controlled by the per-flag `insightsEnabled` setting received from the FeatBit server:
+
+- `false`: disables evaluation event collection for that flag without changing its evaluation result.
+- `true` or absent: allows evaluation event collection, provided SDK-wide event collection is enabled.
+
+`disableEvents` must be `false` (the default) and the SDK must be online for per-flag insights to collect evaluation events. Setting `insightsEnabled` to `true` does not override `disableEvents` or offline mode. The `insightsEnabled` setting does not affect custom metric events sent through `track()`; those remain subject to SDK-wide event collection settings.
 
 ### Experiments (A/B/n Testing)
 
