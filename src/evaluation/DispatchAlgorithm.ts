@@ -28,12 +28,4 @@ export class DispatchAlgorithm {
     return percentage;
   }
 
-  public static dispatchRollout(rollout: [number, number]): number {
-    if (rollout.length !== 2) {
-      // malformed rollout
-      return 0.0;
-    }
-
-    return rollout[1] - rollout[0];
-  }
 }

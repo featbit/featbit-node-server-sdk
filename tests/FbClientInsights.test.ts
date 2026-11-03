@@ -16,14 +16,14 @@ describe('per-flag evaluation insights', () => {
   let updates: IDataSourceUpdates;
   let record: jest.Mock;
   const user = new UserBuilder('user').build();
-  const rollout = [{id: 'on', rollout: [0, 1] as [number, number], exptRollout: 1}];
+  const rollout = [{id: 'on', rollout: [0, 1] as [number, number]}];
 
   function makeFlag(insightsEnabled?: boolean): IFlag {
     const flag = new FlagBuilder()
       .key('flag')
       .variations([{id: 'on', value: 'true'}])
       .disabledVariationId('on')
-      .fallthrough({dispatchKey: '', includedInExpt: true, variations: rollout})
+      .fallthrough({dispatchKey: '', variations: rollout})
       .build();
     flag.updatedAt = '2026-10-30T00:00:00Z';
     if (insightsEnabled !== undefined) {
