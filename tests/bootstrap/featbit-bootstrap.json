@@ -42,7 +42,6 @@
             "id": "16273e69-8e1f-4828-bb9b-07576724f6d8",
             "name": "Rule 1",
             "dispatchKey": null,
-            "includedInExpt": false,
             "conditions": [
               {
                 "property": "age",
@@ -61,8 +60,7 @@
                 "rollout": [
                   0,
                   1
-                ],
-                "exptRollout": 1
+                ]
               }
             ]
           },
@@ -70,7 +68,6 @@
             "id": "05a6e5fa-6fb5-4bf8-8c2d-d556ed44c143",
             "name": "Rule 2",
             "dispatchKey": "keyId",
-            "includedInExpt": false,
             "conditions": [
               {
                 "property": "country",
@@ -84,16 +81,14 @@
                 "rollout": [
                   0,
                   0.2
-                ],
-                "exptRollout": 1
+                ]
               },
               {
                 "id": "19cf9fb6-b790-4877-ab96-b5c5e73e0b46",
                 "rollout": [
                   0.2,
                   1
-                ],
-                "exptRollout": 1
+                ]
               }
             ]
           }
@@ -102,19 +97,16 @@
         "disabledVariationId": "19cf9fb6-b790-4877-ab96-b5c5e73e0b46",
         "fallthrough": {
           "dispatchKey": null,
-          "includedInExpt": true,
           "variations": [
             {
               "id": "3da96792-debf-4878-905a-c9b5f9178cd0",
               "rollout": [
                 0,
                 1
-              ],
-              "exptRollout": 1
+              ]
             }
           ]
         },
-        "exptIncludeAllTargets": true,
         "tags": [],
         "isArchived": false
       }

@@ -78,8 +78,11 @@ describe('given a Evaluator', () => {
     expect(evalResult.value).toBe('true');
     expect(evalResult.reason).toBe('flag off');
 
-    // flag is off
-    expect(evalEvent!.sendToExperiment).toBeFalsy();
+    expect(evalEvent!.toPayload().variations).toEqual([{
+      featureFlagKey: flag.key,
+      timestamp: expect.any(Number),
+      variation: {id: 'trueId', value: evalResult.value}
+    }]);
   });
 
   it('evaluate targeted result', () => {
@@ -102,8 +105,11 @@ describe('given a Evaluator', () => {
     expect(evalResult.value).toBe('false');
     expect(evalResult.reason).toBe('target match');
 
-    // ExptIncludeAllTargets is true by default
-    expect(evalEvent!.sendToExperiment).toBeTruthy();
+    expect(evalEvent!.toPayload().variations).toEqual([{
+      featureFlagKey: flag.key,
+      timestamp: expect.any(Number),
+      variation: {id: 'falseId', value: evalResult.value}
+    }]);
   });
 
   it('evaluate rule matched result', () => {
@@ -119,17 +125,14 @@ describe('given a Evaluator', () => {
         }
       ],
       dispatchKey: 'keyId',
-      includedInExpt: false,
       variations: [{
         id: 'trueId',
-        exptRollout: 1,
         rollout: [0, 1]
       }]
     };
     const flag = new FlagBuilder()
       .key('hello')
       .isEnabled(true)
-      .exptIncludeAllTargets(false)
       .variations([{id: 'trueId', value: 'true'}, {id: 'falseId', value: 'false'}])
       .rules([customRule])
       .build();
@@ -151,18 +154,19 @@ describe('given a Evaluator', () => {
     expect(evalResult.value).toBe('true');
     expect(evalResult.reason).toBe(`match rule ${customRule.name}`);
 
-    // customRule.IncludedInExpt is false
-    expect(evalEvent!.sendToExperiment).toBeFalsy();
+    expect(evalEvent!.toPayload().variations).toEqual([{
+      featureFlagKey: flag.key,
+      timestamp: expect.any(Number),
+      variation: {id: 'trueId', value: evalResult.value}
+    }]);
   });
 
   it('evaluate fallthrough result', () => {
     const fallthrough: IFallthrough = {
       dispatchKey: "keyId",
-      includedInExpt: true,
       variations: [
         {
           id: "falseId",
-          exptRollout: 1,
           rollout: [0, 1]
         }
       ]
@@ -171,7 +175,6 @@ describe('given a Evaluator', () => {
     const flag = new FlagBuilder()
       .key('hello')
       .isEnabled(true)
-      .exptIncludeAllTargets(false)
       .fallthrough(fallthrough)
       .variations([{id: 'trueId', value: 'true'}, {id: 'falseId', value: 'false'}])
       .build();
@@ -188,7 +191,10 @@ describe('given a Evaluator', () => {
     expect(evalResult.value).toBe('false');
     expect(evalResult.reason).toBe('fall through targets and rules');
 
-    // flag is on
-    expect(evalEvent!.sendToExperiment).toBeTruthy();
+    expect(evalEvent!.toPayload().variations).toEqual([{
+      featureFlagKey: flag.key,
+      timestamp: expect.any(Number),
+      variation: {id: 'falseId', value: evalResult.value}
+    }]);
   });
 });

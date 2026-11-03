@@ -21,7 +21,7 @@ const ruleFor = (op: string, property = 'email', value = '@x.com'): ITargetRule 
   name: 'email rule',
   conditions: [{ id: 'condition', property, op, value }],
   dispatchKey: 'keyId',
-  variations: [{ id: 'matched', rollout: [0, 1], exptRollout: 1 }],
+  variations: [{ id: 'matched', rollout: [0, 1] }],
 });
 
 describe('missing attributes in evaluation', () => {
@@ -61,7 +61,7 @@ describe('missing attributes in evaluation', () => {
         const laterRule = ruleFor(OperatorTypes.Equal, 'keyId', 'user-key');
         laterRule.id = 'later-rule';
         laterRule.name = 'later rule';
-        laterRule.variations = [{ id: 'later', rollout: [0, 1], exptRollout: 1 }];
+        laterRule.variations = [{ id: 'later', rollout: [0, 1] }];
 
         for (const hasLaterRule of [false, true]) {
           const flag = new FlagBuilder().key('flag')
@@ -73,8 +73,7 @@ describe('missing attributes in evaluation', () => {
             .rules(hasLaterRule ? [firstRule, laterRule] : [firstRule])
             .fallthrough({
               dispatchKey: 'keyId',
-              includedInExpt: false,
-              variations: [{ id: 'default', rollout: [0, 1], exptRollout: 1 }],
+              variations: [{ id: 'default', rollout: [0, 1] }],
             }).build();
           const data = deserializeAll([flag], segments);
           store.init({

@@ -17,7 +17,6 @@ export class FlagBuilder {
   private _isEnabled: boolean = true;
   private _disabledVariationId: string = EmptyString;
   private _fallthrough?: IFallthrough;
-  private _exptIncludeAllTargets: boolean = true;
 
   id(id: string): FlagBuilder {
     this._id = id;
@@ -69,11 +68,6 @@ export class FlagBuilder {
     return this;
   }
 
-  exptIncludeAllTargets(exptIncludeAllTargets: boolean): FlagBuilder {
-    this._exptIncludeAllTargets = exptIncludeAllTargets
-    return this;
-  }
-
   build(): IFlag {
     return {
       id: this._id!,
@@ -86,7 +80,6 @@ export class FlagBuilder {
       isEnabled: this._isEnabled,
       disabledVariationId: this._disabledVariationId,
       fallthrough: this._fallthrough!,
-      exptIncludeAllTargets: this._exptIncludeAllTargets,
       updatedAt: new Date().toISOString()
     };
   }
