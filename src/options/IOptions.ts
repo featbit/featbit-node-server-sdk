@@ -102,6 +102,10 @@ export interface IOptions {
 
   /**
    *  Timeout in milliseconds for the WebSocket handshake request. This is reset after every redirection.
+   *  Defaults to 10 000 milliseconds. Keep this shorter than the evaluation server's
+   *  Streaming:TokenExpirySeconds (30 seconds by default).
+   *  A timed-out handshake is retried with a new connection token.
+   *  This is independent of startWaitTime, which only limits the initial wait for SDK readiness.
    */
   webSocketHandshakeTimeout?: number;
 
