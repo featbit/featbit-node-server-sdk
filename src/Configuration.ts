@@ -57,7 +57,7 @@ export const defaultValues: IValidatedOptions = {
   eventsUri: '',
   dataSyncMode: DataSyncModeEnum.STREAMING,
   sendEvents: true,
-  webSocketHandshakeTimeout: undefined,
+  webSocketHandshakeTimeout: 10000,
   webSocketPingInterval: 18 * 1000,
   flushInterval: 2000,
   maxEventsInQueue: 10000,

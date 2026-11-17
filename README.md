@@ -9,6 +9,8 @@ The FeatBit Server-Side SDK for Node.js is designed primarily for use in multi-u
 ## Data synchronization
 We use **WebSocket** or **Polling** to make the local data synchronized with the server, and then store them in memory by default. Whenever there is any change to a feature flag or its related data, this change will be pushed to the SDK, the average synchronization time is less than **100ms**. Be aware the WebSocket/Polling connection may be interrupted due to internet outage, but it will be resumed automatically once the problem is gone.
 
+WebSocket handshakes time out after 10 seconds by default. The SDK retries timed-out connections with a new token using its reconnect backoff. Override this with `webSocketHandshakeTimeout` (milliseconds), or `.webSocketHandshakeTimeout(...)` on the builder. Keep the timeout below the evaluation server's `Streaming:TokenExpirySeconds`, which defaults to 30 seconds. This setting is independent of `startWaitTime`, which limits the initial wait for SDK readiness and does not abort a connection attempt.
+
 ## Get Started
 
 ### Installation
